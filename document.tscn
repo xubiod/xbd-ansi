@@ -51,3 +51,6 @@ offset_bottom = 400.0
 
 [node name="Reference" type="Sprite2D" parent="." unique_id=264787008]
 unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0.5)
+centered = false

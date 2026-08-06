@@ -6,7 +6,8 @@ enum Tool {
 	PICKER,
 	LINE,
 	RECT_LINE,
-	RECT_FILL
+	RECT_FILL,
+	REFERENCE
 }
 
 enum PaintMode {
@@ -19,11 +20,14 @@ enum PaintMode {
 const DEFAULT_SIZE: Vector2i = Vector2i(80, 25)
 const LINE_STEPS: int = 1
 
+const REF_IMAGE_DEFAULT_ALPHA: float = 0.5
+
 @onready var viewport: Viewport = get_viewport()
 
 @onready var foreground: TileMapLayer = %Foreground
 @onready var background: TileMapLayer = %Background
 @onready var cursor_sprite: Sprite2D = $Cursor
+@onready var reference: Sprite2D = %Reference
 
 var sauce: Sauce
 
@@ -52,8 +56,12 @@ var current_paint_mode: PaintMode = PaintMode.CHARACTER
 
 var last_mouse_canvas_pos: Vector2 = Vector2.ZERO
 
+var last_global_mouse: Vector2 = Vector2.ZERO
+
 var start_canvas_pos:	Vector2i = Vector2i.ZERO
 var end_canvas_pos:		Vector2i = Vector2i.ZERO
+
+var ref_pos: Vector2 = Vector2.ZERO
 
 signal palette_updated
 signal font_updated
@@ -216,6 +224,8 @@ func paint_with_selected(global_pt: Vector2) -> void:
 #endregion
 
 func _ready() -> void:
+	reference.modulate.a = REF_IMAGE_DEFAULT_ALPHA
+
 	palette_image = (load(DEFAULT_PALETTE_PATH) as Texture2D).get_image()
 	palette_texture = ImageTexture.create_from_image(palette_image)
 	(material as ShaderMaterial).set_shader_parameter("palette", palette_texture)
@@ -253,11 +263,25 @@ func _process(_delta: float) -> void:
 					Tool.LINE, Tool.RECT_LINE, Tool.RECT_FILL:
 						# handled on mouse released
 						pass
+					Tool.REFERENCE:
+						# handled outside of canvas
+						pass
 					_:
 						push_error("not a tool")
 
 			if Input.is_action_just_pressed(&"tool_interaction"):
 				start_canvas_pos = clamped
+
+		# point not in canvas (ref only prolly)
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			match current_tool:
+				Tool.REFERENCE:
+					if reference.visible:
+						ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
+
+						reference.position = ref_pos.snapped(glyph_size) if Input.is_key_pressed(KEY_SHIFT) else ref_pos
+				_:
+					pass
 
 		if Input.is_action_just_released(&"tool_interaction"):
 			end_canvas_pos = clamped
@@ -279,6 +303,7 @@ func _process(_delta: float) -> void:
 					pass
 
 	last_mouse_canvas_pos = clamped
+	last_global_mouse = global_mouse_pos
 
 	cursor_sprite.position = (cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
@@ -399,6 +424,28 @@ func resize(to: Vector2i) -> void:
 
 	document_size = to
 	# document_rect = Rect2(Vector2.ZERO, document_size * glyph_size)
+
+#region Reference image
+func load_reference_image(fname: String) -> void:
+	assert(FileAccess.file_exists(fname), "reference image does not exist")
+	reference.texture = ImageTexture.create_from_image(Image.load_from_file(fname))
+	reference.visible = true
+	reference.position = Vector2.ZERO
+
+	resize_reference_image(int(document_size.x))
+
+func toggle_reference_image() -> void:
+	reference.visible = !reference.visible
+
+func resize_reference_image(width_in_chars: int) -> void:
+	var ratio: float = float(width_in_chars * glyph_size.x) / reference.texture.get_width()
+	reference.scale = Vector2(ratio, ratio)
+
+func get_reference_image_width_in_chars() -> int:
+	if reference.texture == null:
+		return document_size.x
+	return int(reference.scale.x * reference.texture.get_width())
+#endregion
 
 #region File loaders
 func load_xbin(xbin_path: String) -> void:

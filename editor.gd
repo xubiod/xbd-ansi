@@ -12,7 +12,8 @@ var panning: bool = false
 
 const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 	Document.Tool.TYPING,
-	Document.Tool.PICKER
+	Document.Tool.PICKER,
+	Document.Tool.REFERENCE
 ]
 
 func _foreground_changed() -> void:
@@ -48,11 +49,22 @@ func _ready() -> void:
 	%ToolLine.pressed.connect(		update_tool.bind(Document.Tool.LINE))
 	%ToolRectFull.pressed.connect(	update_tool.bind(Document.Tool.RECT_FILL))
 	%ToolRectLine.pressed.connect(	update_tool.bind(Document.Tool.RECT_LINE))
+	%ToolReference.pressed.connect(	update_tool.bind(Document.Tool.REFERENCE))
 
 	%PaintModeCharacter.pressed.connect(	update_paint_mode.bind(Document.PaintMode.CHARACTER))
 	%PaintModeColourizeFG.pressed.connect(	update_paint_mode.bind(Document.PaintMode.COLOURIZE_FG))
 	%PaintModeColourizeBG.pressed.connect(	update_paint_mode.bind(Document.PaintMode.COLOURIZE_BG))
 	%PaintModeColourizeFull.pressed.connect(update_paint_mode.bind(Document.PaintMode.COLOURIZE_FULL))
+
+	%RefVisible.toggled.connect(func(v: bool) -> void: document.reference.visible = v)
+
+	%RefSize.value = document.get_reference_image_width_in_chars()
+	%RefSize.value_changed.connect(func(v: float) -> void: document.resize_reference_image(int(v)))
+
+	%RefAlpha.value = document.reference.modulate.a * 100.
+	%RefAlpha.value_changed.connect(func(v: float) -> void: document.reference.modulate.a = v / 100.)
+
+	%RefLayer.set_pressed_no_signal(document.reference.z_index == 0)
 
 	%ResizePopup.request_resize.connect(resize_document)
 
@@ -96,6 +108,8 @@ func _tool_changed(into: Document.Tool) -> void:
 			%ToolRectFull.button_pressed	= true
 		Document.Tool.RECT_LINE:
 			%ToolRectLine.button_pressed	= true
+		Document.Tool.REFERENCE:
+			%ToolReference.button_pressed	= true
 		_:
 			push_error("missing tool update")
 
@@ -156,6 +170,9 @@ func _process(_delta: float) -> void:
 	%CodeButton.disabled = %PaintModeCharacter.disabled
 	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
 
+	%PaintModesCollection.visible = %Document.current_tool != Document.Tool.REFERENCE
+	%ReferenceCollection.visible = !%PaintModesCollection.visible
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and panning:
 		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
@@ -170,3 +187,22 @@ func _on_open_x_bin_file_selected(path: String) -> void:
 	if not path.to_lower().ends_with(".xb"):
 		return
 	document.load_xbin(path)
+
+func _on_ref_popup_file_selected(path: String) -> void:
+	document.load_reference_image(path)
+	%RefVisible.button_pressed = document.reference.visible
+
+func _on_ref_open_pressed() -> void:
+	%RefPopup.show()
+
+func _on_ref_layer_toggled(toggled_on: bool) -> void:
+	document.reference.z_index = 0 if toggled_on else 2
+
+func _on_ref_reset_pressed() -> void:
+	document.reference.position = Vector2.ZERO
+
+	%RefVisible.button_pressed = true
+	%RefSize.value = document.document_size.x
+	%RefAlpha.value = document.REF_IMAGE_DEFAULT_ALPHA * 100.
+
+	%RefLayer.button_pressed = true
