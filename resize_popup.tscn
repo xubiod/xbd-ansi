@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://cyq2k0aj1ujpf"]
+
+[ext_resource type="Script" uid="uid://obiywvjk17a2" path="res://resize_popup.gd" id="1_0is6x"]
+
+[node name="ResizePopup" type="Popup" unique_id=1473360267]
+disable_3d = true
+oversampling_override = 1.0
+title = "Resize"
+initial_position = 2
+size = Vector2i(650, 250)
+visible = true
+borderless = false
+always_on_top = true
+script = ExtResource("1_0is6x")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=877952833]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1232032146]
+layout_mode = 2
+alignment = 1
+
+[node name="Width" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=750879765]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Width" unique_id=1957416454]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Width:"
+horizontal_alignment = 2
+
+[node name="WidthSpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/Width" unique_id=556765978]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+suffix = "chars"
+
+[node name="Height" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=491135010]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Height" unique_id=1040644061]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Height:"
+horizontal_alignment = 2
+
+[node name="HeightSpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/Height" unique_id=1424445789]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+suffix = "chars"
+
+[node name="Warning" type="RichTextLabel" parent="MarginContainer/VBoxContainer" unique_id=641717539]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]Characters will be cropped out.[/b]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2146208670]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="MarginContainer/VBoxContainer/Buttons" unique_id=1730615696]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0.9999997, 0.10892626, 0.073867835, 1)
+theme_override_colors/font_pressed_color = Color(0.6940474, 0, 0.073581226, 1)
+theme_override_colors/font_hover_color = Color(1, 0.62451994, 0.5675078, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.32801494, 0.28026745, 1)
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="MarginContainer/VBoxContainer/Buttons" unique_id=1984626803]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Confirm"
+
+[connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/Width/WidthSpinBox" to="." method="_size_check"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/Height/HeightSpinBox" to="." method="_size_check"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/Confirm" to="." method="_on_confirm_pressed"]

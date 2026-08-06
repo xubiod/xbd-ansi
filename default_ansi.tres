@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="AnsiFont" format=3 uid="uid://c817boes4jfdo"]
+
+[ext_resource type="Script" uid="uid://b1rmb18o30qjc" path="res://font.gd" id="1_d535f"]
+
+[resource]
+script = ExtResource("1_d535f")
+metadata/_custom_type_script = "uid://b1rmb18o30qjc"

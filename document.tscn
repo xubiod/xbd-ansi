@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://c12rftiejdiwd"]
+
+[ext_resource type="Script" uid="uid://dxk1ea11ukbpr" path="res://document.gd" id="1_mj70b"]
+[ext_resource type="Shader" uid="uid://7pbkjq4nhj2a" path="res://shaders/colourmap.gdshader" id="1_pfdnj"]
+[ext_resource type="Texture2D" uid="uid://cuc2hb2lf1vam" path="res://palettes/cga.png" id="2_1tgo3"]
+[ext_resource type="Material" uid="uid://be0upij1yhrt5" path="res://shaders/cursor_material.tres" id="4_w1jfu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1tgo3"]
+shader = ExtResource("1_pfdnj")
+shader_parameter/palette = ExtResource("2_1tgo3")
+
+[sub_resource type="Gradient" id="Gradient_w1jfu"]
+offsets = PackedFloat32Array(0.5264423)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mvc67"]
+gradient = SubResource("Gradient_w1jfu")
+width = 1
+
+[node name="Document" type="Node2D" unique_id=1505595027]
+material = SubResource("ShaderMaterial_1tgo3")
+script = ExtResource("1_mj70b")
+
+[node name="Foreground" type="TileMapLayer" parent="." unique_id=1611047548]
+unique_name_in_owner = true
+z_index = 1
+use_parent_material = true
+occlusion_enabled = false
+collision_enabled = false
+navigation_enabled = false
+
+[node name="Background" type="TileMapLayer" parent="." unique_id=219117382]
+unique_name_in_owner = true
+z_index = -1
+use_parent_material = true
+occlusion_enabled = false
+collision_enabled = false
+navigation_enabled = false
+
+[node name="Cursor" type="Sprite2D" parent="." unique_id=514289708]
+z_index = 2
+material = ExtResource("4_w1jfu")
+scale = Vector2(8, 16)
+texture = SubResource("GradientTexture1D_mvc67")
+centered = false
+
+[node name="80x25 Reference" type="ReferenceRect" parent="." unique_id=303981841]
+visible = false
+offset_right = 640.0
+offset_bottom = 400.0

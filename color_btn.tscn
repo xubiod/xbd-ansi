@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://bhoyf3yuruu8v"]
+
+[ext_resource type="Script" uid="uid://ctgeqgun3n7t3" path="res://color_btn.gd" id="1_gh8xc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4r506"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rckxj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5sxup"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5v5oa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hut04"]
+
+[node name="ColorBtn" type="Button" unique_id=2067074109]
+custom_minimum_size = Vector2(16, 16)
+offset_right = 16.0
+offset_bottom = 16.0
+theme_override_constants/h_separation = 0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4r506")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_rckxj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5sxup")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_5v5oa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hut04")
+button_mask = 3
+flat = true
+script = ExtResource("1_gh8xc")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1358947391]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
