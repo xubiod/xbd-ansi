@@ -87,7 +87,7 @@ textures/light_projectors/filter=0
 
 CURSOR_HEIGHT={
 "type": "float",
-"value": 0.8
+"value": -8192.0
 }
 BLINK_RATIO={
 "type": "float",
@@ -100,4 +100,8 @@ CHAR_HEIGHT={
 CHAR_WIDTH={
 "type": "int",
 "value": 8
+}
+CURSOR_OUTLINE_ALPHA={
+"type": "float",
+"value": 0.2
 }

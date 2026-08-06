@@ -48,3 +48,6 @@ centered = false
 visible = false
 offset_right = 640.0
 offset_bottom = 400.0
+
+[node name="Reference" type="Sprite2D" parent="." unique_id=264787008]
+unique_name_in_owner = true

@@ -10,6 +10,11 @@ var camera_desired_pos: Vector2
 
 var panning: bool = false
 
+const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
+	Document.Tool.TYPING,
+	Document.Tool.PICKER
+]
+
 func _foreground_changed() -> void:
 	var c: Color = document.selected_fg_as_color()
 	%Foreground.color = c
@@ -143,12 +148,12 @@ func _process(_delta: float) -> void:
 	%Camera.position = %Camera.position.lerp(camera_desired_pos, 0.8)
 
 	# TODO don't do this every frame !!
-	%PaintModeCharacter.disabled = %Document.current_tool == Document.Tool.TYPING
-	%PaintModeColourizeFG.disabled = %Document.current_tool == Document.Tool.TYPING
-	%PaintModeColourizeBG.disabled = %Document.current_tool == Document.Tool.TYPING
-	%PaintModeColourizeFull.disabled = %Document.current_tool == Document.Tool.TYPING
+	%PaintModeCharacter.disabled		= %Document.current_tool in TOOLS_THAT_DISABLE_PAINT_MODE
+	%PaintModeColourizeFG.disabled		= %PaintModeCharacter.disabled
+	%PaintModeColourizeBG.disabled		= %PaintModeCharacter.disabled
+	%PaintModeColourizeFull.disabled	= %PaintModeCharacter.disabled
 
-	%CodeButton.disabled = %Document.current_tool == Document.Tool.TYPING
+	%CodeButton.disabled = %PaintModeCharacter.disabled
 	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
 
 func _unhandled_input(event: InputEvent) -> void:

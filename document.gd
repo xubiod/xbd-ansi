@@ -280,8 +280,11 @@ func _process(_delta: float) -> void:
 
 	last_mouse_canvas_pos = clamped
 
-	cursor_sprite.position = cursor_pos * glyph_size
-	cursor_sprite.visible = current_tool == Tool.TYPING
+	cursor_sprite.position = (cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size
+	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
+
+	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
+	#cursor_sprite.visible = current_tool == Tool.TYPING
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if current_tool != Tool.TYPING:
@@ -293,14 +296,21 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if key_ev.unicode != 0:
 			type(key_ev.unicode)
 
-		if key_ev.keycode == Key.KEY_BACKSPACE and key_ev.is_pressed():
-			cursor_pos.x -= 1
-			if cursor_pos.x < 0:
-				cursor_pos.x = document_size.x - 1
-				cursor_pos.y -= 1
-			if cursor_pos.y < 0:
-				cursor_pos.y = document_size.y - 1
-			set_fg_code(cursor_pos, ansifnt.empty_block)
+		if key_ev.is_pressed():
+			match key_ev.keycode:
+				Key.KEY_BACKSPACE:
+					cursor_pos.x -= 1
+					if cursor_pos.x < 0:
+						cursor_pos.x = document_size.x - 1
+						cursor_pos.y -= 1
+					if cursor_pos.y < 0:
+						cursor_pos.y = document_size.y - 1
+					set_fg_code(cursor_pos, ansifnt.empty_block)
+				Key.KEY_ENTER:
+					cursor_pos.x = 0
+					cursor_pos.y += 1
+				_:
+					pass
 
 	var updown:		float = signf(Input.get_axis(&"move_up",   &"move_down"))
 	var leftright:	float = signf(Input.get_axis(&"move_left", &"move_right"))

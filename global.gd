@@ -1,5 +1,7 @@
 extends Node
 
+const SHADER_CURSOR_HEIGHT: float = 0.8
+
 const DEFAULT_FONTPATH: String = FONT_MAP["IBM, CP437"]["VGA 8x16"]
 
 ## Human friendly names to paths.
