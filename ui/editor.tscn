@@ -8,6 +8,7 @@
 [ext_resource type="ButtonGroup" uid="uid://b0dpa6ob2xbsl" path="res://ui/toolbar_tool_buttongroup.tres" id="4_q0a35"]
 [ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://ui/palette_window.gd" id="5_4s0cy"]
 [ext_resource type="PackedScene" uid="uid://cyq2k0aj1ujpf" path="res://ui/resize_popup.tscn" id="8_t27w5"]
+[ext_resource type="PackedScene" uid="uid://buyqey0uttr0s" path="res://ui/lospec_slug_popup.tscn" id="9_5on0m"]
 
 [node name="Editor" type="Node2D" unique_id=843518339]
 script = ExtResource("1_vjobr")
@@ -67,6 +68,7 @@ custom_minimum_size = Vector2(1, 32)
 layout_mode = 2
 tooltip_text = "Character preview.
 Click to show the character palette."
+mouse_default_cursor_shape = 2
 stretch_mode = 5
 
 [node name="BackgroundCodeBtn" type="ColorRect" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection/CodeButton" unique_id=995238888]
@@ -84,6 +86,7 @@ mouse_filter = 2
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Paints the character as previewed."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_pressed = true
 button_group = ExtResource("4_gbsbp")
@@ -94,6 +97,7 @@ unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Overrides the foreground attribute.
 Character doesn't change."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_gbsbp")
 text = "Colourize FG"
@@ -103,6 +107,7 @@ unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Overrides the background attribute.
 Character doesn't change."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_gbsbp")
 text = "Colourize BG"
@@ -112,6 +117,7 @@ unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Overrides the foreground and background attributes.
 Character doesn't change."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_gbsbp")
 text = "Colourize Full"
@@ -123,6 +129,7 @@ layout_mode = 2
 [node name="RefOpen" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection" unique_id=267694035]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Open"
 
 [node name="RefReset" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection" unique_id=363863436]
@@ -132,11 +139,13 @@ tooltip_text = "Resets reference image properties to their default values.
 
 Visible, moved to the top left of the doucment, 50% opacity, between FG/BG toggleon.
 Width will reset to the current document width."
+mouse_default_cursor_shape = 2
 text = "Reset"
 
 [node name="RefVisible" type="CheckButton" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection" unique_id=1278970747]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_default_cursor_shape = 2
 text = "Visible"
 
 [node name="SizeLabel" type="Label" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection" unique_id=1627338762]
@@ -147,6 +156,7 @@ text = "Width"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
+mouse_default_cursor_shape = 1
 min_value = 1.0
 max_value = 65536.0
 value = 80.0
@@ -162,6 +172,7 @@ text = "Opacity"
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "The opacity of the reference image."
+mouse_default_cursor_shape = 1
 value = 100.0
 suffix = "%"
 
@@ -175,6 +186,7 @@ OFF: The image is overlayed on top of everything.
 
 ON: The image is between the characters and the background. 
 (Background > Ref > Foreground)"
+mouse_default_cursor_shape = 2
 text = "Between FG/BG"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera/UI/MainContainer" unique_id=1338079996]
@@ -193,6 +205,10 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
+tooltip_text = "Foreground over background.
+
+Click to swap."
+mouse_default_cursor_shape = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Foreground" type="ColorRect" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Background" unique_id=1695744727]
@@ -211,6 +227,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="Colors" type="GridContainer" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=975062557]
 unique_name_in_owner = true
@@ -290,6 +307,7 @@ tooltip_text = "Typing
 
 Click to set the cursor position. Arrow keys move the position.
 Type with the keyboard."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_pressed = true
 button_group = ExtResource("4_q0a35")
@@ -301,6 +319,7 @@ layout_mode = 2
 tooltip_text = "Pen
 
 Draw with the mouse."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 text = "Pen"
@@ -311,6 +330,7 @@ layout_mode = 2
 tooltip_text = "Line
 
 Click and drag to make a line."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 text = "Lin"
@@ -321,6 +341,7 @@ layout_mode = 2
 tooltip_text = "Rectangle (Filled)
 
 Click and drag to make a filled-in rectangle."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 text = "Rctf"
@@ -331,6 +352,7 @@ layout_mode = 2
 tooltip_text = "Rectangle (Lined)
 
 Click and drag to make a rectangle."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 text = "Rctl"
@@ -341,6 +363,7 @@ layout_mode = 2
 tooltip_text = "Picker
 
 Click a character to pick its character and attributes."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 text = "Pick"
@@ -351,6 +374,7 @@ layout_mode = 2
 tooltip_text = "Reference
 
 Adjust reference image."
+mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 text = "Ref"
@@ -565,10 +589,15 @@ filters = PackedStringArray("*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg
 folder_creation_enabled = false
 deleting_enabled = false
 
+[node name="LospecSlugPopup" parent="Camera/UI" unique_id=828341066 instance=ExtResource("9_5on0m")]
+unique_name_in_owner = true
+visible = false
+
 [connection signal="pressed" from="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection/CodeButton" to="." method="_on_code_button_pressed"]
 [connection signal="pressed" from="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection/RefOpen" to="." method="_on_ref_open_pressed"]
 [connection signal="pressed" from="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection/RefReset" to="." method="_on_ref_reset_pressed"]
 [connection signal="toggled" from="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection/RefLayer" to="." method="_on_ref_layer_toggled"]
+[connection signal="gui_input" from="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Background" to="." method="_on_background_gui_input"]
 [connection signal="focus_entered" from="Camera/UI/MainContainer/HBoxContainer/ThePit" to="." method="_on_the_pit_focus_entered"]
 [connection signal="gui_input" from="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints" to="." method="_on_control_hints_gui_input"]
 [connection signal="value_changed" from="Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider" to="." method="_on_zoom_slider_value_changed"]

@@ -14,7 +14,9 @@ enum ViewIds {
 
 enum DocumentIds {
 	LOAD_BUILT_IN = 0,
-	RESIZE = 1
+	RESIZE = 1,
+	LOAD_PALETTE = 2,
+	LOAD_PALETTE_FROM_LOSPEC_SLUG = 3
 }
 
 const ID_MASK: int = 0x7FFFFFFF
@@ -35,6 +37,17 @@ func _ready() -> void:
 		built_in_fonts.add_submenu_node_item(key, collection_submenu)
 
 	$Document.add_submenu_node_item("Load built-in font", built_in_fonts, DocumentIds.LOAD_BUILT_IN)
+
+	var built_in_palette: PopupMenu = PopupMenu.new()
+
+	for key: String in Global.named_palettes:
+		built_in_palette.add_item(key, key.hash() & ID_MASK)
+
+	built_in_palette.id_pressed.connect(_on_builtint_palette_id_pressed)
+
+	$Document.add_submenu_node_item("Load built-in palette", built_in_palette, DocumentIds.LOAD_PALETTE)
+	$Document.add_item("Load palette from Lospec", DocumentIds.LOAD_PALETTE_FROM_LOSPEC_SLUG)
+
 	$Document.add_item("Resize", DocumentIds.RESIZE)
 
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
@@ -58,11 +71,13 @@ func _on_file_id_pressed(id: int) -> void:
 func _on_doc_id_pressed(id: int) -> void:
 	var _menu: PopupMenu = $View
 	match id as DocumentIds:
-		DocumentIds.LOAD_BUILT_IN:
+		DocumentIds.LOAD_BUILT_IN, DocumentIds.LOAD_PALETTE:
 			# nothing, use subnode
 			pass
 		DocumentIds.RESIZE:
 			%ResizePopup.summon(%Document)
+		DocumentIds.LOAD_PALETTE_FROM_LOSPEC_SLUG:
+			%LospecSlugPopup.summon()
 		_:
 			assert(false, "invalid view option")
 
@@ -87,3 +102,11 @@ func _on_builtin_font_id_pressed(id: int, collection: String) -> void:
 	assert(idx != -1, "could not find key index in a collection")
 	%Document.ansifnt = AnsiFont.from_path(Global.FONT_MAP[collection][keys[idx]])
 	%Document.update_font_tileset()
+
+func _on_builtint_palette_id_pressed(id: int) -> void:
+	var keys: Array = Global.named_palettes.keys()
+
+	var idx: int = keys.find_custom(func(inp: String) -> bool: return (inp.hash() & ID_MASK) == id)
+
+	assert(idx != -1, "could not find key index")
+	%Document.set_palette_to_named(Global.named_palettes.keys()[idx])

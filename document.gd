@@ -33,7 +33,7 @@ var sauce: Sauce
 
 var palette_image: Image
 var palette_texture: ImageTexture
-const DEFAULT_PALETTE_PATH: String = "res://palettes/cga.png"
+#const DEFAULT_PALETTE_PATH: String = "res://palettes/cga.png"
 
 var ansifnt: AnsiFont
 var tileset: TileSet
@@ -108,6 +108,10 @@ func global_point_in_canvas(global: Vector2) -> bool:
 
 func global_to_canvas_pos(global: Vector2) -> Vector2i:
 	return foreground.local_to_map(to_local(global))
+
+func set_palette_to_named(palette_name: String) -> void:
+	assert(Global.named_palettes.has(palette_name), "not a real palette name")
+	fill_palette_image(Global.named_palettes[palette_name])
 #endregion
 
 #region Tile helpers
@@ -226,8 +230,11 @@ func paint_with_selected(global_pt: Vector2) -> void:
 func _ready() -> void:
 	reference.modulate.a = REF_IMAGE_DEFAULT_ALPHA
 
-	palette_image = (load(DEFAULT_PALETTE_PATH) as Texture2D).get_image()
+	palette_image = Image.create_empty(16, 1, false, Image.FORMAT_RGB8)
 	palette_texture = ImageTexture.create_from_image(palette_image)
+
+	set_palette_to_named(Global.DEFAULT_PALETTE)
+
 	(material as ShaderMaterial).set_shader_parameter("palette", palette_texture)
 
 	ansifnt = AnsiFont.new()
@@ -388,6 +395,13 @@ func update_font_tileset() -> void:
 
 	font_updated.emit()
 
+func fill_palette_image(colours: PackedColorArray) -> void:
+	assert(len(colours) == 16, "invalid amount of colours")
+	for i: int in range(16):
+		palette_image.set_pixel(i, 0, colours[i])
+
+	update_palette()
+
 func update_palette() -> void:
 	palette_texture.update(palette_image)
 	palette_updated.emit()
@@ -484,13 +498,14 @@ func load_xbin(xbin_path: String) -> void:
 		push_warning("unsupported feature: nonblink off\npiece will appear incorrect")
 
 	if has_palette:
+		var p: PackedColorArray
 		for i: int in range(16):
 			var r: float = float(f.get_8() & 0x3f) / 63.
 			var g: float = float(f.get_8() & 0x3f) / 63.
 			var b: float = float(f.get_8() & 0x3f) / 63.
 
-			palette_image.set_pixel(i, 0, Color(r, g, b))
-		update_palette()
+			p.append(Color(r, g, b))
+		fill_palette_image(p)
 
 	if has_font:
 		var font_buffer: PackedByteArray = f.get_buffer(256 * font_size)

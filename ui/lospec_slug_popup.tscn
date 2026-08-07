@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://buyqey0uttr0s"]
+
+[ext_resource type="Script" uid="uid://4oj5d0ukwspg" path="res://ui/lospec_slug_popup.gd" id="1_p64ix"]
+
+[node name="LospecSlugPopup" type="Popup" unique_id=828341066]
+disable_3d = true
+oversampling_override = 1.0
+title = "Load Palette from Lospec Slug"
+initial_position = 2
+size = Vector2i(480, 109)
+visible = true
+borderless = false
+script = ExtResource("1_p64ix")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1402062140]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1643548058]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1302088140]
+layout_mode = 2
+tooltip_text = "The Lospec slug is the URL name of a palette. Must be 16 colours.
+
+For an example, the \"Sweetie 16\" palette URL on Lospec is:
+https://lospec.com/palette-list/sweetie-16
+
+The slug is the last part, \"sweetie-16\"."
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=848410658]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+text = "Slug"
+horizontal_alignment = 2
+
+[node name="Slug" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1676795456]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Lospec slug..."
+
+[node name="Status" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1181053139]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Status"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1041759849]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=640615852]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Load" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1755626043]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Load"
+
+[node name="Requester" type="HTTPRequest" parent="." unique_id=2044586247]
+unique_name_in_owner = true
+
+[connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/Load" to="." method="_on_load_pressed"]
+[connection signal="request_completed" from="Requester" to="." method="_on_requester_request_completed"]

@@ -90,6 +90,8 @@ func _ready() -> void:
 
 	%ResizePopup.request_resize.connect(func(w: int, h: int) -> void: document.resize(Vector2i(w, h)))
 
+	%LospecSlugPopup.slug_successful.connect(func(p: PackedColorArray) -> void: document.fill_palette_image(p))
+
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
 	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
 
@@ -246,5 +248,13 @@ func _on_control_hints_gui_input(event: InputEvent) -> void:
 		var mouse_ev: InputEventMouseButton = event as InputEventMouseButton
 		if mouse_ev.is_pressed() and mouse_ev.button_index == MouseButton.MOUSE_BUTTON_LEFT:
 			control_hints = false
+
+func _on_background_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_ev: InputEventMouseButton = event as InputEventMouseButton
+		if mouse_ev.is_pressed() and mouse_ev.button_index == MouseButton.MOUSE_BUTTON_LEFT:
+			var t: int = document.selected_fg
+			document.selected_fg = document.selected_bg
+			document.selected_bg = t
 
 #endregion
