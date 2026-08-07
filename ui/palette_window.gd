@@ -48,10 +48,10 @@ func _ready() -> void:
 
 	%Document.foreground_updated.connect(_foreground_changed)
 	%Document.background_updated.connect(_background_changed)
+	%Document.palette_updated.connect(_palette_updated)
 	%Document.font_updated.connect(_font_updated)
 
-	_foreground_changed()
-	_background_changed()
+	_palette_updated()
 
 func _process(_delta: float) -> void:
 	if !is_input_handled() and Input.is_action_just_released(&"window_dragging"):
@@ -61,6 +61,10 @@ func _process(_delta: float) -> void:
 	#chars_can_be_dragged_over = chars_can_be_dragged_over && mouse_in_me && Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT)
 
 #region Code set signals
+func _palette_updated() -> void:
+	_foreground_changed()
+	_background_changed()
+
 func _foreground_changed() -> void:
 	%PaletteCharContainer.modulate = %Document.selected_fg_as_color()
 
