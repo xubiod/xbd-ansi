@@ -9,9 +9,6 @@
 [ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://palette_window.gd" id="5_4s0cy"]
 [ext_resource type="PackedScene" uid="uid://cyq2k0aj1ujpf" path="res://resize_popup.tscn" id="8_t27w5"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_t27w5"]
-font_size = 12
-
 [node name="Editor" type="Node2D" unique_id=843518339]
 script = ExtResource("1_vjobr")
 
@@ -42,12 +39,15 @@ layout_mode = 2
 script = ExtResource("3_1ys5w")
 
 [node name="File" type="PopupMenu" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=2020546460]
+disable_3d = true
 
 [node name="Document" type="PopupMenu" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=916149971]
+disable_3d = true
 
 [node name="Built-in fonts" type="PopupMenu" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar/Document" unique_id=1559573923]
 
 [node name="View" type="PopupMenu" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1418084451]
+disable_3d = true
 hide_on_checkable_item_selection = false
 
 [node name="These are handled in code" type="Node" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1733957673]
@@ -176,15 +176,6 @@ OFF: The image is overlayed on top of everything.
 ON: The image is between the characters and the background. 
 (Background > Ref > Foreground)"
 text = "Between FG/BG"
-
-[node name="Label" type="Label" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection" unique_id=1155925340]
-layout_mode = 2
-size_flags_horizontal = 8
-offset_transform_enabled = true
-text = "Drag with LMB to pan. Hold SHIFT to snap to char. grid."
-label_settings = SubResource("LabelSettings_t27w5")
-horizontal_alignment = 2
-vertical_alignment = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Camera/UI/MainContainer" unique_id=1338079996]
 layout_mode = 2
@@ -371,6 +362,95 @@ size_flags_horizontal = 3
 focus_mode = 2
 mouse_filter = 1
 
+[node name="ControlHints" type="MarginContainer" parent="Camera/UI/MainContainer/HBoxContainer/ThePit" unique_id=138531192]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+tooltip_text = "Click to dismiss.
+You can bring back with the menubar under View."
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="PanelContainer" type="PanelContainer" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints" unique_id=159767636]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer" unique_id=145440341]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer" unique_id=274758660]
+layout_mode = 2
+
+[node name="CtrlHintTyping" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=1602108382]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Type with the keyboard.
+LMB to set cursor position, arrow keys to move."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="CtrlHintPen" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=1609784995]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Draw with LMB."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="CtrlHintShape" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=704644296]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Drag with LMB. Release to apply shape."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="CtrlHintPick" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=589556941]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Click with LMB to grab character and attributes."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="CtrlHintReferenceImg" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=1398480319]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Drag with LMB to pan reference image.
+Hold SHIFT to snap to character grid."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="CtrlHintGeneral" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=1928351332]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Pan canvas with RMB."
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="StatusPanel" type="PanelContainer" parent="Camera/UI/MainContainer" unique_id=311408141]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -490,6 +570,7 @@ deleting_enabled = false
 [connection signal="pressed" from="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection/RefReset" to="." method="_on_ref_reset_pressed"]
 [connection signal="toggled" from="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection/RefLayer" to="." method="_on_ref_layer_toggled"]
 [connection signal="focus_entered" from="Camera/UI/MainContainer/HBoxContainer/ThePit" to="." method="_on_the_pit_focus_entered"]
+[connection signal="gui_input" from="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints" to="." method="_on_control_hints_gui_input"]
 [connection signal="value_changed" from="Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider" to="." method="_on_zoom_slider_value_changed"]
 [connection signal="mouse_entered" from="Camera/UI/PaletteWindow" to="Camera/UI/PaletteWindow" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Camera/UI/PaletteWindow" to="Camera/UI/PaletteWindow" method="_on_mouse_exited"]

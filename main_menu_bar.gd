@@ -1,12 +1,15 @@
 extends MenuBar
 
+@onready var editor: Editor = $"../../../../../.."
+
 enum FileIds {
 	NEW = 0,
 	OPEN = 1
 }
 
 enum ViewIds {
-	CHARACTER_PALETTE = 0
+	CHARACTER_PALETTE = 0,
+	CONTROL_HINT = 1
 }
 
 enum DocumentIds {
@@ -35,6 +38,7 @@ func _ready() -> void:
 	$Document.add_item("Resize", DocumentIds.RESIZE)
 
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
+	$View.add_item("Control hints", ViewIds.CONTROL_HINT)
 
 	$File.id_pressed.connect(_on_file_id_pressed)
 	$Document.id_pressed.connect(_on_doc_id_pressed)
@@ -70,6 +74,8 @@ func _on_view_id_pressed(id: int) -> void:
 				%PaletteWindow.show()
 			else:
 				%PaletteWindow.hide()
+		ViewIds.CONTROL_HINT:
+			editor.control_hints = !editor.control_hints
 		_:
 			assert(false, "invalid view option")
 

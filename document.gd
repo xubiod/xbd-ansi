@@ -360,7 +360,6 @@ func prepare(size: Vector2i) -> void:
 
 	glyph_size = Vector2i(8, ansifnt.font_height)
 	RenderingServer.global_shader_parameter_set(&"CHAR_HEIGHT", ansifnt.font_height)
-	#document_rect = Rect2(Vector2.ZERO, document_size * glyph_size)
 
 	for x: int in range(document_size.x):
 		for y: int in range(document_size.y):
@@ -381,7 +380,6 @@ func update_font_tileset() -> void:
 
 	glyph_size = Vector2i(8, ansifnt.font_height)
 	cursor_sprite.scale = glyph_size
-	#document_rect = Rect2(Vector2.ZERO, document_size * glyph_size)
 
 	if _old_full != ansifnt.full_block:
 		for x: int in range(document_size.x):
@@ -423,7 +421,6 @@ func resize(to: Vector2i) -> void:
 				background.erase_cell(Vector2i(x, y))
 
 	document_size = to
-	# document_rect = Rect2(Vector2.ZERO, document_size * glyph_size)
 
 #region Reference image
 func load_reference_image(fname: String) -> void:

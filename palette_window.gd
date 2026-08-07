@@ -9,12 +9,6 @@ var chars_can_be_dragged_over: bool = false
 
 var position_map: Dictionary
 
-func _foreground_changed() -> void:
-	%PaletteCharContainer.modulate = %Document.selected_fg_as_color()
-
-func _background_changed() -> void:
-	%PaletteCharBackground.self_modulate = %Document.selected_bg_as_color()
-
 func _ready() -> void:
 	var source: TileSetAtlasSource = %Document.foreground.tile_set.get_source(0)
 	var btn_min_size: Vector2i = %Document.glyph_size
@@ -59,6 +53,20 @@ func _ready() -> void:
 	_foreground_changed()
 	_background_changed()
 
+func _process(_delta: float) -> void:
+	if !is_input_handled() and Input.is_action_just_released(&"window_dragging"):
+		window_dragging = false
+		set_input_as_handled()
+
+	#chars_can_be_dragged_over = chars_can_be_dragged_over && mouse_in_me && Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT)
+
+#region Code set signals
+func _foreground_changed() -> void:
+	%PaletteCharContainer.modulate = %Document.selected_fg_as_color()
+
+func _background_changed() -> void:
+	%PaletteCharBackground.self_modulate = %Document.selected_bg_as_color()
+
 func _font_updated() -> void:
 	var btn_min_size: Vector2i = %Document.glyph_size
 
@@ -73,23 +81,22 @@ func _font_updated() -> void:
 	min_size = (Vector2i(16, 16) * btn_min_size * 2) + Vector2i(64, 32)
 	size = min_size
 
+## For signals: bind `code`
 func _mouse_in_character(code: int) -> void:
 	if not window_dragging and Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT): # chars_can_be_dragged_over:
 		%Document.selected_code = code
 
+## For signals: bind `code`
 func _character_picked(code: int) -> void:
 	if not window_dragging:
 		%Document.selected_code = code
 		chars_can_be_dragged_over = true
+#endregion
 
-func _process(_delta: float) -> void:
-	if Input.is_action_just_released(&"window_dragging"):
-		window_dragging = false
-
-	#chars_can_be_dragged_over = chars_can_be_dragged_over && mouse_in_me && Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT)
-
+#region Editor set signals
 func _on_dismiss_pressed() -> void:
 	hide()
+	set_input_as_handled()
 
 func _on_titlebar_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"window_dragging"):
@@ -101,3 +108,4 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	mouse_in_me = false
+#endregion

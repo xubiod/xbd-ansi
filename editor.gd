@@ -1,14 +1,36 @@
 class_name Editor extends Node2D
 
 const COLOR_BTN: PackedScene = preload("res://color_btn.tscn")
+
 @onready var document: Document = %Document
 @onready var viewport: Viewport = get_viewport()
 
 @onready var zoom_slider: HSlider = $Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider
 
 var camera_desired_pos: Vector2
-
 var panning: bool = false
+
+var control_hints: bool = false : set = _set_ctrl_hint_visible, get = _get_ctrl_hint_visible
+
+@onready var hint_labels: Dictionary[Document.Tool, Label] = {
+	Document.Tool.TYPING:		%CtrlHintTyping,
+	Document.Tool.DRAWING:		%CtrlHintPen,
+	Document.Tool.LINE:			%CtrlHintShape,
+	Document.Tool.RECT_LINE:	%CtrlHintShape,
+	Document.Tool.RECT_FILL:	%CtrlHintShape,
+	Document.Tool.PICKER:		%CtrlHintPick,
+	Document.Tool.REFERENCE:	%CtrlHintReferenceImg
+}
+
+@onready var tool_to_btn: Dictionary[Document.Tool, BaseButton] = {
+	Document.Tool.TYPING:		%ToolType,
+	Document.Tool.DRAWING:		%ToolPen,
+	Document.Tool.PICKER:		%ToolPicker,
+	Document.Tool.LINE:			%ToolLine,
+	Document.Tool.RECT_FILL:	%ToolRectFull,
+	Document.Tool.RECT_LINE:	%ToolRectLine,
+	Document.Tool.REFERENCE:	%ToolReference
+}
 
 const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 	Document.Tool.TYPING,
@@ -16,15 +38,15 @@ const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 	Document.Tool.REFERENCE
 ]
 
-func _foreground_changed() -> void:
-	var c: Color = document.selected_fg_as_color()
-	%Foreground.color = c
-	%CodeButton.self_modulate = c
+#region Getter(s)/setter(s)
 
-func _background_changed() -> void:
-	var c: Color = document.selected_bg_as_color()
-	%Background.color = c
-	%BackgroundCodeBtn.color = c
+func _set_ctrl_hint_visible(new_value: bool) -> void:
+	%ControlHints.visible = new_value
+
+func _get_ctrl_hint_visible() -> bool:
+	return %ControlHints.visible
+
+#endregion
 
 func _ready() -> void:
 	camera_desired_pos = document.document_rect.get_center()
@@ -33,7 +55,7 @@ func _ready() -> void:
 
 	for c: UIColor in %Colors.get_children():
 		c.color = (document.palette_image as Image).get_pixel(c.id, 0)
-		c.gui_input.connect(color_btn_clicked.bind(c.id))
+		c.gui_input.connect(_color_btn_clicked.bind(c.id))
 
 	_foreground_changed()
 	_background_changed()
@@ -43,18 +65,18 @@ func _ready() -> void:
 	document.foreground_updated.connect(_foreground_changed)
 	document.background_updated.connect(_background_changed)
 
-	%ToolType.pressed.connect(		update_tool.bind(Document.Tool.TYPING))
-	%ToolPen.pressed.connect(		update_tool.bind(Document.Tool.DRAWING))
-	%ToolPicker.pressed.connect(	update_tool.bind(Document.Tool.PICKER))
-	%ToolLine.pressed.connect(		update_tool.bind(Document.Tool.LINE))
-	%ToolRectFull.pressed.connect(	update_tool.bind(Document.Tool.RECT_FILL))
-	%ToolRectLine.pressed.connect(	update_tool.bind(Document.Tool.RECT_LINE))
-	%ToolReference.pressed.connect(	update_tool.bind(Document.Tool.REFERENCE))
+	%ToolType.pressed.connect(		_update_tool.bind(Document.Tool.TYPING))
+	%ToolPen.pressed.connect(		_update_tool.bind(Document.Tool.DRAWING))
+	%ToolPicker.pressed.connect(	_update_tool.bind(Document.Tool.PICKER))
+	%ToolLine.pressed.connect(		_update_tool.bind(Document.Tool.LINE))
+	%ToolRectFull.pressed.connect(	_update_tool.bind(Document.Tool.RECT_FILL))
+	%ToolRectLine.pressed.connect(	_update_tool.bind(Document.Tool.RECT_LINE))
+	%ToolReference.pressed.connect(	_update_tool.bind(Document.Tool.REFERENCE))
 
-	%PaintModeCharacter.pressed.connect(	update_paint_mode.bind(Document.PaintMode.CHARACTER))
-	%PaintModeColourizeFG.pressed.connect(	update_paint_mode.bind(Document.PaintMode.COLOURIZE_FG))
-	%PaintModeColourizeBG.pressed.connect(	update_paint_mode.bind(Document.PaintMode.COLOURIZE_BG))
-	%PaintModeColourizeFull.pressed.connect(update_paint_mode.bind(Document.PaintMode.COLOURIZE_FULL))
+	%PaintModeCharacter.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.CHARACTER))
+	%PaintModeColourizeFG.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.COLOURIZE_FG))
+	%PaintModeColourizeBG.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.COLOURIZE_BG))
+	%PaintModeColourizeFull.pressed.connect(_update_paint_mode.bind(Document.PaintMode.COLOURIZE_FULL))
 
 	%RefVisible.toggled.connect(func(v: bool) -> void: document.reference.visible = v)
 
@@ -66,7 +88,7 @@ func _ready() -> void:
 
 	%RefLayer.set_pressed_no_signal(document.reference.z_index == 0)
 
-	%ResizePopup.request_resize.connect(resize_document)
+	%ResizePopup.request_resize.connect(func(w: int, h: int) -> void: document.resize(Vector2i(w, h)))
 
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
 	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
@@ -90,39 +112,51 @@ func _ready() -> void:
 
 	%CodeButton.custom_minimum_size.x = document.glyph_size.x * (%CodeButton.custom_minimum_size.y / document.glyph_size.y)
 
-func resize_document(width: int, height: int) -> void:
-	document.resize(Vector2i(width, height))
+	%ControlHints.visible = true
+	_update_tool(Document.Tool.TYPING)
+
+func _process(_delta: float) -> void:
+	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
+	%Camera.zoom = %Camera.zoom.lerp(Vector2(zoom_slider.value, zoom_slider.value), 0.5)
+	%Camera.position = %Camera.position.lerp(camera_desired_pos, 0.8)
+
+	%CodeButton.disabled = %PaintModeCharacter.disabled
+	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and panning:
+		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
+
+#region Signal connections
+
+func _foreground_changed() -> void:
+	var c: Color = document.selected_fg_as_color()
+	%Foreground.color = c
+	%CodeButton.self_modulate = c
+
+func _background_changed() -> void:
+	var c: Color = document.selected_bg_as_color()
+	%Background.color = c
+	%BackgroundCodeBtn.color = c
 
 func _tool_changed(into: Document.Tool) -> void:
 	# TODO why the fuck does this not work
-	match into:
-		Document.Tool.TYPING:
-			%ToolType.button_pressed		= true
-		Document.Tool.DRAWING:
-			%ToolPen.button_pressed			= true
-		Document.Tool.PICKER:
-			%ToolPicker.button_pressed		= true
-		Document.Tool.LINE:
-			%ToolLine.button_pressed		= true
-		Document.Tool.RECT_FILL:
-			%ToolRectFull.button_pressed	= true
-		Document.Tool.RECT_LINE:
-			%ToolRectLine.button_pressed	= true
-		Document.Tool.REFERENCE:
-			%ToolReference.button_pressed	= true
-		_:
-			push_error("missing tool update")
+	if tool_to_btn.has(into):
+		tool_to_btn[into].button_pressed = true
+	else:
+		push_error("tool has no button")
 
 func _font_updated() -> void:
-	(%CodeButton.texture_normal as AtlasTexture).atlas = document.foreground.tile_set.get_source(0).texture
+	var t: AtlasTexture = %CodeButton.texture_normal as AtlasTexture
+
+	t.atlas = document.foreground.tile_set.get_source(0).texture
 
 	@warning_ignore("integer_division")
-	(%CodeButton.texture_normal as AtlasTexture).region = Rect2i(
+	t.region = Rect2i(
 		Vector2i(document.selected_code % 16, document.selected_code / 16) * document.glyph_size,
 		document.foreground.tile_set.get_source(0).texture_region_size
 	)
 
-	%CodeButton.custom_minimum_size.x = document.glyph_size.x * 2.
 	%CodeButton.custom_minimum_size.x = document.glyph_size.x * (%CodeButton.custom_minimum_size.y / document.glyph_size.y)
 
 func _selected_code_changed() -> void:
@@ -131,7 +165,8 @@ func _selected_code_changed() -> void:
 
 	%CodeButton.texture_normal.region.position = Vector2(pos)
 
-func color_btn_clicked(event: InputEvent, id: int) -> void:
+## To be used with `bind` setting `id` for the `gui_input` signal.
+func _color_btn_clicked(event: InputEvent, id: int) -> void:
 	if event is InputEventMouseButton:
 		var mouseev: InputEventMouseButton = event as InputEventMouseButton
 		if mouseev.button_index == MouseButton.MOUSE_BUTTON_LEFT:
@@ -140,10 +175,26 @@ func color_btn_clicked(event: InputEvent, id: int) -> void:
 			document.selected_bg = id
 		%ThePit.grab_focus()
 
-func update_tool(tool: Document.Tool) -> void:
+func _update_tool(tool: Document.Tool) -> void:
 	document.current_tool = tool
 
-func update_paint_mode(paint_mode: Document.PaintMode) -> void:
+	for key: Document.Tool in hint_labels:
+		hint_labels[key].visible = false
+
+	if hint_labels.has(tool):
+		hint_labels[tool].visible = true
+	else:
+		push_warning("tool has no hint label")
+
+	%PaintModeCharacter.disabled		= tool in TOOLS_THAT_DISABLE_PAINT_MODE
+	%PaintModeColourizeFG.disabled		= %PaintModeCharacter.disabled
+	%PaintModeColourizeBG.disabled		= %PaintModeCharacter.disabled
+	%PaintModeColourizeFull.disabled	= %PaintModeCharacter.disabled
+
+	%PaintModesCollection.visible = tool != Document.Tool.REFERENCE
+	%ReferenceCollection.visible = !%PaintModesCollection.visible
+
+func _update_paint_mode(paint_mode: Document.PaintMode) -> void:
 	%Document.current_paint_mode = paint_mode
 
 func _palette_updated() -> void:
@@ -152,30 +203,12 @@ func _palette_updated() -> void:
 
 	_foreground_changed()
 	_background_changed()
+#endregion
+
+#region Editor set signal functions
 
 func _on_zoom_slider_value_changed(_value: float) -> void:
 	%ZoomLabel.text = "%0.1f%%" % (floorf(_value * 1000) / 10)
-
-func _process(_delta: float) -> void:
-	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
-	%Camera.zoom = %Camera.zoom.lerp(Vector2(zoom_slider.value, zoom_slider.value), 0.5)
-	%Camera.position = %Camera.position.lerp(camera_desired_pos, 0.8)
-
-	# TODO don't do this every frame !!
-	%PaintModeCharacter.disabled		= %Document.current_tool in TOOLS_THAT_DISABLE_PAINT_MODE
-	%PaintModeColourizeFG.disabled		= %PaintModeCharacter.disabled
-	%PaintModeColourizeBG.disabled		= %PaintModeCharacter.disabled
-	%PaintModeColourizeFull.disabled	= %PaintModeCharacter.disabled
-
-	%CodeButton.disabled = %PaintModeCharacter.disabled
-	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
-
-	%PaintModesCollection.visible = %Document.current_tool != Document.Tool.REFERENCE
-	%ReferenceCollection.visible = !%PaintModesCollection.visible
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and panning:
-		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
 
 func _on_code_button_pressed() -> void:
 	%PaletteWindow.show()
@@ -200,9 +233,18 @@ func _on_ref_layer_toggled(toggled_on: bool) -> void:
 
 func _on_ref_reset_pressed() -> void:
 	document.reference.position = Vector2.ZERO
+	document.ref_pos = Vector2.ZERO
 
 	%RefVisible.button_pressed = true
 	%RefSize.value = document.document_size.x
 	%RefAlpha.value = document.REF_IMAGE_DEFAULT_ALPHA * 100.
 
 	%RefLayer.button_pressed = true
+
+func _on_control_hints_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_ev: InputEventMouseButton = event as InputEventMouseButton
+		if mouse_ev.is_pressed() and mouse_ev.button_index == MouseButton.MOUSE_BUTTON_LEFT:
+			control_hints = false
+
+#endregion

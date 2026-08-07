@@ -173,7 +173,6 @@ func generate_tileset() -> TileSet:
 	bkgd_image.fill(Color.WHITE)
 
 	var bkgd_texture: ImageTexture = ImageTexture.create_from_image(bkgd_image)
-
 	background_source.texture = bkgd_texture
 
 	background_source.create_tile(Vector2i.ZERO)
