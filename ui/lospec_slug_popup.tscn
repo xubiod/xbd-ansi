@@ -74,6 +74,7 @@ text = "Load"
 unique_name_in_owner = true
 
 [connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
+[connection signal="text_submitted" from="MarginContainer/VBoxContainer/SlugContainer/Slug" to="." method="_on_slug_text_submitted"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/Load" to="." method="_on_load_pressed"]
 [connection signal="request_completed" from="Requester" to="." method="_on_requester_request_completed"]

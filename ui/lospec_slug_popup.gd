@@ -71,3 +71,6 @@ func _on_requester_request_completed(result: int, response_code: int, _headers: 
 	else:
 		status.text = "Malformed input. Colors isn't an array of strings."
 		return
+
+func _on_slug_text_submitted(_new_text: String) -> void:
+	_on_load_pressed()
