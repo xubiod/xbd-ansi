@@ -22,12 +22,15 @@ const LINE_STEPS: int = 1
 
 const REF_IMAGE_DEFAULT_ALPHA: float = 0.5
 
+const PREVIEW_ALPHA: float = 0.5
+
 @onready var viewport: Viewport = get_viewport()
 
 @onready var foreground: TileMapLayer = %Foreground
 @onready var background: TileMapLayer = %Background
 @onready var cursor_sprite: Sprite2D = $Cursor
 @onready var reference: Sprite2D = %Reference
+@onready var char_preview: TextureRect = %PreviewFG
 
 var sauce: Sauce
 
@@ -64,6 +67,10 @@ var ref_pos: Vector2 = Vector2.ZERO
 var ref_snapping: bool = false
 
 var dirty: bool = false
+var tool_in_use: bool = false
+
+const HIDE_CHARACTER_PREVIEW: Array[Tool] = [Tool.TYPING, Tool.REFERENCE, Tool.PICKER]
+const STRETCH_CHARACTER_PREVIEW: Array[Tool] = [Tool.RECT_LINE, Tool.RECT_FILL]
 
 signal palette_updated
 signal font_updated
@@ -81,14 +88,20 @@ func _get_document_rect() -> Rect2:
 #region Setters
 func _set_selected_foreground(new_value: int) -> void:
 	selected_fg = new_value
+	char_preview.self_modulate = selected_fg_as_color()
 	foreground_updated.emit()
 
 func _set_selected_background(new_value: int) -> void:
 	selected_bg = new_value
+	%PreviewBG.color = selected_bg_as_color()
 	background_updated.emit()
 
 func _set_selected_code(new_value: int) -> void:
 	selected_code = new_value
+
+	if char_preview.texture != null:
+		update_character_preview()
+
 	selected_code_updated.emit()
 
 func _set_current_tool(new_value: Tool) -> void:
@@ -96,6 +109,7 @@ func _set_current_tool(new_value: Tool) -> void:
 		last_tool = current_tool
 		picked_complete.emit(new_value)
 	current_tool = new_value
+	char_preview.visible = not (current_tool in HIDE_CHARACTER_PREVIEW)
 #endregion
 
 #region Helpers
@@ -114,6 +128,10 @@ func global_to_canvas_pos(global: Vector2) -> Vector2i:
 func set_palette_to_named(palette_name: String) -> void:
 	assert(Global.named_palettes.has(palette_name), "not a real palette name")
 	fill_palette_image(Global.named_palettes[palette_name])
+
+func update_character_preview() -> void:
+	@warning_ignore("integer_division")
+	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
 #endregion
 
 #region Tile helpers
@@ -251,15 +269,23 @@ func _ready() -> void:
 	foreground.tile_set = tileset
 	background.tile_set = tileset
 
+	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
+	char_preview.size = Vector2(glyph_size)
+
 	prepare(DEFAULT_SIZE)
 
 func _process(_delta: float) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
-	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
+	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size) - Vector2.ONE)
+	char_preview.size = Vector2(glyph_size)
 
 	if !viewport.is_input_handled():
 		if global_point_in_canvas(global_mouse_pos):
-			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			if Input.is_action_just_pressed(&"tool_interaction"):
+				tool_in_use = true
+				start_canvas_pos = clamped
+
+			if Input.is_action_pressed(&"tool_interaction"):
 				match current_tool:
 					Tool.TYPING:
 						cursor_pos = clamped / Vector2(glyph_size)
@@ -275,17 +301,19 @@ func _process(_delta: float) -> void:
 						selected_code	= get_fg_code(where)
 
 						current_tool = last_tool
-					Tool.LINE, Tool.RECT_LINE, Tool.RECT_FILL:
+					Tool.LINE:
 						# handled on mouse released
 						pass
+					Tool.RECT_LINE, Tool.RECT_FILL:
+						# manipulation handled on mouse released
+						# here is just for preview
+						var where: Vector2i = global_to_canvas_pos(clamped)
+						char_preview.size = Vector2((where * glyph_size) - start_canvas_pos).abs().snapped(glyph_size)
 					Tool.REFERENCE:
 						# handled outside of canvas
 						pass
 					_:
 						push_error("not a tool")
-
-			if Input.is_action_just_pressed(&"tool_interaction"):
-				start_canvas_pos = clamped
 
 		# point not in canvas (ref only prolly)
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -297,17 +325,23 @@ func _process(_delta: float) -> void:
 				_:
 					pass
 
-		if Input.is_action_just_released(&"tool_interaction"):
+		if Input.is_action_just_released(&"tool_interaction") and tool_in_use:
+			tool_in_use = false
 			end_canvas_pos = clamped
 			match current_tool:
 				Tool.LINE:
 					make_line(start_canvas_pos, end_canvas_pos)
 				Tool.RECT_FILL:
-					for r: int in range(mini(start_canvas_pos.y, end_canvas_pos.y), maxi(start_canvas_pos.y, end_canvas_pos.y), glyph_size.y):
-						make_line(Vector2i(start_canvas_pos.x, r), Vector2i(end_canvas_pos.x, r))
+					var tl: Vector2 = char_preview.position
+					var where: Vector2i = global_to_canvas_pos(clamped)
+					var br: Vector2 = tl + Vector2((where * glyph_size) - start_canvas_pos).abs().snapped(glyph_size)
+
+					for r: int in range(tl.y, br.y, glyph_size.y):
+						make_line(Vector2(tl.x, r), Vector2(br.x, r))
 				Tool.RECT_LINE:
-					var tl: Vector2 = start_canvas_pos.min(end_canvas_pos)
-					var br: Vector2 = start_canvas_pos.max(end_canvas_pos)
+					var tl: Vector2 = char_preview.position
+					var where: Vector2i = global_to_canvas_pos(clamped)
+					var br: Vector2 = tl + Vector2((where * glyph_size) - start_canvas_pos).abs().snapped(glyph_size)
 
 					make_line(tl, Vector2(br.x, tl.y))
 					make_line(tl, Vector2(tl.x, br.y))
@@ -315,12 +349,20 @@ func _process(_delta: float) -> void:
 					make_line(br, Vector2(tl.x, br.y))
 				_:
 					pass
+			char_preview.size = Vector2(glyph_size)
 
 	last_mouse_canvas_pos = clamped
 	last_global_mouse = global_mouse_pos
 
 	cursor_sprite.position = cursor_sprite.position.lerp((cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size, Global.LERP_SLUG)
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
+
+	if current_tool in STRETCH_CHARACTER_PREVIEW and Input.is_action_pressed(&"tool_interaction"):
+		char_preview.position = start_canvas_pos.min(clamped).snapped(glyph_size)
+		char_preview.modulate.a = PREVIEW_ALPHA
+	else:
+		char_preview.position = cursor_sprite.position
+		char_preview.modulate.a = PREVIEW_ALPHA if cursor_sprite.visible else 0.0
 
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 
@@ -371,6 +413,8 @@ func prepare(size: Vector2i) -> void:
 	selected_code = 32
 
 	glyph_size = Vector2i(8, ansifnt.font_height)
+	update_character_preview()
+
 	RenderingServer.global_shader_parameter_set(&"CHAR_HEIGHT", ansifnt.font_height)
 
 	for x: int in range(document_size.x):
@@ -389,6 +433,8 @@ func update_font_tileset() -> void:
 
 	foreground.tile_set = tileset
 	background.tile_set = tileset
+
+	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
 
 	glyph_size = Vector2i(8, ansifnt.font_height)
 	cursor_sprite.scale = glyph_size

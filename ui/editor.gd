@@ -257,7 +257,7 @@ func _on_ref_open_pressed() -> void:
 	%RefPopup.show()
 
 func _on_ref_layer_toggled(toggled_on: bool) -> void:
-	document.reference.z_index = 0 if toggled_on else 2
+	document.reference.z_index = 0 if toggled_on else 10
 
 func _on_ref_reset_pressed() -> void:
 	document.reference.position = Vector2.ZERO

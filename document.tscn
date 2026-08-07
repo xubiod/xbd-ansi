@@ -9,6 +9,8 @@
 shader = ExtResource("1_pfdnj")
 shader_parameter/palette = ExtResource("2_1tgo3")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_w1jfu"]
+
 [sub_resource type="Gradient" id="Gradient_w1jfu"]
 offsets = PackedFloat32Array(0.5264423)
 colors = PackedColorArray(1, 1, 1, 1)
@@ -20,6 +22,31 @@ width = 1
 [node name="Document" type="Node2D" unique_id=1505595027]
 material = SubResource("ShaderMaterial_1tgo3")
 script = ExtResource("1_mj70b")
+
+[node name="PreviewFG" type="TextureRect" parent="." unique_id=1034279502]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0.5)
+z_index = 2
+anchors_preset = -1
+offset_right = 64.0
+offset_bottom = 64.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_w1jfu")
+stretch_mode = 1
+
+[node name="PreviewBG" type="ColorRect" parent="PreviewFG" unique_id=8322965]
+unique_name_in_owner = true
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Foreground" type="TileMapLayer" parent="." unique_id=1611047548]
 unique_name_in_owner = true
