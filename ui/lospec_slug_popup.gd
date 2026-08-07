@@ -53,13 +53,18 @@ func _on_requester_request_completed(result: int, response_code: int, _headers: 
 
 	var colors: Variant = json.data["colors"]
 
-	if colors is Array and (colors as Array).all(func(i: Variant) -> bool: return i is String):
-		var colors_array: Array = colors as Array
+	if colors is not Array:
+		status.text = "Malformed input. JSON key \"colors\" isn't an array."
+		return
 
-		if len(colors_array) != 16:
-			status.text = "Palette is not 16 colors."
-			return
+	if len(colors) != 16:
+		status.text = "Palette is not 16 colors."
+		return
 
+	var colors_array: Array = colors as Array
+
+	# fucked up evil way of "is this Array[String]?"
+	if colors_array.all(func(i: Variant) -> bool: return i is String):
 		var p: PackedColorArray = PackedColorArray()
 
 		for hexstring: String in colors_array:
@@ -69,7 +74,7 @@ func _on_requester_request_completed(result: int, response_code: int, _headers: 
 		slug_successful.emit(p)
 		hide()
 	else:
-		status.text = "Malformed input. Colors isn't an array of strings."
+		status.text = "Malformed input. JSON key \"colors\" isn't an array of all strings."
 		return
 
 func _on_slug_text_submitted(_new_text: String) -> void:
