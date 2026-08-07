@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cyq2k0aj1ujpf"]
 
-[ext_resource type="Script" uid="uid://obiywvjk17a2" path="res://resize_popup.gd" id="1_0is6x"]
+[ext_resource type="Script" uid="uid://obiywvjk17a2" path="res://ui/resize_popup.gd" id="1_0is6x"]
 
 [node name="ResizePopup" type="Popup" unique_id=1473360267]
 disable_3d = true

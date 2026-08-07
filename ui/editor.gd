@@ -1,6 +1,6 @@
 class_name Editor extends Node2D
 
-const COLOR_BTN: PackedScene = preload("res://color_btn.tscn")
+const COLOR_BTN: PackedScene = preload("uid://bhoyf3yuruu8v")
 
 @onready var document: Document = %Document
 @onready var viewport: Viewport = get_viewport()

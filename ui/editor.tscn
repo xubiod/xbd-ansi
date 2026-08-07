@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://cpo0drwt5m8gq"]
 
-[ext_resource type="Script" uid="uid://bqyoyiimncdp5" path="res://editor.gd" id="1_vjobr"]
+[ext_resource type="Script" uid="uid://bqyoyiimncdp5" path="res://ui/editor.gd" id="1_vjobr"]
 [ext_resource type="PackedScene" uid="uid://c12rftiejdiwd" path="res://document.tscn" id="1_wlowb"]
-[ext_resource type="Script" uid="uid://dcbnskp5u6rm2" path="res://main_menu_bar.gd" id="3_1ys5w"]
-[ext_resource type="PackedScene" uid="uid://bhoyf3yuruu8v" path="res://color_btn.tscn" id="3_wrb8p"]
-[ext_resource type="ButtonGroup" uid="uid://cbrh33sr25o61" path="res://toolbar_paint_mode_buttongroup.tres" id="4_gbsbp"]
-[ext_resource type="ButtonGroup" uid="uid://b0dpa6ob2xbsl" path="res://toolbar_tool_buttongroup.tres" id="4_q0a35"]
-[ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://palette_window.gd" id="5_4s0cy"]
-[ext_resource type="PackedScene" uid="uid://cyq2k0aj1ujpf" path="res://resize_popup.tscn" id="8_t27w5"]
+[ext_resource type="Script" uid="uid://dcbnskp5u6rm2" path="res://ui/main_menu_bar.gd" id="3_1ys5w"]
+[ext_resource type="PackedScene" uid="uid://bhoyf3yuruu8v" path="res://ui/color_btn.tscn" id="3_wrb8p"]
+[ext_resource type="ButtonGroup" uid="uid://cbrh33sr25o61" path="res://ui/toolbar_paint_mode_buttongroup.tres" id="4_gbsbp"]
+[ext_resource type="ButtonGroup" uid="uid://b0dpa6ob2xbsl" path="res://ui/toolbar_tool_buttongroup.tres" id="4_q0a35"]
+[ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://ui/palette_window.gd" id="5_4s0cy"]
+[ext_resource type="PackedScene" uid="uid://cyq2k0aj1ujpf" path="res://ui/resize_popup.tscn" id="8_t27w5"]
 
 [node name="Editor" type="Node2D" unique_id=843518339]
 script = ExtResource("1_vjobr")
