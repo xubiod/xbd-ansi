@@ -61,6 +61,7 @@ var start_canvas_pos:	Vector2i = Vector2i.ZERO
 var end_canvas_pos:		Vector2i = Vector2i.ZERO
 
 var ref_pos: Vector2 = Vector2.ZERO
+var ref_snapping: bool = false
 
 var dirty: bool = false
 
@@ -292,8 +293,7 @@ func _process(_delta: float) -> void:
 				Tool.REFERENCE:
 					if reference.visible:
 						ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
-
-						reference.position = ref_pos.snapped(glyph_size) if Input.is_key_pressed(KEY_SHIFT) else ref_pos
+						ref_snapping = Input.is_key_pressed(KEY_SHIFT)
 				_:
 					pass
 
@@ -321,6 +321,8 @@ func _process(_delta: float) -> void:
 
 	cursor_sprite.position = (cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
+
+	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, 0.8)
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
 	#cursor_sprite.visible = current_tool == Tool.TYPING
