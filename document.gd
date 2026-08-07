@@ -403,6 +403,14 @@ func update_font_tileset() -> void:
 
 	font_updated.emit()
 
+func get_palette_colours() -> PackedColorArray:
+	var p: PackedColorArray = PackedColorArray()
+
+	for i: int in range(16):
+		p.append(palette_image.get_pixel(i, 0))
+
+	return p
+
 func fill_palette_image(colours: PackedColorArray) -> void:
 	assert(len(colours) == 16, "invalid amount of colours")
 	for i: int in range(16):

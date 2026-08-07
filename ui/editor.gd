@@ -90,7 +90,7 @@ func _ready() -> void:
 
 	%ResizePopup.request_resize.connect(func(w: int, h: int) -> void: document.resize(Vector2i(w, h)))
 
-	%LospecSlugPopup.slug_successful.connect(func(p: PackedColorArray) -> void: document.fill_palette_image(p))
+	%LospecSlugPopup.slug_successful.connect(change_palette)
 
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
 	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
@@ -128,6 +128,32 @@ func _process(_delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and panning:
 		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
+
+func change_palette(to: PackedColorArray, attempt_reorder: bool = false) -> void:
+	# TODO: make a lot less naive
+	if attempt_reorder:
+		var existing: PackedColorArray = document.get_palette_colours()
+		var goat: PackedColorArray = to.duplicate()
+
+		for colour_idx: int in range(len(existing)):
+			var colour: Color = existing[colour_idx]
+			var diff: float = 1e32
+			var lowest_idx: int = -1
+
+			for new_idx: int in range(len(goat)):
+				var new: Color = goat[new_idx]
+				# https://www.baeldung.com/cs/compute-similarity-of-colours
+				#
+				# this is also doing it in RGB so it SUCKS
+				var c: float = ((colour.r - new.r)**2 * 0.3) + ((colour.g - new.g)**2 * 0.59) + ((colour.b - new.g)**2 * 0.11)
+				if diff > c:
+					diff = c
+					lowest_idx = new_idx
+
+			to[colour_idx] = goat[lowest_idx]
+			goat.remove_at(lowest_idx)
+
+	document.fill_palette_image(to)
 
 #region Signal connections
 
