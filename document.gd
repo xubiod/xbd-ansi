@@ -356,12 +356,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var updown:		float = signf(Input.get_axis(&"move_up",   &"move_down"))
 	var leftright:	float = signf(Input.get_axis(&"move_left", &"move_right"))
 
-	@warning_ignore_start("narrowing_conversion")
-
-	cursor_pos.x = wrapf(cursor_pos.x + leftright, 0., float(document_size.x))
-	cursor_pos.y = wrapf(cursor_pos.y + updown,    0., float(document_size.y))
-
-	@warning_ignore_restore("narrowing_conversion")
+	cursor_pos.x = int(wrapf(cursor_pos.x + leftright, 0., float(document_size.x)))
+	cursor_pos.y = int(wrapf(cursor_pos.y + updown,    0., float(document_size.y)))
 
 func prepare(size: Vector2i) -> void:
 	document_size = size
