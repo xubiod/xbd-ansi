@@ -42,10 +42,6 @@ const FONT_SETTING_OVERRIDES: Dictionary = {
 
 const DEFAULT_PALETTE: String = "CGA (default)"
 
-#const PALETTE_MAP: Dictionary[String, String] = {
-	#"CGA":	"res://palettes/cga.png"
-#}
-
 var named_palettes: Dictionary[String, PackedColorArray] = {
 	"CGA (default)": PackedColorArray([
 		Color.from_rgba8(0x00, 0x00, 0x00),

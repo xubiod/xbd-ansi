@@ -33,7 +33,6 @@ var sauce: Sauce
 
 var palette_image: Image
 var palette_texture: ImageTexture
-#const DEFAULT_PALETTE_PATH: String = "res://palettes/cga.png"
 
 var ansifnt: AnsiFont
 var tileset: TileSet

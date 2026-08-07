@@ -19,7 +19,7 @@ enum DocumentIds {
 	LOAD_PALETTE_FROM_LOSPEC_SLUG = 3
 }
 
-const ID_MASK: int = 0x7FFFFFFF
+const ID_MASK: int = INT32_MAX
 
 func _ready() -> void:
 	$File.add_item("New", FileIds.NEW)
@@ -47,6 +47,8 @@ func _ready() -> void:
 
 	$Document.add_submenu_node_item("Load built-in palette", built_in_palette, DocumentIds.LOAD_PALETTE)
 	$Document.add_item("Load palette from Lospec", DocumentIds.LOAD_PALETTE_FROM_LOSPEC_SLUG)
+
+	$Document.add_separator("", INT32_MAX)
 
 	$Document.add_item("Resize", DocumentIds.RESIZE)
 
@@ -94,6 +96,7 @@ func _on_view_id_pressed(id: int) -> void:
 		_:
 			assert(false, "invalid view option")
 
+#region Submenu handlers
 func _on_builtin_font_id_pressed(id: int, collection: String) -> void:
 	var keys: Array = Global.FONT_MAP[collection].keys()
 
@@ -110,3 +113,4 @@ func _on_builtint_palette_id_pressed(id: int) -> void:
 
 	assert(idx != -1, "could not find key index")
 	%Document.set_palette_to_named(Global.named_palettes.keys()[idx])
+#endregion
