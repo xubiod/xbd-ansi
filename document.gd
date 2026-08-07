@@ -110,6 +110,7 @@ func _set_current_tool(new_value: Tool) -> void:
 		picked_complete.emit(new_value)
 	current_tool = new_value
 	char_preview.visible = not (current_tool in HIDE_CHARACTER_PREVIEW)
+	char_preview.size = Vector2(glyph_size)
 #endregion
 
 #region Helpers
@@ -277,7 +278,6 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
 	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size) - Vector2.ONE)
-	char_preview.size = Vector2(glyph_size)
 
 	if !viewport.is_input_handled():
 		if global_point_in_canvas(global_mouse_pos):
@@ -304,44 +304,51 @@ func _process(_delta: float) -> void:
 					Tool.LINE:
 						# handled on mouse released
 						pass
-					Tool.RECT_LINE, Tool.RECT_FILL:
-						# manipulation handled on mouse released
-						# here is just for preview
-						var where: Vector2i = global_to_canvas_pos(clamped)
-						char_preview.size = Vector2((where * glyph_size) - start_canvas_pos).abs().snapped(glyph_size)
-					Tool.REFERENCE:
+					Tool.RECT_LINE, Tool.RECT_FILL, Tool.REFERENCE:
 						# handled outside of canvas
 						pass
 					_:
 						push_error("not a tool")
 
-		# point not in canvas (ref only prolly)
+		# point not in canvas (ref, preview size)
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			match current_tool:
 				Tool.REFERENCE:
 					if reference.visible:
 						ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
 						ref_snapping = Input.is_key_pressed(KEY_SHIFT)
+				Tool.RECT_LINE, Tool.RECT_FILL:
+					var where: Vector2i = global_to_canvas_pos(clamped)
+					char_preview.size = Vector2(Vector2((where * glyph_size) - start_canvas_pos).abs() + Vector2(glyph_size)).snapped(glyph_size)
 				_:
 					pass
 
 		if Input.is_action_just_released(&"tool_interaction") and tool_in_use:
 			tool_in_use = false
 			end_canvas_pos = clamped
+
+			var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
+
 			match current_tool:
 				Tool.LINE:
 					make_line(start_canvas_pos, end_canvas_pos)
 				Tool.RECT_FILL:
-					var tl: Vector2 = char_preview.position
-					var where: Vector2i = global_to_canvas_pos(clamped)
-					var br: Vector2 = tl + Vector2((where * glyph_size) - start_canvas_pos).abs().snapped(glyph_size)
+					#var tl: Vector2 = char_preview.position
+					#var where: Vector2i = global_to_canvas_pos(clamped)
+					#var br: Vector2 = tl + Vector2(Vector2((where * glyph_size) - start_canvas_pos).abs() + Vector2(glyph_size)).snapped(glyph_size)
+
+					var tl: Vector2 = rect.position
+					var br: Vector2 = rect.position + rect.size
 
 					for r: int in range(tl.y, br.y, glyph_size.y):
 						make_line(Vector2(tl.x, r), Vector2(br.x, r))
 				Tool.RECT_LINE:
-					var tl: Vector2 = char_preview.position
-					var where: Vector2i = global_to_canvas_pos(clamped)
-					var br: Vector2 = tl + Vector2((where * glyph_size) - start_canvas_pos).abs().snapped(glyph_size)
+					#var tl: Vector2 = char_preview.position
+					#var where: Vector2i = global_to_canvas_pos(clamped)
+					#var br: Vector2 = tl + Vector2(Vector2((where * glyph_size) - start_canvas_pos).abs() + Vector2(glyph_size)).snapped(glyph_size)
+
+					var tl: Vector2 = rect.position
+					var br: Vector2 = rect.position + rect.size
 
 					make_line(tl, Vector2(br.x, tl.y))
 					make_line(tl, Vector2(tl.x, br.y))
