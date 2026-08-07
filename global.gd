@@ -17,13 +17,13 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 		"PETSCII unshifted":	"res://fonts/c64/PETSCII unshifted.F08"
 	},
 	"Custom": {
-		"FROGBLOCK":	"res://fonts/custom/FROGBLOCK.F08",
-		"GJSCI-3":		"res://fonts/custom/GJSCI-3.F16",
-		"GJSCI-4":		"res://fonts/custom/GJSCI-4.F16",
-		"GJSCI-X":		"res://fonts/custom/GJSCI-X.F16",
-		"TES-GIGR":		"res://fonts/custom/TES-GIGR.F16",
-		"TES-SYM5":		"res://fonts/custom/TES-SYM5.F16",
-		"TOPAZ 437":	"res://fonts/custom/TOPAZ_437.F16"
+		"FROGBLOCK (by Polyducks)":			"res://fonts/custom/FROGBLOCK.F08",
+		"GJSCI-3 (by GrymmJack)":			"res://fonts/custom/GJSCI-3.F16",
+		"GJSCI-4 (by GrymmJack)":			"res://fonts/custom/GJSCI-4.F16",
+		"GJSCI-X (by GrymmJack)":			"res://fonts/custom/GJSCI-X.F16",
+		"TES-GIGR (by Heikki Lotvonen)":	"res://fonts/custom/TES-GIGR.F16",
+		"TES-SYM5 (by Heikki Lotvonen)":	"res://fonts/custom/TES-SYM5.F16",
+		"TOPAZ 437 (by Heckmeck)":			"res://fonts/custom/TOPAZ_437.F16"
 	}
 }
 
