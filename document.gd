@@ -306,8 +306,8 @@ func _process(_delta: float) -> void:
 					for r: int in range(mini(start_canvas_pos.y, end_canvas_pos.y), maxi(start_canvas_pos.y, end_canvas_pos.y), glyph_size.y):
 						make_line(Vector2i(start_canvas_pos.x, r), Vector2i(end_canvas_pos.x, r))
 				Tool.RECT_LINE:
-					var tl: Vector2 = Vector2(mini(start_canvas_pos.x, end_canvas_pos.x), mini(start_canvas_pos.y, end_canvas_pos.y))
-					var br: Vector2 = Vector2(maxi(start_canvas_pos.x, end_canvas_pos.x), maxi(start_canvas_pos.y, end_canvas_pos.y))
+					var tl: Vector2 = start_canvas_pos.min(end_canvas_pos)
+					var br: Vector2 = start_canvas_pos.max(end_canvas_pos)
 
 					make_line(tl, Vector2(br.x, tl.y))
 					make_line(tl, Vector2(tl.x, br.y))
