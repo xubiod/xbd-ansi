@@ -333,27 +333,22 @@ func _process(_delta: float) -> void:
 				Tool.LINE:
 					make_line(start_canvas_pos, end_canvas_pos)
 				Tool.RECT_FILL:
-					#var tl: Vector2 = char_preview.position
-					#var where: Vector2i = global_to_canvas_pos(clamped)
-					#var br: Vector2 = tl + Vector2(Vector2((where * glyph_size) - start_canvas_pos).abs() + Vector2(glyph_size)).snapped(glyph_size)
-
 					var tl: Vector2 = rect.position
 					var br: Vector2 = rect.position + rect.size
 
 					for r: int in range(tl.y, br.y, glyph_size.y):
 						make_line(Vector2(tl.x, r), Vector2(br.x, r))
 				Tool.RECT_LINE:
-					#var tl: Vector2 = char_preview.position
-					#var where: Vector2i = global_to_canvas_pos(clamped)
-					#var br: Vector2 = tl + Vector2(Vector2((where * glyph_size) - start_canvas_pos).abs() + Vector2(glyph_size)).snapped(glyph_size)
-
 					var tl: Vector2 = rect.position
 					var br: Vector2 = rect.position + rect.size
 
-					make_line(tl, Vector2(br.x, tl.y))
-					make_line(tl, Vector2(tl.x, br.y))
-					make_line(br, Vector2(br.x, tl.y))
-					make_line(br, Vector2(tl.x, br.y))
+					var _tr: Vector2 = Vector2(br.x - 1., tl.y)
+					var _bl: Vector2 = Vector2(tl.x, br.y - 1.)
+
+					make_line(tl, _tr)
+					make_line(_tr, br)
+					make_line(tl, _bl)
+					make_line(_bl, br)
 				_:
 					pass
 			char_preview.size = Vector2(glyph_size)
