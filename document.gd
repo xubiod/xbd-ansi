@@ -63,6 +63,8 @@ var end_canvas_pos:		Vector2i = Vector2i.ZERO
 
 var ref_pos: Vector2 = Vector2.ZERO
 
+var dirty: bool = false
+
 signal palette_updated
 signal font_updated
 signal foreground_updated
@@ -120,6 +122,7 @@ func set_bg(canvas_pos: Vector2i, attr: int) -> void:
 	assert(attr >= 0,  "invalid attribute, less than zero")
 	assert(attr <= 15, "invalid attribute, greater than 15")
 	background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(attr))
+	dirty = true
 
 ## Sets foreground character, and attribute for this position.
 func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
@@ -130,6 +133,7 @@ func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
 	assert(to <= 255, "invalid code, greater than 255")
 
 	foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(attr))
+	dirty = true
 
 ## Sets foreground attribute only for this position.
 func set_fg_attr(canvas_pos: Vector2i, attr: int) -> void:
@@ -141,6 +145,7 @@ func set_fg_attr(canvas_pos: Vector2i, attr: int) -> void:
 		foreground.get_cell_atlas_coords(canvas_pos),
 		ansifnt.get_alt_id(attr)
 	)
+	dirty = true
 
 ## Sets foreground character only for this position.
 func set_fg_code(canvas_pos: Vector2i, to: int) -> void:
@@ -152,6 +157,7 @@ func set_fg_code(canvas_pos: Vector2i, to: int) -> void:
 		ansifnt.code_to_atlas(to),
 		foreground.get_cell_alternative_tile(canvas_pos)
 	)
+	dirty = true
 
 ## Gets character code at this position.
 func get_fg_code(canvas_pos: Vector2i) -> int:
@@ -177,6 +183,7 @@ func set_fg_bg(canvas_pos: Vector2i, to: int, fg_attr: int, bg_attr: int) -> voi
 
 	foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(fg_attr))
 	background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(bg_attr))
+	dirty = true
 
 ## Types a code at the cursor position. Moves the cursor right one, wrapping around
 ## document edges.
@@ -220,8 +227,9 @@ func paint_with_selected(global_pt: Vector2) -> void:
 			if get_bg(tile) != selected_bg:
 				set_bg(tile, selected_bg)
 		PaintMode.COLOURIZE_FULL:
-			if not (get_fg_attr(tile) == selected_fg and get_bg(tile) == selected_bg):
+			if get_fg_attr(tile) != selected_fg:
 				set_fg_attr(tile, selected_fg)
+			if get_bg(tile) != selected_bg:
 				set_bg(tile, selected_bg)
 		_:
 			assert(false, "paint mode invalid")
@@ -595,4 +603,5 @@ func load_xbin(xbin_path: String) -> void:
 
 	@warning_ignore_restore("integer_division")
 	f.close()
+	dirty = false
 #endregion
