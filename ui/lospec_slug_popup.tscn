@@ -27,23 +27,25 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1302088140]
+[node name="SlugContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1302088140]
 layout_mode = 2
 tooltip_text = "The Lospec slug is the URL name of a palette. Must be 16 colours.
 
 For an example, the \"Sweetie 16\" palette URL on Lospec is:
 https://lospec.com/palette-list/sweetie-16
 
-The slug is the last part, \"sweetie-16\"."
+The slug is the last part, \"sweetie-16\".
+The program will attempt to make the input into the format, so inputting
+\"Sweetie 16\" would also work for this palette."
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=848410658]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/SlugContainer" unique_id=848410658]
 custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 text = "Slug"
 horizontal_alignment = 2
 
-[node name="Slug" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1676795456]
+[node name="Slug" type="LineEdit" parent="MarginContainer/VBoxContainer/SlugContainer" unique_id=1676795456]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

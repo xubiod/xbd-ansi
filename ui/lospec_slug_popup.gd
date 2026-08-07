@@ -18,7 +18,7 @@ func _on_popup_hide() -> void:
 	_on_cancel_pressed()
 
 func _on_load_pressed() -> void:
-	var url: String = "https://Lospec.com/palette-list/%s.json" % slug.text.to_lower().strip_edges().uri_encode()
+	var url: String = "https://Lospec.com/palette-list/%s.json" % slug.text.to_lower().strip_edges().replace(" ", "-").uri_encode()
 	var error: Error = requester.request(url)
 
 	if error != Error.OK:
