@@ -319,10 +319,10 @@ func _process(_delta: float) -> void:
 	last_mouse_canvas_pos = clamped
 	last_global_mouse = global_mouse_pos
 
-	cursor_sprite.position = (cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size
+	cursor_sprite.position = cursor_sprite.position.lerp((cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size, Global.LERP_SLUG)
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
 
-	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, 0.8)
+	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
 	#cursor_sprite.visible = current_tool == Tool.TYPING

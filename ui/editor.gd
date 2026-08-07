@@ -119,8 +119,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
-	%Camera.zoom = %Camera.zoom.lerp(Vector2(zoom_slider.value, zoom_slider.value), 0.5)
-	%Camera.position = %Camera.position.lerp(camera_desired_pos, 0.8)
+	%Camera.zoom = %Camera.zoom.lerp(Vector2(zoom_slider.value, zoom_slider.value), Global.LERP_SLUG)
+	%Camera.position = %Camera.position.lerp(camera_desired_pos, Global.LERP_SMOOTH)
 
 	%CodeButton.disabled = %PaintModeCharacter.disabled
 	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
