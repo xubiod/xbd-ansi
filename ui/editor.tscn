@@ -62,6 +62,8 @@ hide_on_checkable_item_selection = false
 [node name="These are handled in code" type="Node" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1733957673]
 
 [node name="Subtools" type="HBoxContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer" unique_id=1598144758]
+custom_minimum_size = Vector2(0, 32)
+custom_maximum_size = Vector2(-1, 32)
 layout_mode = 2
 alignment = 1
 
@@ -245,66 +247,82 @@ theme_override_constants/v_separation = 2
 columns = 2
 
 [node name="Btn" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=2067074109 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 0
 
 [node name="Btn2" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=738823424 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 8
 
 [node name="Btn3" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1035666049 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 1
 
 [node name="Btn4" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=386995826 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 9
 
 [node name="Btn5" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1727054910 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 2
 
 [node name="Btn6" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1819609425 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 10
 
 [node name="Btn7" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=189868534 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 3
 
 [node name="Btn8" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=545488033 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 11
 
 [node name="Btn9" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1786389389 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 4
 
 [node name="Btn10" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=303288560 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 12
 
 [node name="Btn11" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=2092295511 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 5
 
 [node name="Btn12" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=358188793 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 13
 
 [node name="Btn13" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1594465784 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 6
 
 [node name="Btn14" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=770858908 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 14
 
 [node name="Btn15" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1060815267 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 7
 
 [node name="Btn16" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Colors" unique_id=1523794990 instance=ExtResource("3_wrb8p")]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 id = 15
 
