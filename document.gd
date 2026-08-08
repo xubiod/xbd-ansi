@@ -586,7 +586,7 @@ func load_xbin(xbin_path: String) -> void:
 
 	@warning_ignore_start("integer_division")
 
-	make_new(Vector2i(width, height), ansifnt, p)
+	make_new(Vector2i(width, height), ansifnt, p, sauce)
 
 	if not compressed:
 		# reads two bytes at a time so should NOT be multiplied
