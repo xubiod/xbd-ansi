@@ -7,9 +7,16 @@
 [ext_resource type="ButtonGroup" uid="uid://cbrh33sr25o61" path="res://ui/toolbar_paint_mode_buttongroup.tres" id="4_gbsbp"]
 [ext_resource type="ButtonGroup" uid="uid://b0dpa6ob2xbsl" path="res://ui/toolbar_tool_buttongroup.tres" id="4_q0a35"]
 [ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://ui/palette_window.gd" id="5_4s0cy"]
+[ext_resource type="Texture2D" uid="uid://k2yab54u76m6" path="res://ui/icons/xbd-ansi-icons-pixel1.png" id="7_2x4ir"]
+[ext_resource type="Texture2D" uid="uid://8mob677lfrw8" path="res://ui/icons/xbd-ansi-icons-pixel2.png" id="8_407as"]
 [ext_resource type="PackedScene" uid="uid://cyq2k0aj1ujpf" path="res://ui/resize_popup.tscn" id="8_t27w5"]
 [ext_resource type="PackedScene" uid="uid://buyqey0uttr0s" path="res://ui/lospec_slug_popup.tscn" id="9_5on0m"]
+[ext_resource type="Texture2D" uid="uid://db3wdmi5v7m5r" path="res://ui/icons/xbd-ansi-icons-pixel3.png" id="9_l3ljj"]
 [ext_resource type="PackedScene" uid="uid://c0puv0u5vncj8" path="res://ui/doc_is_dirty.tscn" id="10_28l1f"]
+[ext_resource type="Texture2D" uid="uid://cdbgcp8xgpetv" path="res://ui/icons/xbd-ansi-icons-pixel5.png" id="10_n8yra"]
+[ext_resource type="Texture2D" uid="uid://dq5mqstqcftmk" path="res://ui/icons/xbd-ansi-icons-pixel4.png" id="11_sb7vj"]
+[ext_resource type="Texture2D" uid="uid://yhuw8squirsd" path="res://ui/icons/xbd-ansi-icons-pixel6.png" id="12_i6rcl"]
+[ext_resource type="Texture2D" uid="uid://3ofn6jpsd52v" path="res://ui/icons/xbd-ansi-icons-pixel7.png" id="13_c0lqr"]
 
 [node name="Editor" type="Node2D" unique_id=843518339]
 script = ExtResource("1_vjobr")
@@ -312,7 +319,7 @@ mouse_default_cursor_shape = 2
 toggle_mode = true
 button_pressed = true
 button_group = ExtResource("4_q0a35")
-text = "Typ"
+icon = ExtResource("7_2x4ir")
 
 [node name="ToolPen" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=66938162]
 unique_name_in_owner = true
@@ -323,7 +330,7 @@ Draw with the mouse."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
-text = "Pen"
+icon = ExtResource("8_407as")
 
 [node name="ToolLine" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=1487992666]
 unique_name_in_owner = true
@@ -334,7 +341,7 @@ Click and drag to make a line."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
-text = "Lin"
+icon = ExtResource("9_l3ljj")
 
 [node name="ToolRectFull" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=340824582]
 unique_name_in_owner = true
@@ -345,7 +352,7 @@ Click and drag to make a filled-in rectangle."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
-text = "Rctf"
+icon = ExtResource("10_n8yra")
 
 [node name="ToolRectLine" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=613684474]
 unique_name_in_owner = true
@@ -356,7 +363,7 @@ Click and drag to make a rectangle."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
-text = "Rctl"
+icon = ExtResource("11_sb7vj")
 
 [node name="ToolPicker" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=2052547431]
 unique_name_in_owner = true
@@ -367,7 +374,7 @@ Click a character to pick its character and attributes."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
-text = "Pick"
+icon = ExtResource("12_i6rcl")
 
 [node name="ToolReference" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer" unique_id=1576656007]
 unique_name_in_owner = true
@@ -378,7 +385,7 @@ Adjust reference image."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
-text = "Ref"
+icon = ExtResource("13_c0lqr")
 
 [node name="ThePit" type="Control" parent="Camera/UI/MainContainer/HBoxContainer" unique_id=498217050]
 unique_name_in_owner = true
