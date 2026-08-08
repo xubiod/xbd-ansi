@@ -66,7 +66,7 @@ var end_canvas_pos:		Vector2i = Vector2i.ZERO
 var ref_pos: Vector2 = Vector2.ZERO
 var ref_snapping: bool = false
 
-var dirty: bool = false
+var dirty: bool = false : set = _set_dirty
 var tool_in_use: bool = false
 
 const HIDE_CHARACTER_PREVIEW: Array[Tool] = [Tool.TYPING, Tool.REFERENCE, Tool.PICKER]
@@ -77,6 +77,7 @@ signal font_updated
 signal foreground_updated
 signal background_updated
 signal selected_code_updated
+signal dirty_changed(new_value: bool)
 
 signal picked_complete
 
@@ -111,6 +112,10 @@ func _set_current_tool(new_value: Tool) -> void:
 	current_tool = new_value
 	char_preview.visible = not (current_tool in HIDE_CHARACTER_PREVIEW)
 	char_preview.size = Vector2(glyph_size)
+
+func _set_dirty(new_value: Tool) -> void:
+	dirty = new_value
+	dirty_changed.emit(dirty_changed)
 #endregion
 
 #region Helpers
@@ -260,20 +265,9 @@ func _ready() -> void:
 	palette_image = Image.create_empty(16, 1, false, Image.FORMAT_RGB8)
 	palette_texture = ImageTexture.create_from_image(palette_image)
 
-	set_palette_to_named(Global.DEFAULT_PALETTE)
-
 	(material as ShaderMaterial).set_shader_parameter("palette", palette_texture)
 
-	ansifnt = AnsiFont.new()
-
-	tileset = ansifnt.generate_tileset()
-	foreground.tile_set = tileset
-	background.tile_set = tileset
-
-	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
-	char_preview.size = Vector2(glyph_size)
-
-	prepare(DEFAULT_SIZE)
+	make_new(DEFAULT_SIZE, AnsiFont.new())
 
 func _process(_delta: float) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
@@ -403,18 +397,23 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	cursor_pos.x = int(wrapf(cursor_pos.x + leftright, 0., float(document_size.x)))
 	cursor_pos.y = int(wrapf(cursor_pos.y + updown,    0., float(document_size.y)))
 
-func prepare(size: Vector2i) -> void:
+func make_new(size: Vector2i, font: AnsiFont) -> void:
 	document_size = size
-	sauce = Sauce.new()
+	ansifnt = font
 
 	background.clear()
 	foreground.clear()
+
+	update_font_tileset()
+
+	set_palette_to_named(Global.DEFAULT_PALETTE)
+
+	sauce = Sauce.new()
 
 	selected_bg = 0
 	selected_fg = 7
 	selected_code = 32
 
-	glyph_size = Vector2i(8, ansifnt.font_height)
 	update_character_preview()
 
 	RenderingServer.global_shader_parameter_set(&"CHAR_HEIGHT", ansifnt.font_height)
@@ -424,13 +423,13 @@ func prepare(size: Vector2i) -> void:
 			set_fg(Vector2i(x, y), ansifnt.empty_block, 7)
 			set_bg(Vector2i(x, y), 0)
 
+	dirty = false
+
 func change_font(font_path: String) -> void:
 	ansifnt.font_path = font_path
 	update_font_tileset()
 
 func update_font_tileset() -> void:
-	var _old_full: int = ansifnt.full_block
-
 	tileset = ansifnt.generate_tileset()
 
 	foreground.tile_set = tileset
@@ -439,12 +438,8 @@ func update_font_tileset() -> void:
 	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
 
 	glyph_size = Vector2i(8, ansifnt.font_height)
+	char_preview.size = Vector2(glyph_size)
 	cursor_sprite.scale = glyph_size
-
-	if _old_full != ansifnt.full_block:
-		for x: int in range(document_size.x):
-			for y: int in range(document_size.y):
-				set_bg(Vector2i(x, y), 0)
 
 	font_updated.emit()
 
@@ -495,6 +490,7 @@ func resize(to: Vector2i) -> void:
 				foreground.erase_cell(Vector2i(x, y))
 				background.erase_cell(Vector2i(x, y))
 
+	dirty = true
 	document_size = to
 
 #region Reference image
@@ -574,8 +570,7 @@ func load_xbin(xbin_path: String) -> void:
 	else:
 		ansifnt.font_path = Global.DEFAULT_FONTPATH
 
-	prepare(Vector2i(width, height))
-	update_font_tileset()
+	make_new(Vector2i(width, height), ansifnt)
 
 	@warning_ignore_start("integer_division")
 
