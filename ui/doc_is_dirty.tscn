@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://c0puv0u5vncj8"]
+
+[ext_resource type="Script" uid="uid://lv0dhb4o2d5y" path="res://ui/doc_is_dirty.gd" id="1_6j5hn"]
+
+[node name="DocIsDirty" type="Popup" unique_id=887857119]
+disable_3d = true
+oversampling_override = 1.0
+title = "Wait a second!"
+initial_position = 2
+size = Vector2i(500, 150)
+visible = true
+borderless = false
+always_on_top = true
+script = ExtResource("1_6j5hn")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1891666077]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=473048404]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=801159735]
+layout_mode = 2
+text = "You have unsaved changes!
+Making a new document will discard these permanently."
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2091013887]
+layout_mode = 2
+
+[node name="Cancel" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=186913438]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Discard" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=860165956]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Discard and make new"
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Discard" to="." method="_on_discard_pressed"]

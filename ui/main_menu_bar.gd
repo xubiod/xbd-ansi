@@ -63,8 +63,7 @@ func _on_file_id_pressed(id: int) -> void:
 	var _menu: PopupMenu = $View
 	match id as FileIds:
 		FileIds.NEW:
-			push_error("not yet.")
-			# TODO: do new
+			editor.request_new()
 		FileIds.OPEN:
 			%OpenXBin.show()
 		_:

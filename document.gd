@@ -414,6 +414,10 @@ func make_new(size: Vector2i, font: AnsiFont) -> void:
 	selected_fg = 7
 	selected_code = 32
 
+	cursor_pos = Vector2.ZERO
+	reference.texture = null
+	current_tool = Tool.TYPING
+
 	update_character_preview()
 
 	RenderingServer.global_shader_parameter_set(&"CHAR_HEIGHT", ansifnt.font_height)

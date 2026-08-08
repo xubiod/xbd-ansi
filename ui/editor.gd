@@ -92,6 +92,8 @@ func _ready() -> void:
 
 	%LospecSlugPopup.slug_successful.connect(change_palette)
 
+	%DocIsDirty.discard_anyway.connect(new_document)
+
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
 	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
 
@@ -116,6 +118,15 @@ func _ready() -> void:
 
 	%ControlHints.visible = true
 	_update_tool(Document.Tool.TYPING)
+
+func request_new() -> void:
+	if document.dirty:
+		%DocIsDirty.popup_centered()
+	else:
+		new_document()
+
+func new_document() -> void:
+	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
 
 func _process(_delta: float) -> void:
 	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
