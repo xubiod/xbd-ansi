@@ -397,7 +397,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	cursor_pos.x = int(wrapf(cursor_pos.x + leftright, 0., float(document_size.x)))
 	cursor_pos.y = int(wrapf(cursor_pos.y + updown,    0., float(document_size.y)))
 
-func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: PackedColorArray = Global.named_palettes[Global.DEFAULT_PALETTE]) -> void:
+func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: PackedColorArray = Global.named_palettes[Global.DEFAULT_PALETTE], in_sauce: Sauce = Sauce.new()) -> void:
 	document_size = size
 	ansifnt = font
 
@@ -408,7 +408,7 @@ func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: Pa
 
 	fill_palette_image(palette)
 
-	sauce = Sauce.new()
+	sauce = in_sauce
 
 	selected_bg = 0
 	selected_fg = 7
