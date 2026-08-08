@@ -31,7 +31,8 @@ alignment = 1
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=801159735]
 layout_mode = 2
 text = "You have unsaved changes!
-Making a new document will discard these permanently."
+Making a new document will discard these permanently.
+(I know there's no saving yet)"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2091013887]
