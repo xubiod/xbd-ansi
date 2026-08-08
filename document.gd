@@ -397,7 +397,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	cursor_pos.x = int(wrapf(cursor_pos.x + leftright, 0., float(document_size.x)))
 	cursor_pos.y = int(wrapf(cursor_pos.y + updown,    0., float(document_size.y)))
 
-func make_new(size: Vector2i, font: AnsiFont) -> void:
+func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: PackedColorArray = Global.named_palettes[Global.DEFAULT_PALETTE]) -> void:
 	document_size = size
 	ansifnt = font
 
@@ -406,7 +406,7 @@ func make_new(size: Vector2i, font: AnsiFont) -> void:
 
 	update_font_tileset()
 
-	set_palette_to_named(Global.DEFAULT_PALETTE)
+	fill_palette_image(palette)
 
 	sauce = Sauce.new()
 
@@ -558,8 +558,9 @@ func load_xbin(xbin_path: String) -> void:
 	if not nonblink:
 		push_warning("unsupported feature: nonblink off\npiece will appear incorrect")
 
+	var p: PackedColorArray
+
 	if has_palette:
-		var p: PackedColorArray
 		for i: int in range(16):
 			var r: float = float(f.get_8() & 0x3f) / 63.
 			var g: float = float(f.get_8() & 0x3f) / 63.
@@ -567,6 +568,8 @@ func load_xbin(xbin_path: String) -> void:
 
 			p.append(Color(r, g, b))
 		fill_palette_image(p)
+	else:
+		p = Global.named_palettes[Global.DEFAULT_PALETTE]
 
 	if has_font:
 		var font_buffer: PackedByteArray = f.get_buffer(256 * font_size)
@@ -574,9 +577,9 @@ func load_xbin(xbin_path: String) -> void:
 	else:
 		ansifnt.font_path = Global.DEFAULT_FONTPATH
 
-	make_new(Vector2i(width, height), ansifnt)
-
 	@warning_ignore_start("integer_division")
+
+	make_new(Vector2i(width, height), ansifnt, p)
 
 	if not compressed:
 		# reads two bytes at a time so should NOT be multiplied
