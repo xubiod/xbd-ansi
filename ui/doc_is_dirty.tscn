@@ -28,12 +28,16 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=801159735]
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer" unique_id=1387751041]
+custom_minimum_size = Vector2(0, 82.63)
 layout_mode = 2
-text = "You have unsaved changes!
-Making a new document will discard these permanently.
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "You have [pulse freq=1.0 color=#ff0000][shake rate=20.0 level=5][color=yellow]unsaved changes![/color][/shake][/pulse]
+Making a new document will [b][u]discard these permanently[/u][/b].
 (I know there's no saving yet)"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2091013887]
 layout_mode = 2
