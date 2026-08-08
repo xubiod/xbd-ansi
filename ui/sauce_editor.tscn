@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://ctidf4qwl7i2t"]
+
+[ext_resource type="Script" uid="uid://st4gc2dcxd2u" path="res://ui/sauce_editor.gd" id="1_7rocx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4r506"]
+font_size = 10
+font_color = Color(1, 1, 1, 0.70000005)
+
+[node name="SauceEditor" type="Window" unique_id=790962745]
+oversampling_override = 1.0
+title = "SAUCE"
+initial_position = 2
+size = Vector2i(550, 320)
+script = ExtResource("1_7rocx")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1415917709]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=2108472016]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer" unique_id=2105337069]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=864774601]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+text = "Title"
+horizontal_alignment = 2
+
+[node name="TitleBox" type="LineEdit" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=574768302]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLimit" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=161936785]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0/limit"
+label_settings = SubResource("LabelSettings_4r506")
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1193298326]
+layout_mode = 2
+text = "Author"
+horizontal_alignment = 2
+
+[node name="AuthorBox" type="LineEdit" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1814407932]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AuthorLimit" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1975938934]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0/limit"
+label_settings = SubResource("LabelSettings_4r506")
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1118805652]
+layout_mode = 2
+text = "Group"
+horizontal_alignment = 2
+
+[node name="GroupBox" type="LineEdit" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=102764315]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GroupLimit" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=2096616684]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0/limit"
+label_settings = SubResource("LabelSettings_4r506")
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=410877944]
+layout_mode = 2
+text = "Date"
+horizontal_alignment = 2
+
+[node name="DateBox" type="LineEdit" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1629980599]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DateLimit" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=963423153]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0/limit"
+label_settings = SubResource("LabelSettings_4r506")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=978712504]
+layout_mode = 2
+text = "Comments"
+
+[node name="CommentBox" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1971779320]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CommentLimit" type="Label" parent="MarginContainer/VBoxContainer/CommentBox" unique_id=637680533]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -534.0
+offset_top = -14.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "0/limit"
+label_settings = SubResource("LabelSettings_4r506")
+horizontal_alignment = 2
+
+[node name="CommentUpdateTimer" type="Timer" parent="MarginContainer/VBoxContainer/CommentBox" unique_id=798950931]
+unique_name_in_owner = true
+wait_time = 0.6
+one_shot = true
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/TitleBox" to="." method="_on_title_box_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/AuthorBox" to="." method="_on_author_box_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/GroupBox" to="." method="_on_group_box_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/DateBox" to="." method="_on_date_box_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/CommentBox" to="." method="_on_comment_box_text_changed"]
+[connection signal="timeout" from="MarginContainer/VBoxContainer/CommentBox/CommentUpdateTimer" to="." method="_on_comment_update_timer_timeout"]

@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://dq5mqstqcftmk" path="res://ui/icons/xbd-ansi-icons-pixel4.png" id="11_sb7vj"]
 [ext_resource type="Texture2D" uid="uid://yhuw8squirsd" path="res://ui/icons/xbd-ansi-icons-pixel6.png" id="12_i6rcl"]
 [ext_resource type="Texture2D" uid="uid://3ofn6jpsd52v" path="res://ui/icons/xbd-ansi-icons-pixel7.png" id="13_c0lqr"]
+[ext_resource type="PackedScene" uid="uid://ctidf4qwl7i2t" path="res://ui/sauce_editor.tscn" id="18_407as"]
 
 [node name="Editor" type="Node2D" unique_id=843518339]
 script = ExtResource("1_vjobr")
@@ -626,6 +627,10 @@ unique_name_in_owner = true
 visible = false
 
 [node name="DocIsDirty" parent="Camera/UI" unique_id=887857119 instance=ExtResource("10_28l1f")]
+unique_name_in_owner = true
+visible = false
+
+[node name="SauceEditor" parent="Camera/UI" unique_id=790962745 instance=ExtResource("18_407as")]
 unique_name_in_owner = true
 visible = false
 

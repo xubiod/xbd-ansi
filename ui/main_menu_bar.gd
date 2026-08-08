@@ -16,7 +16,8 @@ enum DocumentIds {
 	LOAD_BUILT_IN = 0,
 	RESIZE = 1,
 	LOAD_PALETTE = 2,
-	LOAD_PALETTE_FROM_LOSPEC_SLUG = 3
+	LOAD_PALETTE_FROM_LOSPEC_SLUG = 3,
+	SAUCE_EDITOR = 4
 }
 
 const ID_MASK: int = INT32_MAX
@@ -50,6 +51,7 @@ func _ready() -> void:
 
 	$Document.add_separator("", INT32_MAX)
 
+	$Document.add_item("Sauce", DocumentIds.SAUCE_EDITOR)
 	$Document.add_item("Resize", DocumentIds.RESIZE)
 
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
@@ -79,6 +81,8 @@ func _on_doc_id_pressed(id: int) -> void:
 			%ResizePopup.summon(%Document)
 		DocumentIds.LOAD_PALETTE_FROM_LOSPEC_SLUG:
 			%LospecSlugPopup.summon()
+		DocumentIds.SAUCE_EDITOR:
+			%SauceEditor.summon(%Document.sauce)
 		_:
 			assert(false, "invalid view option")
 
