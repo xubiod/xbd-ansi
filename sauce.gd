@@ -95,3 +95,8 @@ static func read_from_fileaccess(f: FileAccess) -> Sauce:
 					sauce.comments.append(f.get_buffer(COMMENT_LEN).get_string_from_ascii())
 	f.seek(0)
 	return sauce
+
+func pack() -> PackedByteArray:
+	breakpoint
+	assert(false, "unimplemented")
+	return PackedByteArray()

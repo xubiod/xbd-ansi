@@ -519,6 +519,13 @@ func get_reference_image_width_in_chars() -> int:
 	return int(reference.scale.x * reference.texture.get_width())
 #endregion
 
+#region File packers
+func save_xbin() -> PackedByteArray:
+	breakpoint
+	assert(false, "unimplemented")
+	return PackedByteArray()
+#endregion
+
 #region File loaders
 func load_xbin(xbin_path: String) -> void:
 	var f: FileAccess = FileAccess.open(xbin_path, FileAccess.READ)
