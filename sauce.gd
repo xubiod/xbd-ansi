@@ -9,6 +9,7 @@ const GROUP_LEN:	int = 20
 const DATE_LEN:		int =  8
 
 const COMMENT_LEN: 	int = 64
+const MAX_COMMENTS:	int = 255
 
 var title: 	String : set = _set_title
 var author:	String : set = _set_author
