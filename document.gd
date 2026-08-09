@@ -442,8 +442,9 @@ func update_font_tileset() -> void:
 	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
 
 	glyph_size = Vector2i(8, ansifnt.font_height)
-	char_preview.size = Vector2(glyph_size)
 	cursor_sprite.scale = glyph_size
+
+	update_character_preview()
 
 	font_updated.emit()
 
