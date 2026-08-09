@@ -131,6 +131,30 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 		Color(0xFFFFB0_FF)
 	]),
 
+	# partly based on https://lospec.com/palette-list/zx-spectrum (making dim
+	# colours use 0xD8) HOWEVER:
+	# - this is in hardware order
+	# - bright black is here (albeit still 0x000000)
+	"ZX Spectrum": PackedColorArray([
+		Color(0x000000_FF),
+		Color(0x0000D8_FF),
+		Color(0xD80000_FF),
+		Color(0xD800D8_FF),
+		Color(0x00D800_FF),
+		Color(0x00D8D8_FF),
+		Color(0xD8D800_FF),
+		Color(0xD8D8D8_FF),
+
+		Color(0x000000_FF),
+		Color(0x0000FF_FF),
+		Color(0xFF0000_FF),
+		Color(0xFF00FF_FF),
+		Color(0x00FF00_FF),
+		Color(0x00FFFF_FF),
+		Color(0xFFFF00_FF),
+		Color(0xFFFFFF_FF)
+	]),
+
 	# sounds like an FPGA of the ZX spectrum
 	"ZXArne 5.2": PackedColorArray([
 		Color(0x000000_FF),
