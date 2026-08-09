@@ -51,7 +51,7 @@ func _ready() -> void:
 
 	$Document.add_separator("", INT32_MAX)
 
-	$Document.add_item("Sauce", DocumentIds.SAUCE_EDITOR)
+	$Document.add_item("SAUCE info...", DocumentIds.SAUCE_EDITOR)
 	$Document.add_item("Resize", DocumentIds.RESIZE)
 
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
