@@ -271,7 +271,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
-	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size) - Vector2.ONE)
+	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
 
 	if !viewport.is_input_handled():
 		if global_point_in_canvas(global_mouse_pos):
