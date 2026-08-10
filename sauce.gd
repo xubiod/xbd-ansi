@@ -41,6 +41,10 @@ func _set_date(new_value: String) -> void:
 	date = new_value.substr(0, mini(len(new_value),  DATE_LEN))
 #endregion
 
+func _init() -> void:
+	var now: Dictionary = Time.get_date_dict_from_system()
+	date = "%02d%02d%02d%02d" % [now["year"] / 100, now["year"] % 100, now["month"], now["day"]]
+
 func pretty_print() -> void:
 	print("title:\t",	title)
 	print("author:\t",	author)
