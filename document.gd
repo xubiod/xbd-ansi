@@ -126,7 +126,7 @@ func _set_current_tool(new_value: Tool) -> void:
 
 func _set_dirty(new_value: Tool) -> void:
 	dirty = new_value
-	dirty_changed.emit(dirty_changed)
+	dirty_changed.emit(new_value)
 #endregion
 
 #region Helpers

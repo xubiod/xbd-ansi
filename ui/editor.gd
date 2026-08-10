@@ -12,7 +12,16 @@ var panning: bool = false
 
 var control_hints: bool = false : set = _set_ctrl_hint_visible, get = _get_ctrl_hint_visible
 
-var loaded_path: String = ""
+var loaded_path: String = "" : set = _set_loaded_path
+
+enum PendingAction {
+	NOTHING,
+	NEW,
+	OPEN
+}
+
+var pending_action: PendingAction = PendingAction.NOTHING
+var pending_open: String = ""
 
 @onready var hint_labels: Dictionary[Document.Tool, Label] = {
 	Document.Tool.TYPING:		%CtrlHintTyping,
@@ -48,7 +57,20 @@ func _set_ctrl_hint_visible(new_value: bool) -> void:
 func _get_ctrl_hint_visible() -> bool:
 	return %ControlHints.visible
 
+func _set_loaded_path(new_value: String) -> void:
+	loaded_path = new_value
+	update_inwindow_doc_name()
+
 #endregion
+
+func update_inwindow_doc_name() -> void:
+	if loaded_path.is_empty():
+		%InWindowDocName.text = "Untitled"
+	else:
+		%InWindowDocName.text = loaded_path.get_file()
+
+	if document.dirty:
+		%InWindowDocName.text = "%s (*)" % %InWindowDocName.text
 
 func _ready() -> void:
 	camera_desired_pos = document.document_rect.get_center()
@@ -66,6 +88,8 @@ func _ready() -> void:
 
 	document.foreground_updated.connect(_foreground_changed)
 	document.background_updated.connect(_background_changed)
+
+	document.dirty_changed.connect(_on_document_dirty)
 
 	%ToolType.pressed.connect(		_update_tool.bind(Document.Tool.TYPING))
 	%ToolPen.pressed.connect(		_update_tool.bind(Document.Tool.DRAWING))
@@ -94,7 +118,8 @@ func _ready() -> void:
 
 	%LospecSlugPopup.slug_successful.connect(change_palette)
 
-	%DocIsDirty.discard_anyway.connect(new_document)
+	%DocIsDirty.discard_anyway.connect(commit_pending)
+	%DocIsDirty.request_save.connect(request_save)
 
 	%SauceEditor.title_updated.connect(_on_title_updated)
 	%SauceEditor.author_updated.connect(_on_author_updated)
@@ -126,12 +151,33 @@ func _ready() -> void:
 
 	%ControlHints.visible = true
 	_update_tool(Document.Tool.TYPING)
+	update_inwindow_doc_name()
+
+func commit_pending() -> void:
+	match pending_action:
+		PendingAction.NEW:
+			new_document()
+		PendingAction.OPEN:
+			%OpenXBin.show()
+		PendingAction.NOTHING, _:
+			pass
+
+	pending_action = PendingAction.NOTHING
+	pending_open = ""
 
 func request_new() -> void:
 	if document.dirty:
+		pending_action = PendingAction.NEW
 		%DocIsDirty.popup_centered()
 	else:
 		new_document()
+
+func request_open() -> void:
+	if document.dirty:
+		pending_action = PendingAction.OPEN
+		%DocIsDirty.popup_centered()
+	else:
+		%OpenXBin.show()
 
 func request_save(force_save_dialog: bool = false) -> void:
 	if loaded_path.is_empty() or force_save_dialog:
@@ -140,6 +186,7 @@ func request_save(force_save_dialog: bool = false) -> void:
 		%SaveDocument.popup_centered()
 	else:
 		save_document()
+	commit_pending()
 
 func new_document() -> void:
 	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
@@ -285,6 +332,9 @@ func _on_date_updated(v: String) -> void:
 func _on_comments_updated(v: PackedStringArray) -> void:
 	document.dirty = true
 	document.sauce.comments = v
+
+func _on_document_dirty(_v: bool) -> void:
+	update_inwindow_doc_name()
 #endregion
 
 #region Editor set signal functions

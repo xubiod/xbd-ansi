@@ -71,7 +71,7 @@ func _on_file_id_pressed(id: int) -> void:
 		FileIds.NEW:
 			editor.request_new()
 		FileIds.OPEN:
-			%OpenXBin.show()
+			editor.request_open()
 		FileIds.SAVE:
 			editor.request_save()
 		FileIds.SAVE_AS:
