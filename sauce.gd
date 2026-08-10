@@ -56,7 +56,7 @@ func _to_string() -> String:
 	s.strip_edges()
 
 	if len(comments) > 0:
-		s = "%s\n" % s
+		s = "%s\n\n" % s
 		for comment: String in comments:
 			s = "%s\n%s" % [s, comment]
 	return s
