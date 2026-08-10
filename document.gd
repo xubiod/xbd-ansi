@@ -17,6 +17,14 @@ enum PaintMode {
 	COLOURIZE_FULL
 }
 
+const FLAGS_PALETTE:	int = 0b00000001
+const FLAGS_FONT:		int = 0b00000010
+const FLAGS_COMPRESSED:	int = 0b00000100
+const FLAGS_NONBLINK:	int = 0b00001000
+const FLAGS_BIGFONT:	int = 0b00010000
+
+const FLAGS_MASK:		int = 0b00011111
+
 const DEFAULT_SIZE: Vector2i = Vector2i(80, 25)
 const LINE_STEPS: int = 1
 
@@ -565,13 +573,13 @@ func load_xbin(xbin_path: String) -> void:
 	if font_size > 32 or font_size < 1:
 		push_error("illegal fontsize, ", font_size)
 
-	var flags: int = f.get_8() & 0b00011111
+	var flags: int = f.get_8() & FLAGS_MASK
 
-	var has_palette: bool 	= flags & 0b00000001
-	var has_font: bool		= flags & 0b00000010
-	var compressed: bool	= flags & 0b00000100
-	var nonblink: bool		= flags & 0b00001000 # Unsupported (rn)
-	var bigfont: bool		= flags & 0b00010000 # Unsupported (rn)
+	var has_palette: bool 	= flags & FLAGS_PALETTE
+	var has_font: bool		= flags & FLAGS_FONT
+	var compressed: bool	= flags & FLAGS_COMPRESSED
+	var nonblink: bool		= flags & FLAGS_NONBLINK # Unsupported (rn)
+	var bigfont: bool		= flags & FLAGS_BIGFONT # Unsupported (rn)
 
 	if bigfont:
 		push_error("unsupported feature: 512 character font")
