@@ -62,16 +62,20 @@ hide_on_checkable_item_selection = false
 
 [node name="These are handled in code" type="Node" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1733957673]
 
-[node name="InWindowDocName" type="Label" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=951099640]
-unique_name_in_owner = true
+[node name="MarginContainer" type="MarginContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1820780103]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+
+[node name="InWindowDocName" type="Label" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar/MarginContainer" unique_id=951099640]
+unique_name_in_owner = true
+layout_mode = 2
 text = "Untitled *"
 
 [node name="Subtools" type="HBoxContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer" unique_id=1598144758]
