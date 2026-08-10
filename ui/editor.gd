@@ -338,8 +338,8 @@ func _on_background_gui_input(event: InputEvent) -> void:
 			document.selected_fg = document.selected_bg
 			document.selected_bg = t
 
-#endregion
-
 func _on_save_document_file_selected(path: String) -> void:
 	loaded_path = path
 	save_document()
+
+#endregion
