@@ -17,7 +17,8 @@ var loaded_path: String = "" : set = _set_loaded_path
 enum PendingAction {
 	NOTHING,
 	NEW,
-	OPEN
+	OPEN,
+	CLOSE
 }
 
 var pending_action: PendingAction = PendingAction.NOTHING
@@ -72,6 +73,8 @@ func update_inwindow_doc_name() -> void:
 		%InWindowDocName.text = "%s (*)" % %InWindowDocName.text
 
 func _ready() -> void:
+	get_tree().set_auto_accept_quit(false)
+
 	camera_desired_pos = document.document_rect.get_center()
 	%Camera.position = camera_desired_pos
 	%ZoomLabel.text = "%d%%" % (floorf(%Camera.zoom.x * 1000) / 10)
@@ -152,12 +155,21 @@ func _ready() -> void:
 	_update_tool(Document.Tool.TYPING)
 	update_inwindow_doc_name()
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_WM_CLOSE_REQUEST:
+			request_close()
+		_:
+			pass
+
 func commit_pending() -> void:
 	match pending_action:
 		PendingAction.NEW:
 			new_document()
 		PendingAction.OPEN:
 			%OpenXBin.show()
+		PendingAction.CLOSE:
+			get_tree().quit(0)
 		PendingAction.NOTHING, _:
 			pass
 
@@ -176,6 +188,13 @@ func request_open() -> void:
 		%DocIsDirty.popup_centered()
 	else:
 		%OpenXBin.show()
+
+func request_close() -> void:
+	if document.dirty:
+		pending_action = PendingAction.CLOSE
+		%DocIsDirty.popup_centered()
+	else:
+		get_tree().quit(0)
 
 func request_save(force_save_dialog: bool = false) -> void:
 	if loaded_path.is_empty() or force_save_dialog:
