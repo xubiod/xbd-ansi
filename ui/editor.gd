@@ -94,6 +94,12 @@ func _ready() -> void:
 
 	%DocIsDirty.discard_anyway.connect(new_document)
 
+	%SauceEditor.title_updated.connect(_on_title_updated)
+	%SauceEditor.author_updated.connect(_on_author_updated)
+	%SauceEditor.group_updated.connect(_on_group_updated)
+	%SauceEditor.date_updated.connect(_on_date_updated)
+	%SauceEditor.comments_updated.connect(_on_comments_updated)
+
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
 	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
 
@@ -242,6 +248,26 @@ func _palette_updated() -> void:
 
 	_foreground_changed()
 	_background_changed()
+
+func _on_title_updated(v: String) -> void:
+	document.dirty = document.dirty || (document.sauce.title != v)
+	document.sauce.title = v
+
+func _on_author_updated(v: String) -> void:
+	document.dirty = document.dirty || (document.sauce.author != v)
+	document.sauce.author = v
+
+func _on_group_updated(v: String) -> void:
+	document.dirty = document.dirty || (document.sauce.group != v)
+	document.sauce.group = v
+
+func _on_date_updated(v: String) -> void:
+	document.dirty = document.dirty || (document.sauce.date != v)
+	document.sauce.date = v
+
+func _on_comments_updated(v: PackedStringArray) -> void:
+	document.dirty = true
+	document.sauce.comments = v
 #endregion
 
 #region Editor set signal functions
