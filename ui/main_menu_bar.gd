@@ -5,7 +5,8 @@ extends MenuBar
 enum FileIds {
 	NEW = 0,
 	OPEN = 1,
-	SAVE = 2
+	SAVE = 2,
+	SAVE_AS = 3
 }
 
 enum ViewIds {
@@ -27,6 +28,7 @@ func _ready() -> void:
 	$File.add_item("New", FileIds.NEW)
 	$File.add_item("Open", FileIds.OPEN)
 	$File.add_item("Save", FileIds.SAVE)
+	$File.add_item("Save as", FileIds.SAVE_AS)
 
 	var built_in_fonts: PopupMenu = PopupMenu.new()
 
@@ -71,11 +73,9 @@ func _on_file_id_pressed(id: int) -> void:
 		FileIds.OPEN:
 			%OpenXBin.show()
 		FileIds.SAVE:
-			var b: PackedByteArray = %Document.save_xbin_to_buffer()
-			var f: FileAccess = FileAccess.open("user://out.xb", FileAccess.WRITE)
-			f.store_buffer(b)
-			f.close()
-			%Document.dirty = false
+			editor.request_save()
+		FileIds.SAVE_AS:
+			editor.request_save(true)
 		_:
 			assert(false, "invalid file option")
 

@@ -12,6 +12,8 @@ var panning: bool = false
 
 var control_hints: bool = false : set = _set_ctrl_hint_visible, get = _get_ctrl_hint_visible
 
+var loaded_path: String = ""
+
 @onready var hint_labels: Dictionary[Document.Tool, Label] = {
 	Document.Tool.TYPING:		%CtrlHintTyping,
 	Document.Tool.DRAWING:		%CtrlHintPen,
@@ -131,8 +133,24 @@ func request_new() -> void:
 	else:
 		new_document()
 
+func request_save(force_save_dialog: bool = false) -> void:
+	if loaded_path.is_empty() or force_save_dialog:
+		%SaveDocument.current_dir = loaded_path.get_base_dir()
+		%SaveDocument.current_file = loaded_path.get_file()
+		%SaveDocument.popup_centered()
+	else:
+		save_document()
+
 func new_document() -> void:
 	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
+	loaded_path = ""
+
+func save_document() -> void:
+	var b: PackedByteArray = %Document.save_xbin_to_buffer()
+	var f: FileAccess = FileAccess.open(loaded_path, FileAccess.WRITE)
+	f.store_buffer(b)
+	f.close()
+	%Document.dirty = false
 
 func _process(_delta: float) -> void:
 	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
@@ -284,6 +302,7 @@ func _on_open_x_bin_file_selected(path: String) -> void:
 	if not path.to_lower().ends_with(".xb"):
 		return
 	document.load_xbin(path)
+	loaded_path = path
 
 func _on_ref_popup_file_selected(path: String) -> void:
 	document.load_reference_image(path)
@@ -320,3 +339,7 @@ func _on_background_gui_input(event: InputEvent) -> void:
 			document.selected_bg = t
 
 #endregion
+
+func _on_save_document_file_selected(path: String) -> void:
+	loaded_path = path
+	save_document()
