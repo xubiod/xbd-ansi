@@ -44,6 +44,8 @@ func _set_date(new_value: String) -> void:
 func _init() -> void:
 	var now: Dictionary = Time.get_date_dict_from_system()
 	date = "%02d%02d%02d%02d" % [now["year"] / 100, now["year"] % 100, now["month"], now["day"]]
+	tinfos.resize(22)
+	tinfos.fill(0x00)
 
 func _to_string() -> String:
 	var s: String = ""
