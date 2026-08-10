@@ -123,10 +123,11 @@ func type_for_xbin(document_width: int, document_height: int) -> void:
 	tinfos.fill(0x00)
 
 func save_to_buffer(file_size: int = 0) -> PackedByteArray:
-	var buffer: PackedByteArray = PackedByteArray()
+	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
 
 	if len(comments) > 0:
-		buffer.append_array("COMNT".to_ascii_buffer())
+		#buffer.resize(5 + (len(comments) * COMMENT_LEN))
+		stream.put_data("COMNT".to_ascii_buffer())
 		for comment: String in comments:
 			var comment_buffer: PackedByteArray = PackedByteArray()
 			comment_buffer.resize(COMMENT_LEN)
@@ -134,28 +135,27 @@ func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 
 			var c: PackedByteArray = comment.to_ascii_buffer()
 			c.resize(COMMENT_LEN)
-
-			for idx: int in len(c):
-				comment_buffer[idx] = c[idx]
+			stream.put_data(c)
 
 	if file_size > 0xFFFFFFFF:
 		file_size = 0
 
-	buffer.append_array("SAUCE".to_ascii_buffer())
-	buffer.append_array("00".to_ascii_buffer())
-	buffer.append_array(title.to_ascii_buffer())
-	buffer.append_array(author.to_ascii_buffer())
-	buffer.append_array(group.to_ascii_buffer())
-	buffer.append_array(date.to_ascii_buffer())
-	buffer.encode_u32(len(buffer), file_size)
-	buffer.append(datatype & 0xFF)
-	buffer.append(filetype & 0xFF)
-	buffer.encode_u16(len(buffer), tinfo[0] & 0xFFFF)
-	buffer.encode_u16(len(buffer), tinfo[1] & 0xFFFF)
-	buffer.encode_u16(len(buffer), tinfo[2] & 0xFFFF)
-	buffer.encode_u16(len(buffer), tinfo[3] & 0xFFFF)
-	buffer.encode_u8(len(buffer), len(comments))
-	buffer.encode_u8(len(buffer), tflags)
-	buffer.append_array(tinfos)
+	#buffer.resize(len(buffer) + 128)
+	stream.put_data("SAUCE".to_ascii_buffer())
+	stream.put_data("00".to_ascii_buffer())
+	stream.put_data(title.to_ascii_buffer())
+	stream.put_data(author.to_ascii_buffer())
+	stream.put_data(group.to_ascii_buffer())
+	stream.put_data(date.to_ascii_buffer())
+	stream.put_32(file_size)
+	stream.put_8(datatype & 0xFF)
+	stream.put_8(filetype & 0xFF)
+	stream.put_16(tinfo[0] & 0xFFFF)
+	stream.put_16(tinfo[1] & 0xFFFF)
+	stream.put_16(tinfo[2] & 0xFFFF)
+	stream.put_16(tinfo[3] & 0xFFFF)
+	stream.put_8(len(comments))
+	stream.put_8(tflags)
+	stream.put_data(tinfos)
 
-	return buffer
+	return stream.data_array

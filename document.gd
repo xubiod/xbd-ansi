@@ -543,10 +543,41 @@ func get_reference_image_width_in_chars() -> int:
 
 #region File packers
 func save_xbin_to_buffer() -> PackedByteArray:
-	var buffer: PackedByteArray = PackedByteArray()
-	breakpoint
-	assert(false)
-	return buffer
+	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
+
+	stream.put_data("XBIN".to_ascii_buffer())
+	stream.put_8(0x1A)
+
+	stream.put_16(document_size.x & 0xFFFF)
+	stream.put_16(document_size.y & 0xFFFF)
+
+	stream.put_8(ansifnt.font_height)
+
+	var flags: int = (FLAGS_PALETTE | FLAGS_FONT | FLAGS_NONBLINK) & FLAGS_MASK
+
+	stream.put_8(flags)
+
+	if (flags & FLAGS_PALETTE) != 0:
+		for c: Color in get_palette_colours():
+			stream.put_8(int(c.r * 63))
+			stream.put_8(int(c.g * 63))
+			stream.put_8(int(c.b * 63))
+
+	if (flags & FLAGS_FONT) != 0:
+		stream.put_data(ansifnt.font_data)
+
+	for y: int in range(document_size.y):
+		for x: int in range(document_size.x):
+			var pos: Vector2i = Vector2i(x, y)
+
+			var code: int = get_fg_code(pos)
+			var attr: int = (get_bg(pos) << 4) | get_fg_attr(pos)
+
+			stream.put_8(code)
+			stream.put_8(attr)
+
+	stream.put_data(sauce.save_to_buffer(stream.get_size()))
+	return stream.data_array
 #endregion
 
 #region File loaders
