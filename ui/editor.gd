@@ -184,10 +184,9 @@ func _background_changed() -> void:
 	%Background.color = c
 	%BackgroundCodeBtn.color = c
 
-func _tool_changed(into: Document.Tool) -> void:
-	# TODO why the fuck does this not work
-	if tool_to_btn.has(into):
-		tool_to_btn[into].button_pressed = true
+func _tool_changed() -> void:
+	if tool_to_btn.has(document.last_tool):
+		tool_to_btn[document.last_tool].button_pressed = true
 	else:
 		push_error("tool has no button")
 

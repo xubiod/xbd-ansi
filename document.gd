@@ -108,7 +108,10 @@ func _set_selected_code(new_value: int) -> void:
 func _set_current_tool(new_value: Tool) -> void:
 	if new_value == Tool.PICKER:
 		last_tool = current_tool
-		picked_complete.emit(new_value)
+
+	if current_tool == Tool.PICKER:
+		picked_complete.emit()
+
 	current_tool = new_value
 	char_preview.visible = not (current_tool in HIDE_CHARACTER_PREVIEW)
 	char_preview.size = Vector2(glyph_size)
