@@ -21,7 +21,6 @@ enum PendingAction {
 }
 
 var pending_action: PendingAction = PendingAction.NOTHING
-var pending_open: String = ""
 
 @onready var hint_labels: Dictionary[Document.Tool, Label] = {
 	Document.Tool.TYPING:		%CtrlHintTyping,
@@ -163,7 +162,6 @@ func commit_pending() -> void:
 			pass
 
 	pending_action = PendingAction.NOTHING
-	pending_open = ""
 
 func request_new() -> void:
 	if document.dirty:
@@ -186,7 +184,6 @@ func request_save(force_save_dialog: bool = false) -> void:
 		%SaveDocument.popup_centered()
 	else:
 		save_document()
-	commit_pending()
 
 func new_document() -> void:
 	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
@@ -391,5 +388,6 @@ func _on_background_gui_input(event: InputEvent) -> void:
 func _on_save_document_file_selected(path: String) -> void:
 	loaded_path = path
 	save_document()
+	commit_pending()
 
 #endregion

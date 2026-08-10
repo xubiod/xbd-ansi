@@ -2,6 +2,3 @@
   - Starts in the wrong location on click
 - Rectangles fucky going in a negative direction
   - Starting with bottom left, bottom right, and top right
-
-- Opening with a never-saved document causes open dialog first, and save dialog fails to open
-  - Swap the order, as when open dialog is closed the save one opens?
