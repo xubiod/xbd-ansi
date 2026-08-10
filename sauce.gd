@@ -136,6 +136,9 @@ func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 			for idx: int in len(c):
 				comment_buffer[idx] = c[idx]
 
+	if file_size > 0xFFFFFFFF:
+		file_size = 0
+
 	buffer.append_array("SAUCE".to_ascii_buffer())
 	buffer.append_array("00".to_ascii_buffer())
 	buffer.append_array(title.to_ascii_buffer())
