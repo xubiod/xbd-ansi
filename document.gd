@@ -553,12 +553,20 @@ func save_xbin_to_buffer() -> PackedByteArray:
 
 	stream.put_8(ansifnt.font_height)
 
-	var flags: int = (FLAGS_PALETTE | FLAGS_FONT | FLAGS_NONBLINK) & FLAGS_MASK
+	var flags: int = FLAGS_NONBLINK
 
-	stream.put_8(flags)
+	var palette: PackedColorArray = get_palette_colours()
+
+	if palette != Global.named_palettes[Global.DEFAULT_PALETTE]:
+		flags |= FLAGS_PALETTE
+
+	if ansifnt.font_path != Global.DEFAULT_FONTPATH:
+		flags |= FLAGS_FONT
+
+	stream.put_8(flags & FLAGS_MASK)
 
 	if (flags & FLAGS_PALETTE) != 0:
-		for c: Color in get_palette_colours():
+		for c: Color in palette:
 			stream.put_8(int(c.r * 63))
 			stream.put_8(int(c.g * 63))
 			stream.put_8(int(c.b * 63))
