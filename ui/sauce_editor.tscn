@@ -107,6 +107,7 @@ DD - Day in month
 
 This textbox has no verification (other than length)."
 placeholder_text = "CCYYMMDD"
+editable = false
 virtual_keyboard_type = 2
 
 [node name="DateCentury" type="SpinBox" parent="MarginContainer/VBoxContainer/GridContainer/DateContainment" unique_id=1710482630]
