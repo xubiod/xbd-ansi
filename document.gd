@@ -391,7 +391,10 @@ func _process(_delta: float) -> void:
 	last_mouse_canvas_pos = clamped
 	last_global_mouse = global_mouse_pos
 
-	cursor_sprite.position = cursor_sprite.position.lerp((cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size, Global.LERP_SLUG)
+	cursor_sprite.position = cursor_sprite.position.lerp(
+		(cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size, Global.LERP_SLUG
+	)
+
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
 
 	if current_tool in STRETCH_CHARACTER_PREVIEW and Input.is_action_pressed(&"tool_interaction"):
