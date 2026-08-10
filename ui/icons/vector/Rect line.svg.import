@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3ofn6jpsd52v"
-path="res://.godot/imported/xbd-ansi-icons-pixel7.png-9c39f51a4da99880455c8c370389d445.ctex"
+uid="uid://bwr1qfd1djj5r"
+path="res://.godot/imported/Rect line.svg-9f3d3a895b103e6216cd010009bd9688.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/icons/xbd-ansi-icons-pixel7.png"
-dest_files=["res://.godot/imported/xbd-ansi-icons-pixel7.png-9c39f51a4da99880455c8c370389d445.ctex"]
+source_file="res://ui/icons/vector/Rect line.svg"
+dest_files=["res://.godot/imported/Rect line.svg-9f3d3a895b103e6216cd010009bd9688.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=2.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

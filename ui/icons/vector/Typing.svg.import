@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwr1qfd1djj5r"
-path="res://.godot/imported/Rect line.svg-f16ef985a7e977ca8fbb622996c96556.ctex"
+uid="uid://cp6uys877408m"
+path="res://.godot/imported/Typing.svg-3067c0dfdec77ff78aac343ff18fb80a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/icons/Rect line.svg"
-dest_files=["res://.godot/imported/Rect line.svg-f16ef985a7e977ca8fbb622996c96556.ctex"]
+source_file="res://ui/icons/vector/Typing.svg"
+dest_files=["res://.godot/imported/Typing.svg-3067c0dfdec77ff78aac343ff18fb80a.ctex"]
 
 [params]
 
