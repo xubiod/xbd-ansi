@@ -25,7 +25,7 @@ var tinfo: Array[int] = [0x00, 0x00, 0x00, 0x00]
 var tflags: int
 var tinfos: PackedByteArray = PackedByteArray()
 
-var comments: Array[String] = []
+var comments: PackedStringArray = []
 
 #region Setters
 func _set_title(new_value: String) -> void:
