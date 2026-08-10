@@ -135,6 +135,44 @@ func set_palette_to_named(palette_name: String) -> void:
 	assert(Global.named_palettes.has(palette_name), "not a real palette name")
 	fill_palette_image(Global.named_palettes[palette_name])
 
+func change_font(font_path: String) -> void:
+	ansifnt.font_path = font_path
+	update_font_tileset()
+
+func update_font_tileset() -> void:
+	tileset = ansifnt.generate_tileset()
+
+	foreground.tile_set = tileset
+	background.tile_set = tileset
+
+	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
+
+	glyph_size = Vector2i(8, ansifnt.font_height)
+	cursor_sprite.scale = glyph_size
+
+	update_character_preview()
+
+	font_updated.emit()
+
+func get_palette_colours() -> PackedColorArray:
+	var p: PackedColorArray = PackedColorArray()
+
+	for i: int in range(16):
+		p.append(palette_image.get_pixel(i, 0))
+
+	return p
+
+func fill_palette_image(colours: PackedColorArray) -> void:
+	assert(len(colours) == 16, "invalid amount of colours")
+	for i: int in range(16):
+		palette_image.set_pixel(i, 0, colours[i])
+
+	update_palette()
+
+func update_palette() -> void:
+	palette_texture.update(palette_image)
+	palette_updated.emit()
+
 func update_character_preview() -> void:
 	@warning_ignore("integer_division")
 	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
@@ -397,8 +435,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	cursor_pos.x = int(wrapf(cursor_pos.x + leftright, 0., float(document_size.x)))
 	cursor_pos.y = int(wrapf(cursor_pos.y + updown,    0., float(document_size.y)))
 
-func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: PackedColorArray = Global.named_palettes[Global.DEFAULT_PALETTE], in_sauce: Sauce = Sauce.new()) -> void:
-	document_size = size
+func make_new(
+	size: Vector2i, font: AnsiFont = AnsiFont.from_path(),
+	palette: PackedColorArray = Global.named_palettes[Global.DEFAULT_PALETTE],
+	in_sauce: Sauce = Sauce.new()
+) -> void:
+	document_size = Vector2i.ZERO
 	ansifnt = font
 
 	background.clear()
@@ -409,6 +451,8 @@ func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: Pa
 	fill_palette_image(palette)
 
 	sauce = in_sauce
+
+	resize(size)
 
 	selected_bg = 0
 	selected_fg = 7
@@ -429,47 +473,9 @@ func make_new(size: Vector2i, font: AnsiFont = AnsiFont.from_path(), palette: Pa
 
 	dirty = false
 
-func change_font(font_path: String) -> void:
-	ansifnt.font_path = font_path
-	update_font_tileset()
-
-func update_font_tileset() -> void:
-	tileset = ansifnt.generate_tileset()
-
-	foreground.tile_set = tileset
-	background.tile_set = tileset
-
-	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
-
-	glyph_size = Vector2i(8, ansifnt.font_height)
-	cursor_sprite.scale = glyph_size
-
-	update_character_preview()
-
-	font_updated.emit()
-
-func get_palette_colours() -> PackedColorArray:
-	var p: PackedColorArray = PackedColorArray()
-
-	for i: int in range(16):
-		p.append(palette_image.get_pixel(i, 0))
-
-	return p
-
-func fill_palette_image(colours: PackedColorArray) -> void:
-	assert(len(colours) == 16, "invalid amount of colours")
-	for i: int in range(16):
-		palette_image.set_pixel(i, 0, colours[i])
-
-	update_palette()
-
-func update_palette() -> void:
-	palette_texture.update(palette_image)
-	palette_updated.emit()
-
 func resize(to: Vector2i) -> void:
 	assert(to == to.abs(),  "document size is negative somewhere")
-	assert(to.length() > 0, "document size is zero")
+	#assert(to.length() > 0, "document size is zero")
 
 	if to.x > document_size.x:
 		for x: int in range(document_size.x, to.x):
@@ -497,6 +503,7 @@ func resize(to: Vector2i) -> void:
 
 	dirty = true
 	document_size = to
+	sauce.type_for_xbin(document_size.x, document_size.y)
 
 #region Reference image
 func load_reference_image(fname: String) -> void:
@@ -521,10 +528,11 @@ func get_reference_image_width_in_chars() -> int:
 #endregion
 
 #region File packers
-func save_xbin() -> PackedByteArray:
+func save_xbin_to_buffer() -> PackedByteArray:
+	var buffer: PackedByteArray = PackedByteArray()
 	breakpoint
-	assert(false, "unimplemented")
-	return PackedByteArray()
+	assert(false)
+	return buffer
 #endregion
 
 #region File loaders
