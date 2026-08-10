@@ -11,21 +11,21 @@ const DATE_LEN:		int =  8
 const COMMENT_LEN: 	int = 64
 const MAX_COMMENTS:	int = 255
 
-var title: 	String : set = _set_title
-var author:	String : set = _set_author
-var group: 	String : set = _set_group
-var date:	String : set = _set_date
+var title: 	String = "" : set = _set_title
+var author:	String = "" : set = _set_author
+var group: 	String = "" : set = _set_group
+var date:	String = "" : set = _set_date
 
-var fsize:	int
-var datatype: int
-var filetype: int
+var fsize:		int
+var datatype:	int
+var filetype:	int
 
-var tinfo: Array[int]
+var tinfo: Array[int] = [0x00, 0x00, 0x00, 0x00]
 
 var tflags: int
-var tinfos: PackedByteArray
+var tinfos: PackedByteArray = PackedByteArray()
 
-var comments: Array[String]
+var comments: Array[String] = []
 
 #region Setters
 func _set_title(new_value: String) -> void:
@@ -44,8 +44,6 @@ func _set_date(new_value: String) -> void:
 func _init() -> void:
 	var now: Dictionary = Time.get_date_dict_from_system()
 	date = "%02d%02d%02d%02d" % [now["year"] / 100, now["year"] % 100, now["month"], now["day"]]
-
-	tinfo = [0, 0, 0, 0]
 
 func _to_string() -> String:
 	var s: String = ""
