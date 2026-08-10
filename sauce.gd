@@ -45,15 +45,21 @@ func _init() -> void:
 	var now: Dictionary = Time.get_date_dict_from_system()
 	date = "%02d%02d%02d%02d" % [now["year"] / 100, now["year"] % 100, now["month"], now["day"]]
 
-func pretty_print() -> void:
-	print("title:\t",	title)
-	print("author:\t",	author)
-	print("group:\t",	group)
-	print("date:\t",	date)
+	tinfo = [0, 0, 0, 0]
 
-	print("comment lines:")
-	for comment: String in comments:
-		print(comment)
+func _to_string() -> String:
+	var s: String = ""
+	s = "%s\n%s" % [s, title]
+	s = "%s\n%s" % [s, author]
+	s = "%s\n%s" % [s, group]
+	s = "%s\n%s" % [s, date]
+	s.strip_edges()
+
+	if len(comments) > 0:
+		s = "%s\n" % s
+		for comment: String in comments:
+			s = "%s\n%s" % [s, comment]
+	return s
 
 ## Reads from the FileAccess. Seeks to 0 after being done.
 static func read_from_fileaccess(f: FileAccess) -> Sauce:
