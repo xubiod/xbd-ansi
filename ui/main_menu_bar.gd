@@ -75,6 +75,7 @@ func _on_file_id_pressed(id: int) -> void:
 			var f: FileAccess = FileAccess.open("user://out.xb", FileAccess.WRITE)
 			f.store_buffer(b)
 			f.close()
+			%Document.dirty = false
 		_:
 			assert(false, "invalid file option")
 
