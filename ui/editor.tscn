@@ -45,6 +45,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="MainMenuBar" type="MenuBar" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer" unique_id=1450602432]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 script = ExtResource("3_1ys5w")
 
@@ -62,16 +63,18 @@ hide_on_checkable_item_selection = false
 
 [node name="These are handled in code" type="Node" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1733957673]
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1820780103]
+[node name="MarginContainer" type="MarginContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar" unique_id=1215700558]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -80.0
 grow_horizontal = 0
 grow_vertical = 2
-theme_override_constants/margin_top = 4
+theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
 [node name="InWindowDocName" type="Label" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/MainMenuBar/MarginContainer" unique_id=951099640]
 unique_name_in_owner = true
