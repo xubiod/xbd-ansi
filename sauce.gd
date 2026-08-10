@@ -101,7 +101,52 @@ static func read_from_fileaccess(f: FileAccess) -> Sauce:
 	f.seek(0)
 	return sauce
 
-func pack() -> PackedByteArray:
-	breakpoint
-	assert(false, "unimplemented")
-	return PackedByteArray()
+func type_for_xbin(document_width: int, document_height: int) -> void:
+	datatype = 0x06
+	filetype = 0x00
+
+	tinfo[0] = document_width & 0xFF
+	tinfo[1] = document_height & 0xFF
+	tinfo[2] = 0x00
+	tinfo[3] = 0x00
+
+	tflags = 0x00
+
+	tinfos = PackedByteArray()
+	tinfos.resize(22)
+	tinfos.fill(0x00)
+
+func save_to_buffer(file_size: int = 0) -> PackedByteArray:
+	var buffer: PackedByteArray = PackedByteArray()
+
+	if len(comments) > 0:
+		buffer.append_array("COMNT".to_ascii_buffer())
+		for comment: String in comments:
+			var comment_buffer: PackedByteArray = PackedByteArray()
+			comment_buffer.resize(COMMENT_LEN)
+			comment_buffer.fill(0x20)
+
+			var c: PackedByteArray = comment.to_ascii_buffer()
+			c.resize(COMMENT_LEN)
+
+			for idx: int in len(c):
+				comment_buffer[idx] = c[idx]
+
+	buffer.append_array("SAUCE".to_ascii_buffer())
+	buffer.append_array("00".to_ascii_buffer())
+	buffer.append_array(title.to_ascii_buffer())
+	buffer.append_array(author.to_ascii_buffer())
+	buffer.append_array(group.to_ascii_buffer())
+	buffer.append_array(date.to_ascii_buffer())
+	buffer.encode_u32(len(buffer), file_size)
+	buffer.append(datatype & 0xFF)
+	buffer.append(filetype & 0xFF)
+	buffer.encode_u16(len(buffer), tinfo[0] & 0xFFFF)
+	buffer.encode_u16(len(buffer), tinfo[1] & 0xFFFF)
+	buffer.encode_u16(len(buffer), tinfo[2] & 0xFFFF)
+	buffer.encode_u16(len(buffer), tinfo[3] & 0xFFFF)
+	buffer.encode_u8(len(buffer), len(comments))
+	buffer.encode_u8(len(buffer), tflags)
+	buffer.append_array(tinfos)
+
+	return buffer
