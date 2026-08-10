@@ -89,12 +89,67 @@ layout_mode = 2
 text = "Date"
 horizontal_alignment = 2
 
-[node name="DateBox" type="LineEdit" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1629980599]
+[node name="DateContainment" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=299632785]
+layout_mode = 2
+
+[node name="DateBox" type="LineEdit" parent="MarginContainer/VBoxContainer/GridContainer/DateContainment" unique_id=1629980599]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "The date to save. It is _expected_ to be formated as:
+
+CCYYMMDD
+
+CC - Century
+YY - Year in century
+MM - Month
+DD - Day in month
+
+This textbox has no verification (other than length)."
 placeholder_text = "CCYYMMDD"
 virtual_keyboard_type = 2
+
+[node name="DateCentury" type="SpinBox" parent="MarginContainer/VBoxContainer/GridContainer/DateContainment" unique_id=1710482630]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Century, in range of 00-99. Provided as a helper.
+Changing this will override the date text box to the date in the spin boxes."
+max_value = 99.0
+value = 20.0
+rounded = true
+prefix = "C:"
+
+[node name="DateYear" type="SpinBox" parent="MarginContainer/VBoxContainer/GridContainer/DateContainment" unique_id=912637988]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Year, in range of 00-99. Provided as a helper.
+Changing this will override the date text box to the date in the spin boxes."
+max_value = 99.0
+value = 26.0
+rounded = true
+prefix = "Y:"
+
+[node name="DateMonth" type="SpinBox" parent="MarginContainer/VBoxContainer/GridContainer/DateContainment" unique_id=448903586]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Month, in range of 01-12. Provided as a helper.
+Changing this will override the date text box to the date in the spin boxes."
+min_value = 1.0
+max_value = 12.0
+value = 1.0
+rounded = true
+prefix = "M:"
+
+[node name="DateDay" type="SpinBox" parent="MarginContainer/VBoxContainer/GridContainer/DateContainment" unique_id=972661124]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Day, in range of 01-31. Provided as a helper.
+Changing this will override the date text box to the date in the spin boxes."
+min_value = 1.0
+max_value = 31.0
+value = 1.0
+rounded = true
+prefix = "D:"
 
 [node name="DateLimit" type="Label" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=963423153]
 unique_name_in_owner = true
@@ -140,7 +195,11 @@ one_shot = true
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/TitleBox" to="." method="_on_title_box_text_changed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/AuthorBox" to="." method="_on_author_box_text_changed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/GroupBox" to="." method="_on_group_box_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/DateBox" to="." method="_on_date_box_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/GridContainer/DateContainment/DateBox" to="." method="_on_date_box_text_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/GridContainer/DateContainment/DateCentury" to="." method="_on_date_spinboxes_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/GridContainer/DateContainment/DateYear" to="." method="_on_date_spinboxes_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/GridContainer/DateContainment/DateMonth" to="." method="_on_date_spinboxes_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/GridContainer/DateContainment/DateDay" to="." method="_on_date_spinboxes_value_changed"]
 [connection signal="lines_edited_from" from="MarginContainer/VBoxContainer/CommentBox" to="." method="_on_comment_box_lines_edited_from"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/CommentBox" to="." method="_on_comment_box_text_changed"]
 [connection signal="timeout" from="MarginContainer/VBoxContainer/CommentBox/CommentUpdateTimer" to="." method="_on_comment_update_timer_timeout"]

@@ -6,6 +6,11 @@ class_name SauceEditor extends Window
 @onready var date_box:		LineEdit = %DateBox
 @onready var comment_box:	TextEdit = %CommentBox
 
+@onready var date_century:	SpinBox = %DateCentury
+@onready var date_year:		SpinBox = %DateYear
+@onready var date_month:	SpinBox = %DateMonth
+@onready var date_day:		SpinBox = %DateDay
+
 @onready var title_limit:	Label = %TitleLimit
 @onready var author_limit:	Label = %AuthorLimit
 @onready var group_limit:	Label = %GroupLimit
@@ -32,6 +37,12 @@ func summon(sauce: Sauce) -> void:
 	group_box.text	= sauce.group.strip_edges()
 	date_box.text	= sauce.date.strip_edges()
 
+	if len(date_box.text) == date_box.max_length:
+		date_century.set_value_no_signal(	float(date_box.text.substr(0, 2).to_int()))
+		date_year.set_value_no_signal(		float(date_box.text.substr(2, 2).to_int()))
+		date_month.set_value_no_signal(		float(date_box.text.substr(4, 2).to_int()))
+		date_day.set_value_no_signal(		float(date_box.text.substr(6, 2).to_int()))
+
 	comment_box.text = "\n".join(sauce.comments)
 
 	title_limit.text	= "%d/%d" % [len(title_box.text),	title_box.max_length]
@@ -57,7 +68,15 @@ func _on_group_box_text_changed(new_text: String) -> void:
 
 func _on_date_box_text_changed(new_text: String) -> void:
 	date_updated.emit(new_text)
+	if len(new_text) == date_box.max_length:
+		date_century.set_value_no_signal(	float(new_text.substr(0, 2).to_int()))
+		date_year.set_value_no_signal(		float(new_text.substr(2, 2).to_int()))
+		date_month.set_value_no_signal(		float(new_text.substr(4, 2).to_int()))
+		date_day.set_value_no_signal(		float(new_text.substr(6, 2).to_int()))
 	date_limit.text = "%d/%d" % [len(new_text), date_box.max_length]
+
+func _on_date_spinboxes_value_changed(_value: float) -> void:
+	date_box.text = "%02d%02d%02d%02d" % [int(date_century.value), int(date_year.value), int(date_month.value), int(date_day.value)]
 
 func _on_comment_box_text_changed() -> void:
 	if len(comment_box.text) > COMMENTS_BOX_LEN:
