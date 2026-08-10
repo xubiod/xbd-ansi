@@ -11,6 +11,7 @@ func summon() -> void:
 	status.text = ""
 	show()
 
+#region Editor set signals
 func _on_cancel_pressed() -> void:
 	hide()
 
@@ -79,3 +80,4 @@ func _on_requester_request_completed(result: int, response_code: int, _headers: 
 
 func _on_slug_text_submitted(_new_text: String) -> void:
 	_on_load_pressed()
+#endregion
