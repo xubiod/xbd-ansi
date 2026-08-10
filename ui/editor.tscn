@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://cp6gdi2bocfuu" path="res://ui/icons/pixel/rectlined.tres" id="11_407as"]
 [ext_resource type="Texture2D" uid="uid://jxf8yfog0dkl" path="res://ui/icons/pixel/picker.tres" id="12_407as"]
 [ext_resource type="Texture2D" uid="uid://crlluqhka5t2e" path="res://ui/icons/pixel/refimage.tres" id="13_l3ljj"]
+[ext_resource type="Texture2D" uid="uid://cdtvbkhps4ix7" path="res://ui/icons/pixel/fillbucket.tres" id="14_l3ljj"]
 [ext_resource type="PackedScene" uid="uid://ctidf4qwl7i2t" path="res://ui/sauce_editor.tscn" id="18_407as"]
 
 [node name="Editor" type="Node2D" unique_id=843518339]
@@ -430,6 +431,18 @@ mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 icon = ExtResource("13_l3ljj")
+
+[node name="ToolFillBucket" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Tools" unique_id=580374171]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Fillbucket
+
+Unimplemented."
+mouse_default_cursor_shape = 2
+disabled = true
+toggle_mode = true
+button_group = ExtResource("4_q0a35")
+icon = ExtResource("14_l3ljj")
 
 [node name="ThePit" type="Control" parent="Camera/UI/MainContainer/HBoxContainer" unique_id=498217050]
 unique_name_in_owner = true
