@@ -5,6 +5,7 @@ signal request_save
 
 func _on_about_to_popup() -> void:
 	%Cancel.grab_focus()
+	DisplayServer.beep()
 
 func _on_cancel_pressed() -> void:
 	hide()
