@@ -628,10 +628,6 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.xb;XBin;application/octet-stream")
 
-[node name="ResizePopup" parent="Camera/UI" unique_id=1473360267 instance=ExtResource("8_t27w5")]
-unique_name_in_owner = true
-visible = false
-
 [node name="RefPopup" type="FileDialog" parent="Camera/UI" unique_id=1828895261]
 unique_name_in_owner = true
 oversampling_override = 1.0
@@ -643,6 +639,10 @@ access = 2
 filters = PackedStringArray("*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg")
 folder_creation_enabled = false
 deleting_enabled = false
+
+[node name="ResizePopup" parent="Camera/UI" unique_id=1473360267 instance=ExtResource("8_t27w5")]
+unique_name_in_owner = true
+visible = false
 
 [node name="LospecSlugPopup" parent="Camera/UI" unique_id=828341066 instance=ExtResource("9_5on0m")]
 unique_name_in_owner = true
