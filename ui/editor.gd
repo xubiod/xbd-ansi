@@ -23,10 +23,11 @@ enum PendingAction {
 
 var pending_action: PendingAction = PendingAction.NOTHING
 
-var last_path: String
-var last_upscale: float
-var last_webplossy: bool
-var last_webpquality: float
+var last_path:			String	= ""
+var last_upscale_x:		float	= NAN
+var last_upscale_y:		float	= NAN
+var last_webplossy:		bool	= false
+var last_webpquality:	float	= NAN
 
 @onready var hint_labels: Dictionary[Document.Tool, Label] = {
 	Document.Tool.TYPING:		%CtrlHintTyping,
@@ -212,20 +213,21 @@ func request_save(force_save_dialog: bool = false) -> void:
 		save_document()
 
 func request_export() -> void:
-	%Exporter.show()
+	%Exporter.summon(document.document_rect.size)
 
 func request_reexport() -> void:
-	if last_path.is_empty() or is_nan(last_upscale) or is_nan(last_webpquality):
+	if last_path.is_empty() or is_nan(last_upscale_x) or is_nan(last_upscale_y) or is_nan(last_webpquality):
 		request_export()
 	else:
-		_start_export(last_path, last_upscale, last_webplossy, last_webpquality)
+		_start_export(last_path, last_upscale_x, last_upscale_y, last_webplossy, last_webpquality)
 
 func new_document() -> void:
 	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
 	loaded_path = ""
 
 	last_path = ""
-	last_upscale = NAN
+	last_upscale_x = NAN
+	last_upscale_y = NAN
 	last_webpquality = NAN
 
 func save_document() -> void:
@@ -372,14 +374,15 @@ func _on_comments_updated(v: PackedStringArray) -> void:
 func _on_document_dirty(_v: bool) -> void:
 	update_inwindow_doc_name()
 
-func _start_export(path: String, upscale: float, webplossy: bool, webpquality: float) -> void:
+func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: bool, webpquality: float) -> void:
 	last_path = path
-	last_upscale = upscale
+	last_upscale_x = upscale_x
+	last_upscale_y = upscale_y
 	last_webplossy = webplossy
 	last_webpquality = webpquality
 
 	var i: Image = document.render()
-	i.resize(i.get_width() * int(upscale), i.get_height() * int(upscale), Image.INTERPOLATE_NEAREST)
+	i.resize(i.get_width() * int(upscale_x), i.get_height() * int(upscale_y), Image.INTERPOLATE_NEAREST)
 
 	match path.to_lower().get_extension():
 		"png":

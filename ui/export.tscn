@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dxs8h6hyjkl3e" path="res://ui/export.gd" id="1_erral"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_4r506"]
+font_color = Color(1, 1, 1, 0.5)
+
 [node name="Exporter" type="Window" unique_id=2093735464]
 oversampling_override = 1.0
 title = "Export"
@@ -49,9 +52,9 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1400598136]
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
-text = "Scale"
+text = "Scale X"
 
-[node name="UpscaleFactor" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1116117388]
+[node name="UpscaleFactorX" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1116117388]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -63,11 +66,57 @@ rounded = true
 tick_count = 8
 ticks_on_borders = true
 
-[node name="UpscaleReadable" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1414428109]
+[node name="UpscaleReadableX" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1414428109]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 text = "100%"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=266453715]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer3" unique_id=570253830]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Scale Y"
+
+[node name="UpscaleFactorY" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1970808549]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 8.0
+value = 1.0
+rounded = true
+tick_count = 8
+ticks_on_borders = true
+
+[node name="UpscaleReadableY" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1753070490]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "100%"
+
+[node name="LockAspect" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=1519802713]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Lock Aspect Ratio"
+
+[node name="ResultingSize" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1469969323]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 49)
+layout_mode = 2
+tooltip_text = "This is just how large the image will be.
+The max resolution percentages is mostly to show with Godot and current GPU limitations."
+mouse_filter = 1
+mouse_default_cursor_shape = 16
+text = "0 x 0
+0 x 0"
+label_settings = SubResource("LabelSettings_4r506")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=372292109]
 layout_mode = 2
@@ -128,7 +177,9 @@ filters = PackedStringArray("*.png,*webp;Image Files;image/png,image/webp")
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer/ExportPath" to="." method="_on_export_path_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SummonPicker" to="." method="_on_summon_picker_pressed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/UpscaleFactor" to="." method="_on_upscale_factor_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/UpscaleFactorX" to="." method="_on_upscale_factor_x_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer3/UpscaleFactorY" to="." method="_on_upscale_factor_y_value_changed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/LockAspect" to="." method="_on_lock_aspect_toggled"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer/WebpQuality" to="." method="_on_webp_quality_value_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Submit" to="." method="_on_submit_pressed"]
 [connection signal="file_selected" from="ExportTo" to="." method="_on_export_to_file_selected"]
