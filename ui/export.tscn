@@ -9,7 +9,7 @@ font_color = Color(1, 1, 1, 0.5)
 oversampling_override = 1.0
 title = "Export"
 initial_position = 2
-size = Vector2i(600, 300)
+size = Vector2i(600, 400)
 script = ExtResource("1_erral")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=41028338]
@@ -61,16 +61,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 min_value = 1.0
 max_value = 8.0
+step = 0.1
 value = 1.0
-rounded = true
 tick_count = 8
 ticks_on_borders = true
 
-[node name="UpscaleReadableX" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1414428109]
+[node name="UpscaleSpinboxX" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=488018334]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
-text = "100%"
+min_value = 100.0
+max_value = 800.0
+step = 10.0
+value = 100.0
+rounded = true
+alignment = 2
+suffix = "%"
+custom_arrow_step = 100.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=266453715]
 layout_mode = 2
@@ -87,22 +93,28 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 min_value = 1.0
 max_value = 8.0
+step = 0.1
 value = 1.0
-rounded = true
 tick_count = 8
 ticks_on_borders = true
 
-[node name="UpscaleReadableY" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1753070490]
+[node name="UpscaleSpinboxY" type="SpinBox" parent="MarginContainer/VBoxContainer/HBoxContainer3" unique_id=715894621]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
-text = "100%"
+min_value = 100.0
+max_value = 800.0
+step = 10.0
+value = 100.0
+rounded = true
+alignment = 2
+suffix = "%"
+custom_arrow_step = 100.0
 
 [node name="LockAspect" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=1519802713]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
-text = "Lock Aspect Ratio"
+text = "Enforce 1:1 pixel ratio"
 
 [node name="ResultingSize" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1469969323]
 unique_name_in_owner = true
@@ -113,37 +125,50 @@ The max resolution percentages is mostly to show with Godot and current GPU limi
 mouse_filter = 1
 mouse_default_cursor_shape = 16
 text = "0 x 0
-0 x 0"
+One more line"
 label_settings = SubResource("LabelSettings_4r506")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="SideBudget" type="ProgressBar" parent="MarginContainer/VBoxContainer" unique_id=1048241100]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+tooltip_text = "The \"size budget\" of the current document and upscale settings."
+max_value = 1.0
 
 [node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=372292109]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FoldableContainer" type="FoldableContainer" parent="MarginContainer/VBoxContainer" unique_id=392024408]
+[node name="Foldables" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=708240833]
 layout_mode = 2
+
+[node name="WebpSettings" type="FoldableContainer" parent="MarginContainer/VBoxContainer/Foldables" unique_id=392024408]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
 folded = true
 title = "WebP Settings"
+title_position = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/FoldableContainer" unique_id=2064109561]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Foldables/WebpSettings" unique_id=2064109561]
 visible = false
 layout_mode = 2
 
-[node name="WebPLossy" type="CheckButton" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer" unique_id=1121561494]
+[node name="WebPLossy" type="CheckButton" parent="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer" unique_id=1121561494]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Lossy compression (WebP only)"
+text = "Lossy compression"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer" unique_id=460705586]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer" unique_id=1674414701]
+layout_mode = 2
+text = "Quality factor"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer" unique_id=460705586]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=1674414701]
-layout_mode = 2
-text = "Webp Quality"
-
-[node name="WebpQuality" type="HSlider" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=144593788]
+[node name="WebpQuality" type="HSlider" parent="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer/HBoxContainer" unique_id=144593788]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -153,11 +178,33 @@ value = 0.75
 tick_count = 9
 ticks_on_borders = true
 
-[node name="WebpQualityReadable" type="Label" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=643437838]
+[node name="WebpQualityReadable" type="Label" parent="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer/HBoxContainer" unique_id=643437838]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 text = "0.75"
+
+[node name="AdvancedSettings" type="FoldableContainer" parent="MarginContainer/VBoxContainer/Foldables" unique_id=1248018141]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+folded = true
+title = "Advanced Settings"
+title_position = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Foldables/AdvancedSettings" unique_id=178194801]
+visible = false
+layout_mode = 2
+
+[node name="IntegerOnly" type="CheckButton" parent="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer" unique_id=1780844756]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "If ON, upscales can only be integers (100%, 200%, 300%, etc.).
+
+If OFF, the sliders will allow values in steps of 10%.
+This can cause artifacts with nearest neighbour upscaling."
+button_pressed = true
+text = "Integer upscales only"
 
 [node name="Submit" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1750333958]
 unique_name_in_owner = true
@@ -178,8 +225,11 @@ filters = PackedStringArray("*.png,*webp;Image Files;image/png,image/webp")
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer/ExportPath" to="." method="_on_export_path_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SummonPicker" to="." method="_on_summon_picker_pressed"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/UpscaleFactorX" to="." method="_on_upscale_factor_x_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/UpscaleSpinboxX" to="." method="_on_upscale_spinbox_x_value_changed"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer3/UpscaleFactorY" to="." method="_on_upscale_factor_y_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer3/UpscaleSpinboxY" to="." method="_on_upscale_spinbox_y_value_changed"]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/LockAspect" to="." method="_on_lock_aspect_toggled"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer/WebpQuality" to="." method="_on_webp_quality_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer/HBoxContainer/WebpQuality" to="." method="_on_webp_quality_value_changed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer/IntegerOnly" to="." method="_on_integer_only_toggled"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Submit" to="." method="_on_submit_pressed"]
 [connection signal="file_selected" from="ExportTo" to="." method="_on_export_to_file_selected"]
