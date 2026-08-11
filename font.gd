@@ -25,6 +25,8 @@ const DEFAULT_FULL_BLOCK:		 int = 0xDB
 @export_range(0.0, 255.0) var half_bottom_block: int = DEFAULT_HALF_BOTTOM_BLOCK
 @export_range(0.0, 255.0) var full_block:		 int = DEFAULT_FULL_BLOCK
 
+var image: Image = null : get = _get_image
+
 #region Static constructors
 
 static func from_data(data: PackedByteArray) -> AnsiFont:
@@ -54,6 +56,13 @@ static func from_path(path: String = Global.DEFAULT_FONTPATH) -> AnsiFont:
 
 	return f
 
+#endregion
+
+#region Getter(s)
+func _get_image() -> Image:
+	if image == null:
+		image = generate_image()
+	return image
 #endregion
 
 #region Setter(s)
@@ -154,7 +163,7 @@ func generate_tileset() -> TileSet:
 
 	tileset.add_source(source)
 
-	source.texture = ImageTexture.create_from_image(generate_image())
+	source.texture = ImageTexture.create_from_image(_get_image())
 
 	for character_y: int in range(0, 16):
 		for character_x: int in range(0, 16):

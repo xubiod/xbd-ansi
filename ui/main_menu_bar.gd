@@ -6,7 +6,9 @@ enum FileIds {
 	NEW = 0,
 	OPEN = 1,
 	SAVE = 2,
-	SAVE_AS = 3
+	SAVE_AS = 3,
+	EXPORT = 4,
+	EXPORT_AGAIN = 5
 }
 
 enum ViewIds {
@@ -27,8 +29,12 @@ const ID_MASK: int = INT32_MAX
 func _ready() -> void:
 	$File.add_item("New", FileIds.NEW)
 	$File.add_item("Open", FileIds.OPEN)
+	$File.add_separator("", ID_MASK)
 	$File.add_item("Save", FileIds.SAVE)
 	$File.add_item("Save as", FileIds.SAVE_AS)
+	$File.add_separator("", ID_MASK - 1)
+	$File.add_item("Export", FileIds.EXPORT)
+	$File.add_item("Repeat last export", FileIds.EXPORT_AGAIN)
 
 	var built_in_fonts: PopupMenu = PopupMenu.new()
 
@@ -76,6 +82,10 @@ func _on_file_id_pressed(id: int) -> void:
 			editor.request_save()
 		FileIds.SAVE_AS:
 			editor.request_save(true)
+		FileIds.EXPORT:
+			editor.request_export()
+		FileIds.EXPORT_AGAIN:
+			editor.request_reexport()
 		_:
 			assert(false, "invalid file option")
 

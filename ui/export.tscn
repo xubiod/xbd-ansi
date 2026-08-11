@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://bxwqmlxtv6fa"]
+
+[ext_resource type="Script" uid="uid://dxs8h6hyjkl3e" path="res://ui/export.gd" id="1_erral"]
+
+[node name="Exporter" type="Window" unique_id=2093735464]
+oversampling_override = 1.0
+title = "Export"
+initial_position = 2
+size = Vector2i(600, 300)
+script = ExtResource("1_erral")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=41028338]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1044636198]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=139876205]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1756259832]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Export to..."
+
+[node name="ExportPath" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=914947481]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "File path..."
+
+[node name="SummonPicker" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=319472454]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "..."
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=891310314]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1400598136]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Scale"
+
+[node name="UpscaleFactor" type="HSlider" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1116117388]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 8.0
+value = 1.0
+rounded = true
+tick_count = 8
+ticks_on_borders = true
+
+[node name="UpscaleReadable" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1414428109]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "100%"
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=372292109]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FoldableContainer" type="FoldableContainer" parent="MarginContainer/VBoxContainer" unique_id=392024408]
+layout_mode = 2
+folded = true
+title = "WebP Settings"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/FoldableContainer" unique_id=2064109561]
+visible = false
+layout_mode = 2
+
+[node name="WebPLossy" type="CheckButton" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer" unique_id=1121561494]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Lossy compression (WebP only)"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer" unique_id=460705586]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=1674414701]
+layout_mode = 2
+text = "Webp Quality"
+
+[node name="WebpQuality" type="HSlider" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=144593788]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.75
+tick_count = 9
+ticks_on_borders = true
+
+[node name="WebpQualityReadable" type="Label" parent="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=643437838]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "0.75"
+
+[node name="Submit" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1750333958]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Export!"
+
+[node name="ExportTo" type="FileDialog" parent="." unique_id=686655597]
+oversampling_override = 1.0
+title = "Export to..."
+initial_position = 2
+size = Vector2i(800, 480)
+access = 2
+filters = PackedStringArray("*.png,*webp;Image Files;image/png,image/webp")
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer/ExportPath" to="." method="_on_export_path_text_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SummonPicker" to="." method="_on_summon_picker_pressed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/UpscaleFactor" to="." method="_on_upscale_factor_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/FoldableContainer/VBoxContainer/HBoxContainer/WebpQuality" to="." method="_on_webp_quality_value_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Submit" to="." method="_on_submit_pressed"]
+[connection signal="file_selected" from="ExportTo" to="." method="_on_export_to_file_selected"]
