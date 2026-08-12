@@ -279,12 +279,9 @@ func request_save(force_save_dialog: bool = false) -> void:
 	else:
 		save_document()
 
-func request_export() -> void:
-	%Exporter.summon(document.document_rect.size)
-
-func request_reexport() -> void:
-	if last_path.is_empty() or is_nan(last_upscale_x) or is_nan(last_upscale_y) or is_nan(last_webpquality):
-		request_export()
+func request_export(force_reexport: bool = false) -> void:
+	if (not force_reexport) or last_path.is_empty() or is_nan(last_upscale_x) or is_nan(last_upscale_y) or is_nan(last_webpquality):
+		%Exporter.summon(document.document_rect.size)
 	else:
 		_start_export(last_path, last_upscale_x, last_upscale_y, last_webplossy, last_webpquality)
 #endregion

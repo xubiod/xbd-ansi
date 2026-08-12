@@ -87,7 +87,7 @@ func _on_file_id_pressed(id: int) -> void:
 		FileIds.EXPORT:
 			editor.request_export()
 		FileIds.EXPORT_AGAIN:
-			editor.request_reexport()
+			editor.request_export(true)
 		_:
 			assert(false, "invalid file option")
 
