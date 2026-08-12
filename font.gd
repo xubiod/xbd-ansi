@@ -72,6 +72,7 @@ func _set_font_path(new_value: String) -> void:
 	assert(FileAccess.file_exists(new_value), "not a valid file")
 	font_path = new_value
 	font_data.clear()
+	image = null
 	_guess_font_height_with_path(FontHeightGuessHeuristic.PATH_SIZE)
 #endregion
 

@@ -133,6 +133,8 @@ func _ready() -> void:
 
 	%Exporter.export_request.connect(_start_export)
 
+	%FontImporter.font_submitted.connect(_update_font)
+
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
 	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
 
@@ -415,6 +417,9 @@ func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: 
 			i.save_webp(path, webplossy, webpquality)
 		_:
 			push_error("unknown extension?")
+
+func _update_font(path: String) -> void:
+	document.change_font(path)
 #endregion
 
 #region Editor set signal functions

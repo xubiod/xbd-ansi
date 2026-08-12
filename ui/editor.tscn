@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://cdtvbkhps4ix7" path="res://ui/icons/pixel/fillbucket.tres" id="14_l3ljj"]
 [ext_resource type="PackedScene" uid="uid://ctidf4qwl7i2t" path="res://ui/sauce_editor.tscn" id="18_407as"]
 [ext_resource type="PackedScene" uid="uid://bxwqmlxtv6fa" path="res://ui/export.tscn" id="20_n8yra"]
+[ext_resource type="PackedScene" uid="uid://bs0fb5ftava6b" path="res://ui/font_importer.tscn" id="20_sb7vj"]
 
 [node name="Editor" type="Node2D" unique_id=843518339]
 script = ExtResource("1_vjobr")
@@ -667,6 +668,10 @@ unique_name_in_owner = true
 visible = false
 
 [node name="Exporter" parent="Camera/UI" unique_id=2093735464 instance=ExtResource("20_n8yra")]
+unique_name_in_owner = true
+visible = false
+
+[node name="FontImporter" parent="Camera/UI" unique_id=1477292601 instance=ExtResource("20_sb7vj")]
 unique_name_in_owner = true
 visible = false
 

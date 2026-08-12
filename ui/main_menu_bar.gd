@@ -21,7 +21,8 @@ enum DocumentIds {
 	RESIZE = 1,
 	LOAD_PALETTE = 2,
 	LOAD_PALETTE_FROM_LOSPEC_SLUG = 3,
-	SAUCE_EDITOR = 4
+	SAUCE_EDITOR = 4,
+	CUSTOM_FONT = 5
 }
 
 const ID_MASK: int = INT32_MAX
@@ -48,6 +49,7 @@ func _ready() -> void:
 		built_in_fonts.add_submenu_node_item(key, collection_submenu)
 
 	$Document.add_submenu_node_item("Load built-in font", built_in_fonts, DocumentIds.LOAD_BUILT_IN)
+	$Document.add_item("Load font from *.F##", DocumentIds.CUSTOM_FONT)
 
 	var built_in_palette: PopupMenu = PopupMenu.new()
 
@@ -101,6 +103,8 @@ func _on_doc_id_pressed(id: int) -> void:
 			%LospecSlugPopup.summon()
 		DocumentIds.SAUCE_EDITOR:
 			%SauceEditor.summon(%Document.sauce)
+		DocumentIds.CUSTOM_FONT:
+			%FontImporter.show()
 		_:
 			assert(false, "invalid view option")
 
