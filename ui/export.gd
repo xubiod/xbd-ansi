@@ -27,6 +27,11 @@ const MAX_SIDE: int = 16384
 var document_rect_size: Vector2
 var side_budget: float = 0.
 
+func reset() -> void:
+	width_updated(1.)
+	height_updated(1.)
+	lock_aspect.button_pressed = true
+
 func summon(with_input: Vector2) -> void:
 	document_rect_size = with_input
 	show()

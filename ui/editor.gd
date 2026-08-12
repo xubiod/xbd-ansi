@@ -2,14 +2,13 @@ class_name Editor extends Node2D
 
 const COLOR_BTN: PackedScene = preload("uid://bhoyf3yuruu8v")
 
-@onready var document: Document = %Document
-@onready var viewport: Viewport = get_viewport()
-
-@onready var zoom_slider: HSlider = $Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider
-
 const RECT_FILL: AtlasTexture	= preload("uid://mvkafpgtklt6")
 const RECT_LINED: AtlasTexture	= preload("uid://cp6gdi2bocfuu")
 const RECT_BOTH: AtlasTexture	= preload("uid://cvkpg31f16453")
+
+@onready var document:		Document	= %Document
+@onready var viewport:		Viewport	= get_viewport()
+@onready var zoom_slider:	HSlider		= $Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider
 
 var camera_desired_pos: Vector2
 var panning: bool = false
@@ -76,15 +75,6 @@ func _set_loaded_path(new_value: String) -> void:
 	update_inwindow_doc_name()
 
 #endregion
-
-func update_inwindow_doc_name() -> void:
-	if loaded_path.is_empty():
-		%InWindowDocName.text = "Untitled"
-	else:
-		%InWindowDocName.text = loaded_path.get_file()
-
-	if document.dirty:
-		%InWindowDocName.text = "%s (*)" % %InWindowDocName.text
 
 func _ready() -> void:
 	get_tree().set_auto_accept_quit(false)
@@ -171,6 +161,18 @@ func _ready() -> void:
 	_update_tool(Document.Tool.TYPING)
 	update_inwindow_doc_name()
 
+func _process(_delta: float) -> void:
+	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
+	%Camera.zoom = %Camera.zoom.lerp(Vector2(zoom_slider.value, zoom_slider.value), Global.LERP_SLUG)
+	%Camera.position = %Camera.position.lerp(camera_desired_pos, Global.LERP_SMOOTH)
+
+	%CodeButton.disabled = %PaintModeCharacter.disabled
+	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and panning:
+		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
+
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_WM_CLOSE_REQUEST:
@@ -191,6 +193,63 @@ func commit_pending() -> void:
 
 	pending_action = PendingAction.NOTHING
 
+func new_document() -> void:
+	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
+	loaded_path = ""
+
+	last_path = ""
+	last_upscale_x = NAN
+	last_upscale_y = NAN
+	last_webpquality = NAN
+
+	%Editor.reset()
+
+func save_document() -> void:
+	assert(not loaded_path.is_empty(), "path cannot be empty")
+	assert(loaded_path.is_absolute_path() or loaded_path.is_relative_path(), "path isn't valid")
+
+	var b: PackedByteArray = %Document.save_xbin_to_buffer()
+	var f: FileAccess = FileAccess.open(loaded_path, FileAccess.WRITE)
+	f.store_buffer(b)
+	f.close()
+	%Document.dirty = false
+
+func change_palette(to: PackedColorArray, attempt_reorder: bool = false) -> void:
+	# TODO: make a lot less naive
+	if attempt_reorder:
+		var existing: PackedColorArray = document.get_palette_colours()
+		var goat: PackedColorArray = to.duplicate()
+
+		for colour_idx: int in range(len(existing)):
+			var colour: Color = existing[colour_idx]
+			var diff: float = 1e32
+			var lowest_idx: int = -1
+
+			for new_idx: int in range(len(goat)):
+				var new: Color = goat[new_idx]
+				# https://www.baeldung.com/cs/compute-similarity-of-colours
+				#
+				# this is also doing it in RGB so it SUCKS
+				var c: float = ((colour.r - new.r)**2 * 0.3) + ((colour.g - new.g)**2 * 0.59) + ((colour.b - new.g)**2 * 0.11)
+				if diff > c:
+					diff = c
+					lowest_idx = new_idx
+
+			to[colour_idx] = goat[lowest_idx]
+			goat.remove_at(lowest_idx)
+
+	document.fill_palette_image(to)
+
+func update_inwindow_doc_name() -> void:
+	if loaded_path.is_empty():
+		%InWindowDocName.text = "Untitled"
+	else:
+		%InWindowDocName.text = loaded_path.get_file()
+
+	if document.dirty:
+		%InWindowDocName.text = "%s (*)" % %InWindowDocName.text
+
+#region Document Requests (New, Open, Save..)
 func request_new() -> void:
 	if document.dirty:
 		pending_action = PendingAction.NEW
@@ -228,60 +287,7 @@ func request_reexport() -> void:
 		request_export()
 	else:
 		_start_export(last_path, last_upscale_x, last_upscale_y, last_webplossy, last_webpquality)
-
-func new_document() -> void:
-	document.make_new(document.DEFAULT_SIZE, AnsiFont.from_path())
-	loaded_path = ""
-
-	last_path = ""
-	last_upscale_x = NAN
-	last_upscale_y = NAN
-	last_webpquality = NAN
-
-func save_document() -> void:
-	var b: PackedByteArray = %Document.save_xbin_to_buffer()
-	var f: FileAccess = FileAccess.open(loaded_path, FileAccess.WRITE)
-	f.store_buffer(b)
-	f.close()
-	%Document.dirty = false
-
-func _process(_delta: float) -> void:
-	panning = Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_RIGHT) and !viewport.is_input_handled()
-	%Camera.zoom = %Camera.zoom.lerp(Vector2(zoom_slider.value, zoom_slider.value), Global.LERP_SLUG)
-	%Camera.position = %Camera.position.lerp(camera_desired_pos, Global.LERP_SMOOTH)
-
-	%CodeButton.disabled = %PaintModeCharacter.disabled
-	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and panning:
-		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
-
-func change_palette(to: PackedColorArray, attempt_reorder: bool = false) -> void:
-	# TODO: make a lot less naive
-	if attempt_reorder:
-		var existing: PackedColorArray = document.get_palette_colours()
-		var goat: PackedColorArray = to.duplicate()
-
-		for colour_idx: int in range(len(existing)):
-			var colour: Color = existing[colour_idx]
-			var diff: float = 1e32
-			var lowest_idx: int = -1
-
-			for new_idx: int in range(len(goat)):
-				var new: Color = goat[new_idx]
-				# https://www.baeldung.com/cs/compute-similarity-of-colours
-				#
-				# this is also doing it in RGB so it SUCKS
-				var c: float = ((colour.r - new.r)**2 * 0.3) + ((colour.g - new.g)**2 * 0.59) + ((colour.b - new.g)**2 * 0.11)
-				if diff > c:
-					diff = c
-					lowest_idx = new_idx
-
-			to[colour_idx] = goat[lowest_idx]
-			goat.remove_at(lowest_idx)
-
-	document.fill_palette_image(to)
+#endregion
 
 #region Signal connections
 
