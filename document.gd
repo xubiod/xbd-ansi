@@ -480,7 +480,6 @@ func make_new(
 
 	for x: int in range(document_size.x):
 		for y: int in range(document_size.y):
-			set_fg(Vector2i(x, y), ansifnt.empty_block, 7)
 			set_bg(Vector2i(x, y), 0)
 
 	dirty = false
@@ -488,29 +487,18 @@ func make_new(
 func resize(to: Vector2i) -> void:
 	assert(to == to.abs(),  "document size is negative somewhere")
 
-	if to.x > document_size.x:
-		for x: int in range(document_size.x, to.x):
-			for y: int in range(maxi(to.y, document_size.y)):
-				set_fg(Vector2i(x, y), ansifnt.empty_block, 0)
-				set_bg(Vector2i(x, y), 0)
+	background.clear()
+	for x: int in range(to.x):
+		for y: int in range(to.y):
+			set_bg(Vector2i(x, y), 0)
 
-	elif to.x < document_size.x:
-		for x: int in range(to.x, document_size.x):
-			for y: int in range(maxi(to.y, document_size.y)):
-				foreground.erase_cell(Vector2i(x, y))
-				background.erase_cell(Vector2i(x, y))
+	for x: int in range(mini(document_size.x, to.x), maxi(document_size.x, to.x)):
+		for y: int in range(maxi(to.y, document_size.y)):
+			foreground.erase_cell(Vector2i(x, y))
 
-	if to.y > document_size.y:
-		for y: int in range(document_size.y, to.y):
-			for x: int in range(maxi(to.x, document_size.x)):
-				set_fg(Vector2i(x, y), ansifnt.empty_block, 0)
-				set_bg(Vector2i(x, y), 0)
-
-	elif to.y < document_size.y:
-		for y: int in range(to.y, document_size.y):
-			for x: int in range(maxi(to.x, document_size.x)):
-				foreground.erase_cell(Vector2i(x, y))
-				background.erase_cell(Vector2i(x, y))
+	for y: int in range(mini(to.y, document_size.y), maxi(to.y, document_size.y)):
+		for x: int in range(maxi(document_size.x, to.x)):
+			foreground.erase_cell(Vector2i(x, y))
 
 	dirty = true
 	document_size = to
