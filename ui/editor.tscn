@@ -527,7 +527,8 @@ vertical_alignment = 2
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
-text = "Pan canvas with RMB."
+text = "Zoom with slider, scroll wheel, or pinching in/out.
+Pan canvas with RMB, or sliding two fingers."
 horizontal_alignment = 2
 vertical_alignment = 2
 
