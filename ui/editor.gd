@@ -111,8 +111,6 @@ func _ready() -> void:
 	%ToolPen.pressed.connect(		_update_tool.bind(Document.Tool.DRAWING))
 	%ToolPicker.pressed.connect(	_update_tool.bind(Document.Tool.PICKER))
 	%ToolLine.pressed.connect(		_update_tool.bind(Document.Tool.LINE))
-	#%ToolRectFull.pressed.connect(	_update_tool.bind(Document.Tool.RECT_FILL))
-	#%ToolRectLine.pressed.connect(	_update_tool.bind(Document.Tool.RECT_LINE))
 	%ToolReference.pressed.connect(	_update_tool.bind(Document.Tool.REFERENCE))
 
 	%ToolRectBoth.pressed.connect(_update_rect_tool)

@@ -13,8 +13,6 @@
 [ext_resource type="PackedScene" uid="uid://buyqey0uttr0s" path="res://ui/lospec_slug_popup.tscn" id="9_5on0m"]
 [ext_resource type="Texture2D" uid="uid://bmhpknr5aunxd" path="res://ui/icons/pixel/line.tres" id="9_407as"]
 [ext_resource type="PackedScene" uid="uid://c0puv0u5vncj8" path="res://ui/doc_is_dirty.tscn" id="10_28l1f"]
-[ext_resource type="Texture2D" uid="uid://mvkafpgtklt6" path="res://ui/icons/pixel/rectfill.tres" id="10_407as"]
-[ext_resource type="Texture2D" uid="uid://cp6gdi2bocfuu" path="res://ui/icons/pixel/rectlined.tres" id="11_407as"]
 [ext_resource type="Texture2D" uid="uid://jxf8yfog0dkl" path="res://ui/icons/pixel/picker.tres" id="12_407as"]
 [ext_resource type="Texture2D" uid="uid://cvkpg31f16453" path="res://ui/icons/pixel/rectboth.tres" id="12_sb7vj"]
 [ext_resource type="Texture2D" uid="uid://crlluqhka5t2e" path="res://ui/icons/pixel/refimage.tres" id="13_l3ljj"]
@@ -389,30 +387,6 @@ mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 icon = ExtResource("9_407as")
-
-[node name="ToolRectFull" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Tools" unique_id=340824582]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-tooltip_text = "Rectangle (Filled)
-
-Click and drag to make a filled-in rectangle."
-mouse_default_cursor_shape = 2
-toggle_mode = true
-button_group = ExtResource("4_q0a35")
-icon = ExtResource("10_407as")
-
-[node name="ToolRectLine" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Tools" unique_id=613684474]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-tooltip_text = "Rectangle (Lined)
-
-Click and drag to make a rectangle."
-mouse_default_cursor_shape = 2
-toggle_mode = true
-button_group = ExtResource("4_q0a35")
-icon = ExtResource("11_407as")
 
 [node name="ToolRectBoth" type="Button" parent="Camera/UI/MainContainer/HBoxContainer/ToolboxPanel/VBoxContainer/Tools" unique_id=1576251068]
 unique_name_in_owner = true
