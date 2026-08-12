@@ -4,20 +4,21 @@ signal export_request(path: String, upscale_x: float, upscale_y: float, webploss
 
 @onready var export_path: LineEdit = %ExportPath
 
-@onready var upscale_factor_x: HSlider = %UpscaleFactorX
-@onready var upscale_spinbox_x: SpinBox = %UpscaleSpinboxX
+@onready var upscale_factor_x:	HSlider = %UpscaleFactorX
+@onready var upscale_spinbox_x:	SpinBox = %UpscaleSpinboxX
 
-@onready var upscale_factor_y: HSlider = %UpscaleFactorY
-@onready var upscale_spinbox_y: SpinBox = %UpscaleSpinboxY
+@onready var upscale_factor_y:	HSlider = %UpscaleFactorY
+@onready var upscale_spinbox_y:	SpinBox = %UpscaleSpinboxY
 
-@onready var lock_aspect: CheckButton = %LockAspect
-@onready var integer_only: CheckButton = %IntegerOnly
+@onready var lock_aspect:	CheckButton = %LockAspect
+@onready var integer_only:	CheckButton = %IntegerOnly
 
-@onready var web_p_lossy: CheckButton = %WebPLossy
-@onready var webp_quality: HSlider = %WebpQuality
-@onready var webp_quality_readable: Label = %WebpQualityReadable
+@onready var web_p_lossy:			CheckButton	= %WebPLossy
+@onready var webp_quality:			HSlider		= %WebpQuality
+@onready var webp_quality_readable:	Label		= %WebpQualityReadable
+@onready var resulting_size:		Label		= %ResultingSize
+
 @onready var submit: Button = %Submit
-@onready var resulting_size: Label = %ResultingSize
 
 const VALID_EXPORT_FORMATS: PackedStringArray = ["png", "webp"]
 

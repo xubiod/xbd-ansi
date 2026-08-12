@@ -126,7 +126,6 @@ func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
 
 	if len(comments) > 0:
-		#buffer.resize(5 + (len(comments) * COMMENT_LEN))
 		stream.put_data("COMNT".to_ascii_buffer())
 		for comment: String in comments:
 			var comment_buffer: PackedByteArray = PackedByteArray()
@@ -140,7 +139,6 @@ func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 	if file_size > 0xFFFFFFFF:
 		file_size = 0
 
-	#buffer.resize(len(buffer) + 128)
 	stream.put_data("SAUCE".to_ascii_buffer())
 	stream.put_data("00".to_ascii_buffer())
 	stream.put_data(title.to_ascii_buffer())

@@ -413,7 +413,6 @@ func _process(_delta: float) -> void:
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
-	#cursor_sprite.visible = current_tool == Tool.TYPING
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if current_tool != Tool.TYPING:
@@ -487,7 +486,6 @@ func make_new(
 
 func resize(to: Vector2i) -> void:
 	assert(to == to.abs(),  "document size is negative somewhere")
-	#assert(to.length() > 0, "document size is zero")
 
 	if to.x > document_size.x:
 		for x: int in range(document_size.x, to.x):

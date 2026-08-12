@@ -63,7 +63,6 @@ const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 const TOOLS_RECTANGLE: Array[Document.Tool] = [Document.Tool.RECT_LINE, Document.Tool.RECT_FILL]
 
 #region Getter(s)/setter(s)
-
 func _set_ctrl_hint_visible(new_value: bool) -> void:
 	%ControlHints.visible = new_value
 
@@ -73,7 +72,6 @@ func _get_ctrl_hint_visible() -> bool:
 func _set_loaded_path(new_value: String) -> void:
 	loaded_path = new_value
 	update_inwindow_doc_name()
-
 #endregion
 
 func _ready() -> void:
@@ -290,7 +288,6 @@ func request_reexport() -> void:
 #endregion
 
 #region Signal connections
-
 func _foreground_changed() -> void:
 	var c: Color = document.selected_fg_as_color()
 	%Foreground.color = c
@@ -421,7 +418,6 @@ func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: 
 #endregion
 
 #region Editor set signal functions
-
 func _on_zoom_slider_value_changed(_value: float) -> void:
 	%ZoomLabel.text = "%0.1f%%" % (floorf(_value * 1000) / 10)
 
@@ -475,5 +471,4 @@ func _on_save_document_file_selected(path: String) -> void:
 	loaded_path = path
 	save_document()
 	commit_pending()
-
 #endregion

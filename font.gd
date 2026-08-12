@@ -55,17 +55,14 @@ static func from_path(path: String = Global.DEFAULT_FONTPATH) -> AnsiFont:
 		f.full_block = Global.FONT_SETTING_OVERRIDES[path]["full"]
 
 	return f
-
 #endregion
 
-#region Getter(s)
+#region Getter(s)/Setter(s)
 func _get_image() -> Image:
 	if image == null:
 		image = generate_image()
 	return image
-#endregion
 
-#region Setter(s)
 func _set_font_path(new_value: String) -> void:
 	# allow blank to unset
 	if new_value.is_empty():
