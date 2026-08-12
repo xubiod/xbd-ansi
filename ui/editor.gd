@@ -7,6 +7,10 @@ const COLOR_BTN: PackedScene = preload("uid://bhoyf3yuruu8v")
 
 @onready var zoom_slider: HSlider = $Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider
 
+const RECT_FILL: AtlasTexture	= preload("uid://mvkafpgtklt6")
+const RECT_LINED: AtlasTexture	= preload("uid://cp6gdi2bocfuu")
+const RECT_BOTH: AtlasTexture	= preload("uid://cvkpg31f16453")
+
 var camera_desired_pos: Vector2
 var panning: bool = false
 
@@ -44,16 +48,20 @@ var last_webpquality:	float	= NAN
 	Document.Tool.DRAWING:		%ToolPen,
 	Document.Tool.PICKER:		%ToolPicker,
 	Document.Tool.LINE:			%ToolLine,
-	Document.Tool.RECT_FILL:	%ToolRectFull,
-	Document.Tool.RECT_LINE:	%ToolRectLine,
+	Document.Tool.RECT_FILL:	%ToolRectBoth,
+	Document.Tool.RECT_LINE:	%ToolRectBoth,
 	Document.Tool.REFERENCE:	%ToolReference
 }
+
+var tool_fill: bool = false
 
 const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 	Document.Tool.TYPING,
 	Document.Tool.PICKER,
 	Document.Tool.REFERENCE
 ]
+
+const TOOLS_RECTANGLE: Array[Document.Tool] = [Document.Tool.RECT_LINE, Document.Tool.RECT_FILL]
 
 #region Getter(s)/setter(s)
 
@@ -103,9 +111,11 @@ func _ready() -> void:
 	%ToolPen.pressed.connect(		_update_tool.bind(Document.Tool.DRAWING))
 	%ToolPicker.pressed.connect(	_update_tool.bind(Document.Tool.PICKER))
 	%ToolLine.pressed.connect(		_update_tool.bind(Document.Tool.LINE))
-	%ToolRectFull.pressed.connect(	_update_tool.bind(Document.Tool.RECT_FILL))
-	%ToolRectLine.pressed.connect(	_update_tool.bind(Document.Tool.RECT_LINE))
+	#%ToolRectFull.pressed.connect(	_update_tool.bind(Document.Tool.RECT_FILL))
+	#%ToolRectLine.pressed.connect(	_update_tool.bind(Document.Tool.RECT_LINE))
 	%ToolReference.pressed.connect(	_update_tool.bind(Document.Tool.REFERENCE))
+
+	%ToolRectBoth.pressed.connect(_update_rect_tool)
 
 	%PaintModeCharacter.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.CHARACTER))
 	%PaintModeColourizeFG.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.COLOURIZE_FG))
@@ -325,6 +335,9 @@ func _color_btn_clicked(event: InputEvent, id: int) -> void:
 func _update_tool(tool: Document.Tool) -> void:
 	document.current_tool = tool
 
+	if tool not in TOOLS_RECTANGLE:
+		%ToolRectBoth.icon = RECT_BOTH
+
 	for key: Document.Tool in hint_labels:
 		hint_labels[key].visible = false
 
@@ -340,6 +353,16 @@ func _update_tool(tool: Document.Tool) -> void:
 
 	%PaintModesCollection.visible = tool != Document.Tool.REFERENCE
 	%ReferenceCollection.visible = !%PaintModesCollection.visible
+
+func _update_rect_tool() -> void:
+	if document.current_tool in TOOLS_RECTANGLE:
+		tool_fill = !tool_fill
+	else:
+		tool_fill = false
+
+	%ToolRectBoth.icon = RECT_FILL if tool_fill else RECT_LINED
+
+	_update_tool(Document.Tool.RECT_FILL if tool_fill else Document.Tool.RECT_LINE)
 
 func _update_paint_mode(paint_mode: Document.PaintMode) -> void:
 	%Document.current_paint_mode = paint_mode
