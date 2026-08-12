@@ -79,7 +79,7 @@ func _ready() -> void:
 
 	camera_desired_pos = document.document_rect.get_center()
 	%Camera.position = camera_desired_pos
-	%ZoomLabel.text = "%d%%" % (floorf(%Camera.zoom.x * 1000) / 10)
+	%ZoomLabel.text = "%.1f%%" % (floorf(%Camera.zoom.x * 1000) / 10)
 
 	for c: UIColor in %Colors.get_children():
 		c.color = (document.palette_image as Image).get_pixel(c.id, 0)
