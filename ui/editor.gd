@@ -17,6 +17,8 @@ var control_hints: bool = false : set = _set_ctrl_hint_visible, get = _get_ctrl_
 
 var loaded_path: String = "" : set = _set_loaded_path
 
+var zoom_inverted: bool = false
+
 enum PendingAction {
 	NOTHING,
 	NEW,
@@ -172,6 +174,13 @@ func _process(_delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and panning:
 		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
+
+	if event is InputEventMouseButton:
+		if event.pressed:
+			if event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_UP:
+				zoom_slider.value += zoom_slider.step * (-1 if zoom_inverted else 1)
+			elif event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_DOWN:
+				zoom_slider.value -= zoom_slider.step * (-1 if zoom_inverted else 1)
 
 func _notification(what: int) -> void:
 	match what:
