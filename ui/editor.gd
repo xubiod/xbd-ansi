@@ -66,6 +66,8 @@ const TOOLS_RECTANGLE: Array[Document.Tool] = [Document.Tool.RECT_LINE, Document
 
 var zoom_magnify_gesture: float = 0.
 
+const PAN_GESTURE_MULTIPLIER: float = 8.
+
 #region Getter(s)/setter(s)
 func _set_ctrl_hint_visible(new_value: bool) -> void:
 	%ControlHints.visible = new_value
@@ -193,6 +195,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if zoom_magnify_gesture > zoom_slider.step:
 			zoom_magnify_gesture -= zoom_slider.step
 			zoom_slider.value += zoom_slider.step * (-1 if event.factor < 1 else 1)
+
+	if event is InputEventPanGesture:
+		camera_desired_pos += (event.delta * PAN_GESTURE_MULTIPLIER) / %Camera.zoom.x
 
 func _notification(what: int) -> void:
 	match what:
