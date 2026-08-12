@@ -597,6 +597,9 @@ func save_xbin_to_buffer() -> PackedByteArray:
 			var code: int = get_fg_code(pos)
 			var attr: int = (get_bg(pos) << 4) | get_fg_attr(pos)
 
+			if code < 0:
+				code = ansifnt.empty_block
+
 			stream.put_8(code)
 			stream.put_8(attr)
 
