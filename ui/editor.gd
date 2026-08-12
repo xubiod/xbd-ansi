@@ -64,6 +64,8 @@ const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 
 const TOOLS_RECTANGLE: Array[Document.Tool] = [Document.Tool.RECT_LINE, Document.Tool.RECT_FILL]
 
+var zoom_magnify_gesture: float = 0.
+
 #region Getter(s)/setter(s)
 func _set_ctrl_hint_visible(new_value: bool) -> void:
 	%ControlHints.visible = new_value
@@ -171,6 +173,8 @@ func _process(_delta: float) -> void:
 	%CodeButton.disabled = %PaintModeCharacter.disabled
 	%CodeButton.modulate.a = 0.5 if %CodeButton.disabled else 1.0
 
+	zoom_magnify_gesture = lerpf(zoom_magnify_gesture, 0, 0.6)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and panning:
 		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
@@ -181,6 +185,14 @@ func _unhandled_input(event: InputEvent) -> void:
 				zoom_slider.value += zoom_slider.step * (-1 if zoom_inverted else 1)
 			elif event.button_index == MouseButton.MOUSE_BUTTON_WHEEL_DOWN:
 				zoom_slider.value -= zoom_slider.step * (-1 if zoom_inverted else 1)
+
+	if event is InputEventMagnifyGesture:
+		var f: float = remap(event.factor, 0.7, 1.3, -zoom_slider.step * 2, zoom_slider.step * 2)
+		zoom_magnify_gesture += absf(f)
+
+		if zoom_magnify_gesture > zoom_slider.step:
+			zoom_magnify_gesture -= zoom_slider.step
+			zoom_slider.value += zoom_slider.step * (-1 if event.factor < 1 else 1)
 
 func _notification(what: int) -> void:
 	match what:
