@@ -89,12 +89,10 @@ signal dirty_changed(new_value: bool)
 
 signal picked_complete
 
-#region Getters
+#region Getters/setters
 func _get_document_rect() -> Rect2:
 	return Rect2(Vector2.ZERO, document_size * glyph_size)
-#endregion
 
-#region Setters
 func _set_selected_foreground(new_value: int) -> void:
 	selected_fg = new_value
 	char_preview.self_modulate = selected_fg_as_color()
