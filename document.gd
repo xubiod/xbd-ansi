@@ -505,14 +505,14 @@ func resize(to: Vector2i) -> void:
 	sauce.type_for_xbin(document_size.x, document_size.y)
 
 func render(transparent_bg_idx: int = -1) -> Image:
-	var r: Image		= Image.create_empty(int(document_rect.size.x), int(document_rect.size.y), false, Image.FORMAT_RGBA4444)
-	var src: Image		= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
+	var r: Image	= Image.create_empty(int(document_rect.size.x), int(document_rect.size.y), false, Image.FORMAT_RGBA4444)
+	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
 
 	for y: int in range(document_size.y):
 		for x: int in range(document_size.x):
-			var p:		Vector2i = Vector2i(x, y)
-			var bg:		int = get_bg(p)
-			var fg:		int = get_fg_attr(p)
+			var p:	Vector2i = Vector2i(x, y)
+			var bg:	int = get_bg(p)
+			var fg:	int = get_fg_attr(p)
 
 			var region: Vector2i = foreground.get_cell_atlas_coords(p)
 
@@ -735,6 +735,4 @@ func load_xbin(xbin_path: String) -> void:
 	@warning_ignore_restore("integer_division")
 	f.close()
 	dirty = false
-
-	render()
 #endregion
