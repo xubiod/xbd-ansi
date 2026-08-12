@@ -51,6 +51,8 @@ func _ready() -> void:
 	$Document.add_submenu_node_item("Load built-in font", built_in_fonts, DocumentIds.LOAD_BUILT_IN)
 	$Document.add_item("Load font from *.F##", DocumentIds.CUSTOM_FONT)
 
+	$Document.add_separator("", ID_MASK)
+
 	var built_in_palette: PopupMenu = PopupMenu.new()
 
 	for key: String in Global.named_palettes:
@@ -61,7 +63,7 @@ func _ready() -> void:
 	$Document.add_submenu_node_item("Load built-in palette", built_in_palette, DocumentIds.LOAD_PALETTE)
 	$Document.add_item("Load palette from Lospec", DocumentIds.LOAD_PALETTE_FROM_LOSPEC_SLUG)
 
-	$Document.add_separator("", INT32_MAX)
+	$Document.add_separator("", ID_MASK - 1)
 
 	$Document.add_item("SAUCE info...", DocumentIds.SAUCE_EDITOR)
 	$Document.add_item("Resize", DocumentIds.RESIZE)
