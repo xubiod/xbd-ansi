@@ -18,10 +18,14 @@ func _on_font_path_text_changed(new_text: String) -> void:
 	if exists:
 		myfont = AnsiFont.from_path(new_text)
 		preview.texture = ImageTexture.create_from_image(myfont.image)
+		var _size: Vector2 = preview.texture.get_size() * %PreviewZoom.value
+		preview.custom_minimum_size = _size
 
 func _on_about_to_popup() -> void:
 	font_path.text = ""
 	myfont = AnsiFont.new()
+	preview.scale = Vector2.ONE
+	%PreviewZoom.value = 1.0
 
 func _on_close_requested() -> void:
 	hide()
@@ -36,3 +40,8 @@ func _on_submit_pressed() -> void:
 
 func _on_summon_picker_pressed() -> void:
 	open_font.show()
+
+func _on_preview_zoom_value_changed(value: float) -> void:
+	var _size: Vector2 = preview.texture.get_size() * value
+	preview.custom_minimum_size = _size
+	%PreviewZoomLbl.text = "%d%%" % [value * 100]
