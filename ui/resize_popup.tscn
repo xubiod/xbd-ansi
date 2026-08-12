@@ -31,7 +31,9 @@ layout_mode = 2
 alignment = 1
 
 [node name="Width" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=750879765]
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Width" unique_id=1957416454]
 custom_minimum_size = Vector2(80, 0)
@@ -54,7 +56,9 @@ alignment = 2
 suffix = "chars"
 
 [node name="Height" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=491135010]
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Height" unique_id=1040644061]
 custom_minimum_size = Vector2(80, 0)
