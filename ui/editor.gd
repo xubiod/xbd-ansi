@@ -229,6 +229,7 @@ func new_document() -> void:
 	last_webpquality = NAN
 
 	%Editor.reset()
+	camera_desired_pos = document.document_rect.get_center()
 
 func save_document() -> void:
 	assert(not loaded_path.is_empty(), "path cannot be empty")
@@ -460,6 +461,7 @@ func _on_open_x_bin_file_selected(path: String) -> void:
 		return
 	document.load_xbin(path)
 	loaded_path = path
+	camera_desired_pos = document.document_rect.get_center()
 
 func _on_ref_popup_file_selected(path: String) -> void:
 	document.load_reference_image(path)
@@ -499,4 +501,7 @@ func _on_save_document_file_selected(path: String) -> void:
 	loaded_path = path
 	save_document()
 	commit_pending()
+
+func _on_recenter_camera_pressed() -> void:
+	camera_desired_pos = document.document_rect.get_center()
 #endregion

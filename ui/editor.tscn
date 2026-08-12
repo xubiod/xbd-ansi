@@ -557,6 +557,14 @@ max_value = 4.0
 step = 0.125
 value = 1.0
 
+[node name="RecenterCamera" type="Button" parent="Camera/UI/MainContainer/StatusPanel/StatusHBox" unique_id=1330698887]
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Recenters the camera to the center of the current document.
+Helpful if you get lost."
+theme_override_font_sizes/font_size = 10
+text = "Recenter"
+
 [node name="PaletteWindow" type="Window" parent="Camera/UI" unique_id=1775890482]
 unique_name_in_owner = true
 disable_3d = true
@@ -685,6 +693,7 @@ visible = false
 [connection signal="focus_entered" from="Camera/UI/MainContainer/HBoxContainer/ThePit" to="." method="_on_the_pit_focus_entered"]
 [connection signal="gui_input" from="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints" to="." method="_on_control_hints_gui_input"]
 [connection signal="value_changed" from="Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider" to="." method="_on_zoom_slider_value_changed"]
+[connection signal="pressed" from="Camera/UI/MainContainer/StatusPanel/StatusHBox/RecenterCamera" to="." method="_on_recenter_camera_pressed"]
 [connection signal="mouse_entered" from="Camera/UI/PaletteWindow" to="Camera/UI/PaletteWindow" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Camera/UI/PaletteWindow" to="Camera/UI/PaletteWindow" method="_on_mouse_exited"]
 [connection signal="gui_input" from="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer/Titlebar/Titlebar" to="Camera/UI/PaletteWindow" method="_on_titlebar_gui_input"]
