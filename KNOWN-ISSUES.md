@@ -8,3 +8,4 @@
 - Additional XBin fuunctionality
   - Should be able to load fonts from XBin
   - Import palette from XBin
+- Lines are jaggy

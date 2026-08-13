@@ -293,12 +293,28 @@ func type(code: int) -> void:
 ## Uses the method `paint_with_selected` to draw a line on the TileMapLayer(s).
 ## See `paint_with_selected` for how the line is drawn character by character.
 func make_line(from: Vector2, to: Vector2) -> void:
-	var dist: float = from.distance_to(to)
-	var change: Vector2 = ((to - from) / dist) / LINE_STEPS
+	var dx:  float =  floorf(absf(to.x - from.x))
+	var dy:  float = -floorf(absf(to.y - from.y))
 
-	for i: int in range(floorf(dist) * LINE_STEPS):
+	var sx:  float = 1.0 if from.x < to.x else -1.0
+	var sy:  float = 1.0 if from.y < to.y else -1.0
+
+	var err: float = dx + dy
+	var e2: float
+
+	while true:
 		paint_with_selected(from)
-		from += change
+		e2 = 2. * err
+		if e2 >= dy:
+			if is_equal_approx(from.x, to.x):
+				return
+			err += dy
+			from.x += sx
+		if e2 <= dx:
+			if is_equal_approx(from.y, to.y):
+				return
+			err += dx
+			from.y += sy
 
 ## Uses `selected_code`, `selected_fg`, `selected_bg` and `current_paint_mode`
 ## to change a tile on the foreground/background layers.
