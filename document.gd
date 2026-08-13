@@ -574,8 +574,8 @@ func save_xbin_to_buffer() -> PackedByteArray:
 	stream.put_data("XBIN".to_ascii_buffer())
 	stream.put_8(0x1A)
 
-	stream.put_16(document_size.x & 0xFFFF)
-	stream.put_16(document_size.y & 0xFFFF)
+	stream.put_16(document_size.x & UINT16_MAX)
+	stream.put_16(document_size.y & UINT16_MAX)
 
 	stream.put_8(ansifnt.font_height)
 
