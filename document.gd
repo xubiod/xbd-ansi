@@ -183,6 +183,10 @@ func fill_palette_image(colours: PackedColorArray) -> void:
 
 	update_palette()
 
+func single_color_update(index: int, to: Color) -> void:
+	palette_image.set_pixel(index, 0, to)
+	update_palette()
+
 func update_palette() -> void:
 	palette_texture.update(palette_image)
 	palette_updated.emit()

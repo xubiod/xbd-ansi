@@ -89,7 +89,8 @@ func _ready() -> void:
 
 	for c: UIColor in %Colors.get_children():
 		c.color = (document.palette_image as Image).get_pixel(c.id, 0)
-		c.gui_input.connect(_color_btn_clicked.bind(c.id))
+		c.gui_input.connect(_color_btn_clicked.bind(c.id, c))
+		c.color_changed.connect(_single_color_updated)
 
 	_foreground_changed()
 	_background_changed()
@@ -350,10 +351,12 @@ func _selected_code_changed() -> void:
 	%CodeButton.texture_normal.region.position = Vector2(pos)
 
 ## To be used with `bind` setting `id` for the `gui_input` signal.
-func _color_btn_clicked(event: InputEvent, id: int) -> void:
+func _color_btn_clicked(event: InputEvent, id: int, node: UIColor) -> void:
 	if event is InputEventMouseButton:
 		var mouseev: InputEventMouseButton = event as InputEventMouseButton
-		if mouseev.button_index == MouseButton.MOUSE_BUTTON_LEFT:
+		if mouseev.double_click:
+			node.show_picker()
+		elif mouseev.button_index == MouseButton.MOUSE_BUTTON_LEFT:
 			document.selected_fg = id
 		elif mouseev.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
 			document.selected_bg = id
@@ -400,6 +403,9 @@ func _palette_updated() -> void:
 
 	_foreground_changed()
 	_background_changed()
+
+func _single_color_updated(id: int, to: Color) -> void:
+	document.single_color_update(id, to)
 
 func _on_title_updated(v: String) -> void:
 	document.dirty = document.dirty || (document.sauce.title != v)

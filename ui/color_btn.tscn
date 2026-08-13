@@ -12,7 +12,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hut04"]
 
-[node name="ColorBtn" type="Button" unique_id=2067074109]
+[node name="ColorBtn" type="Button" unique_id=1551964726]
 custom_minimum_size = Vector2(16, 16)
 offset_right = 16.0
 offset_bottom = 16.0
@@ -35,3 +35,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="PickerPopup" type="Popup" parent="." unique_id=982780709]
+disable_3d = true
+oversampling_override = 1.0
+position = Vector2i(16, 0)
+size = Vector2i(300, 564)
+
+[node name="ColorPicker" type="ColorPicker" parent="PickerPopup" unique_id=509116779]
+unique_name_in_owner = true
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 564.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+edit_alpha = false
+edit_intensity = false
+
+[connection signal="color_changed" from="PickerPopup/ColorPicker" to="." method="_on_color_picker_color_changed"]
