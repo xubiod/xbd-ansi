@@ -92,7 +92,6 @@ alignment = 1
 
 [node name="PaintModesCollection" type="HBoxContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools" unique_id=699743751]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="CodeButton" type="TextureButton" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection" unique_id=973421108]
@@ -115,8 +114,20 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="PaintModeHalf" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection" unique_id=2016593249]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+tooltip_text = "Unimplemented."
+mouse_default_cursor_shape = 2
+disabled = true
+toggle_mode = true
+button_group = ExtResource("4_gbsbp")
+text = "Half Block"
+
 [node name="PaintModeCharacter" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection" unique_id=78321147]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 tooltip_text = "Paints the character as previewed."
 mouse_default_cursor_shape = 2
@@ -127,6 +138,7 @@ text = "Character"
 
 [node name="PaintModeColourizeFG" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection" unique_id=1749209537]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 tooltip_text = "Overrides the foreground attribute.
 Character doesn't change."
@@ -137,6 +149,7 @@ text = "Colourize FG"
 
 [node name="PaintModeColourizeBG" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection" unique_id=384805283]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 tooltip_text = "Overrides the background attribute.
 Character doesn't change."
@@ -147,6 +160,7 @@ text = "Colourize BG"
 
 [node name="PaintModeColourizeFull" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/PaintModesCollection" unique_id=1869734110]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 tooltip_text = "Overrides the foreground and background attributes.
 Character doesn't change."
@@ -157,6 +171,7 @@ text = "Colourize Full"
 
 [node name="ReferenceCollection" type="HBoxContainer" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools" unique_id=1706481200]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="RefOpen" type="Button" parent="Camera/UI/MainContainer/TopPanel/VBoxContainer/Subtools/ReferenceCollection" unique_id=267694035]
