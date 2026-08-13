@@ -27,6 +27,8 @@ const DEFAULT_FULL_BLOCK:		 int = 0xDB
 
 var image: Image = null : get = _get_image
 
+const CHAR_COUNT: int = 256
+
 #region Static constructors
 static func from_data(data: PackedByteArray) -> AnsiFont:
 	var f: AnsiFont = AnsiFont.new()
@@ -89,13 +91,10 @@ func _guess_font_height_with_path(heuristic: FontHeightGuessHeuristic = FontHeig
 
 			font_height = int(font_path.get_extension().erase(0, 1))
 		FontHeightGuessHeuristic.PATH_SIZE:
-			const CHAR_COUNT: int = 256
-			var size: int = FileAccess.get_size(font_path)
 			@warning_ignore("integer_division")
-			font_height = size / CHAR_COUNT
+			font_height = FileAccess.get_size(font_path) / CHAR_COUNT
 
 func _guess_font_height_from_data() -> void:
-	const CHAR_COUNT: int = 256
 	var length: int = len(font_data)
 
 	assert(length % CHAR_COUNT == 0, "weird font size, not a multiple of charcount")
@@ -138,10 +137,11 @@ func generate_image() -> Image:
 
 	var result: Image = Image.create_empty(128, 16 * font_height, false, Image.FORMAT_LA8)
 
+	var byte: int
 	for character_y: int in range(0, 16):
 		for character_x: int in range(0, 16):
 			for y: int in range(0, font_height):
-				var byte: int = font_data.decode_u8(y + (character_x * font_height) + (character_y * font_height * 16))
+				byte = font_data.decode_u8(y + (character_x * font_height) + (character_y * font_height * 16))
 				for sub_x: int in range(7, -1, -1):
 					result.set_pixel(
 						(character_x * 8) + sub_x,
@@ -162,9 +162,10 @@ func generate_tileset() -> TileSet:
 
 	source.texture = ImageTexture.create_from_image(_get_image())
 
+	var pos: Vector2i
 	for character_y: int in range(0, 16):
 		for character_x: int in range(0, 16):
-			var pos: Vector2i = Vector2i(character_x, character_y)
+			pos = Vector2i(character_x, character_y)
 			source.create_tile(pos)
 			for shade: int in range(0, 16):
 				source.create_alternative_tile(pos, get_alt_id(shade))
