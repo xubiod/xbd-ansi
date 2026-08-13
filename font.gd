@@ -28,7 +28,6 @@ const DEFAULT_FULL_BLOCK:		 int = 0xDB
 var image: Image = null : get = _get_image
 
 #region Static constructors
-
 static func from_data(data: PackedByteArray) -> AnsiFont:
 	var f: AnsiFont = AnsiFont.new()
 	f.font_data = data
