@@ -29,6 +29,11 @@ const FLAGS_BIGFONT:	int = 0b00010000
 
 const FLAGS_MASK:		int = 0b00011111
 
+const XBIN_COMPRESSION_NONE:		int = 0x00
+const XBIN_COMPRESSION_CHARACTER:	int = 0x40
+const XBIN_COMPRESSION_ATTRIBUTE:	int = 0x80
+const XBIN_COMPRESSION_BOTH:		int = 0xC0
+
 const DEFAULT_SIZE: Vector2i = Vector2i(80, 25)
 const LINE_STEPS: int = 1
 
@@ -698,7 +703,7 @@ func load_xbin(xbin_path: String) -> void:
 			var bg: int
 
 			match compression_type:
-				0x00:	# no compression (0b00000000)
+				XBIN_COMPRESSION_NONE:
 					for i: int in range(compression_count):
 						code = f.get_8()
 						attr = f.get_8()
@@ -708,7 +713,7 @@ func load_xbin(xbin_path: String) -> void:
 
 						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
 						tiles_written += 1
-				0x40:	# character compression (0b01000000)
+				XBIN_COMPRESSION_CHARACTER:
 					code = f.get_8()
 					for i: int in range(compression_count):
 						attr = f.get_8()
@@ -718,7 +723,7 @@ func load_xbin(xbin_path: String) -> void:
 
 						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
 						tiles_written += 1
-				0x80:	# attribute compression (0b10000000)
+				XBIN_COMPRESSION_ATTRIBUTE:
 					attr = f.get_8()
 
 					fg = attr & 0xF
@@ -731,7 +736,7 @@ func load_xbin(xbin_path: String) -> void:
 
 						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
 						tiles_written += 1
-				0xC0:	# both compression (0b11000000)
+				XBIN_COMPRESSION_BOTH:
 					code = f.get_8()
 					attr = f.get_8()
 
