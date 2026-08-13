@@ -51,6 +51,7 @@ const PREVIEW_ALPHA: float = 0.5
 @onready var cursor_sprite: Sprite2D = $Cursor
 @onready var reference: Sprite2D = %Reference
 @onready var char_preview: TextureRect = %PreviewFG
+@onready var line_ref: Line2D = $LineRef
 
 var sauce: Sauce
 
@@ -358,6 +359,8 @@ func _process(_delta: float) -> void:
 	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
 
 	if !viewport.is_input_handled():
+		line_ref.visible = Input.is_action_pressed(&"tool_interaction")
+
 		if global_point_in_canvas(global_mouse_pos):
 			if Input.is_action_just_pressed(&"tool_interaction"):
 				tool_in_use = true
@@ -448,6 +451,9 @@ func _process(_delta: float) -> void:
 		char_preview.modulate.a = PREVIEW_ALPHA if cursor_sprite.visible else 0.0
 
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
+
+	line_ref.set_point_position(0, Vector2(start_canvas_pos))
+	line_ref.set_point_position(1, Vector2(global_mouse_pos))
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
 

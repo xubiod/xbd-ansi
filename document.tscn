@@ -81,3 +81,10 @@ unique_name_in_owner = true
 visible = false
 modulate = Color(1, 1, 1, 0.5)
 centered = false
+
+[node name="LineRef" type="Line2D" parent="." unique_id=454720796]
+visible = false
+points = PackedVector2Array(0, 0, 0, 0)
+width = 1.0
+default_color = Color(1, 1, 1, 0.5)
+antialiased = true
