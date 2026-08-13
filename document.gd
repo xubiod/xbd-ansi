@@ -29,6 +29,9 @@ const FLAGS_BIGFONT:	int = 0b00010000
 
 const FLAGS_MASK:		int = 0b00011111
 
+const XBIN_MAGIC:	String = "XBIN"
+const XBIN_EOF:		int = 0x1A
+
 const XBIN_COMPRESSION_NONE:		int = 0x00
 const XBIN_COMPRESSION_CHARACTER:	int = 0x40
 const XBIN_COMPRESSION_ATTRIBUTE:	int = 0x80
@@ -571,8 +574,8 @@ func get_reference_image_width_in_chars() -> int:
 func save_xbin_to_buffer() -> PackedByteArray:
 	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
 
-	stream.put_data("XBIN".to_ascii_buffer())
-	stream.put_8(0x1A)
+	stream.put_data(XBIN_MAGIC.to_ascii_buffer())
+	stream.put_8(XBIN_EOF)
 
 	stream.put_16(document_size.x & UINT16_MAX)
 	stream.put_16(document_size.y & UINT16_MAX)
@@ -629,11 +632,11 @@ func load_xbin(xbin_path: String) -> void:
 	f.seek(0)
 
 	var magic: String = f.get_buffer(4).get_string_from_ascii()
-	if magic != "XBIN":
+	if magic != XBIN_MAGIC:
 		push_error("no magic")
 		return
 
-	if f.get_8() != 0x1A:
+	if f.get_8() != XBIN_EOF:
 		push_error("no EOF")
 		return
 
