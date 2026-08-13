@@ -149,6 +149,10 @@ func change_font(font_path: String) -> void:
 	ansifnt.font_path = font_path
 	update_font_tileset()
 
+func change_font_data(font_data: PackedByteArray) -> void:
+	ansifnt = AnsiFont.from_data(font_data)
+	update_font_tileset()
+
 func update_font_tileset() -> void:
 	tileset = ansifnt.generate_tileset()
 

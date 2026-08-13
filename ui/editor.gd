@@ -442,8 +442,8 @@ func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: 
 		_:
 			push_error("unknown extension?")
 
-func _update_font(path: String) -> void:
-	document.change_font(path)
+func _update_font(data: PackedByteArray) -> void:
+	document.change_font_data(data)
 #endregion
 
 #region Editor set signal functions

@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://bhoyf3yuruu8v" path="res://ui/color_btn.tscn" id="3_wrb8p"]
 [ext_resource type="ButtonGroup" uid="uid://cbrh33sr25o61" path="res://ui/toolbar_paint_mode_buttongroup.tres" id="4_gbsbp"]
 [ext_resource type="ButtonGroup" uid="uid://b0dpa6ob2xbsl" path="res://ui/toolbar_tool_buttongroup.tres" id="4_q0a35"]
-[ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://ui/palette_window.gd" id="5_4s0cy"]
 [ext_resource type="Texture2D" uid="uid://8fnttr2hav24" path="res://ui/icons/pixel/typing.tres" id="7_407as"]
 [ext_resource type="Texture2D" uid="uid://bnwbisqfgphq5" path="res://ui/icons/pixel/pencil.tres" id="8_l3ljj"]
 [ext_resource type="PackedScene" uid="uid://cyq2k0aj1ujpf" path="res://ui/resize_popup.tscn" id="8_t27w5"]
@@ -17,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://cvkpg31f16453" path="res://ui/icons/pixel/rectboth.tres" id="12_sb7vj"]
 [ext_resource type="Texture2D" uid="uid://crlluqhka5t2e" path="res://ui/icons/pixel/refimage.tres" id="13_l3ljj"]
 [ext_resource type="Texture2D" uid="uid://cdtvbkhps4ix7" path="res://ui/icons/pixel/fillbucket.tres" id="14_l3ljj"]
+[ext_resource type="PackedScene" uid="uid://b6b0jplks4ps5" path="res://ui/palette_window.tscn" id="14_n8yra"]
 [ext_resource type="PackedScene" uid="uid://ctidf4qwl7i2t" path="res://ui/sauce_editor.tscn" id="18_407as"]
 [ext_resource type="PackedScene" uid="uid://bxwqmlxtv6fa" path="res://ui/export.tscn" id="20_n8yra"]
 [ext_resource type="PackedScene" uid="uid://bs0fb5ftava6b" path="res://ui/font_importer.tscn" id="20_sb7vj"]
@@ -565,66 +565,9 @@ Helpful if you get lost."
 theme_override_font_sizes/font_size = 10
 text = "Recenter"
 
-[node name="PaletteWindow" type="Window" parent="Camera/UI" unique_id=1775890482]
-unique_name_in_owner = true
-disable_3d = true
-handle_input_locally = false
-oversampling_override = 1.0
-title = "Character Palette"
-initial_position = 2
-size = Vector2i(256, 256)
-visible = false
-transient = true
-borderless = true
-script = ExtResource("5_4s0cy")
+[node name="Windows" type="Node" parent="Camera/UI" unique_id=1706040997]
 
-[node name="PanelContainer" type="PanelContainer" parent="Camera/UI/PaletteWindow" unique_id=1916482218]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera/UI/PaletteWindow/PanelContainer" unique_id=330703307]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="Titlebar" type="HBoxContainer" parent="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer" unique_id=928185227]
-layout_mode = 2
-
-[node name="Titlebar" type="Button" parent="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer/Titlebar" unique_id=854749068]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_behavior_recursive = 2
-text = "Character Palette"
-
-[node name="Dismiss" type="Button" parent="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer/Titlebar" unique_id=1199521591]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-text = "X"
-
-[node name="PaletteCharBackground" type="ColorRect" parent="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer" unique_id=69608606]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="PaletteCharContainer" type="GridContainer" parent="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer/PaletteCharBackground" unique_id=7468375]
-unique_name_in_owner = true
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
-columns = 16
-
-[node name="OpenXBin" type="FileDialog" parent="Camera/UI" unique_id=1461863555]
+[node name="OpenXBin" type="FileDialog" parent="Camera/UI/Windows" unique_id=1461863555]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Open a File"
@@ -638,7 +581,7 @@ folder_creation_enabled = false
 favorites_enabled = false
 deleting_enabled = false
 
-[node name="SaveDocument" type="FileDialog" parent="Camera/UI" unique_id=508781406]
+[node name="SaveDocument" type="FileDialog" parent="Camera/UI/Windows" unique_id=508781406]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Save Document"
@@ -648,7 +591,7 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.xb;XBin;application/octet-stream")
 
-[node name="RefPopup" type="FileDialog" parent="Camera/UI" unique_id=1828895261]
+[node name="RefPopup" type="FileDialog" parent="Camera/UI/Windows" unique_id=1828895261]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Open a File"
@@ -660,27 +603,30 @@ filters = PackedStringArray("*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg
 folder_creation_enabled = false
 deleting_enabled = false
 
-[node name="ResizePopup" parent="Camera/UI" unique_id=1473360267 instance=ExtResource("8_t27w5")]
+[node name="PaletteWindow" parent="Camera/UI/Windows" unique_id=1905367076 instance=ExtResource("14_n8yra")]
+unique_name_in_owner = true
+
+[node name="ResizePopup" parent="Camera/UI/Windows" unique_id=1473360267 instance=ExtResource("8_t27w5")]
 unique_name_in_owner = true
 visible = false
 
-[node name="LospecSlugPopup" parent="Camera/UI" unique_id=828341066 instance=ExtResource("9_5on0m")]
+[node name="LospecSlugPopup" parent="Camera/UI/Windows" unique_id=828341066 instance=ExtResource("9_5on0m")]
 unique_name_in_owner = true
 visible = false
 
-[node name="DocIsDirty" parent="Camera/UI" unique_id=887857119 instance=ExtResource("10_28l1f")]
+[node name="DocIsDirty" parent="Camera/UI/Windows" unique_id=887857119 instance=ExtResource("10_28l1f")]
 unique_name_in_owner = true
 visible = false
 
-[node name="SauceEditor" parent="Camera/UI" unique_id=790962745 instance=ExtResource("18_407as")]
+[node name="SauceEditor" parent="Camera/UI/Windows" unique_id=790962745 instance=ExtResource("18_407as")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Exporter" parent="Camera/UI" unique_id=2093735464 instance=ExtResource("20_n8yra")]
+[node name="Exporter" parent="Camera/UI/Windows" unique_id=2093735464 instance=ExtResource("20_n8yra")]
 unique_name_in_owner = true
 visible = false
 
-[node name="FontImporter" parent="Camera/UI" unique_id=1477292601 instance=ExtResource("20_sb7vj")]
+[node name="FontImporter" parent="Camera/UI/Windows" unique_id=1477292601 instance=ExtResource("20_sb7vj")]
 unique_name_in_owner = true
 visible = false
 
@@ -694,10 +640,6 @@ visible = false
 [connection signal="gui_input" from="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints" to="." method="_on_control_hints_gui_input"]
 [connection signal="value_changed" from="Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider" to="." method="_on_zoom_slider_value_changed"]
 [connection signal="pressed" from="Camera/UI/MainContainer/StatusPanel/StatusHBox/RecenterCamera" to="." method="_on_recenter_camera_pressed"]
-[connection signal="mouse_entered" from="Camera/UI/PaletteWindow" to="Camera/UI/PaletteWindow" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Camera/UI/PaletteWindow" to="Camera/UI/PaletteWindow" method="_on_mouse_exited"]
-[connection signal="gui_input" from="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer/Titlebar/Titlebar" to="Camera/UI/PaletteWindow" method="_on_titlebar_gui_input"]
-[connection signal="pressed" from="Camera/UI/PaletteWindow/PanelContainer/VBoxContainer/Titlebar/Dismiss" to="Camera/UI/PaletteWindow" method="_on_dismiss_pressed"]
-[connection signal="file_selected" from="Camera/UI/OpenXBin" to="." method="_on_open_x_bin_file_selected"]
-[connection signal="file_selected" from="Camera/UI/SaveDocument" to="." method="_on_save_document_file_selected"]
-[connection signal="file_selected" from="Camera/UI/RefPopup" to="." method="_on_ref_popup_file_selected"]
+[connection signal="file_selected" from="Camera/UI/Windows/OpenXBin" to="." method="_on_open_x_bin_file_selected"]
+[connection signal="file_selected" from="Camera/UI/Windows/SaveDocument" to="." method="_on_save_document_file_selected"]
+[connection signal="file_selected" from="Camera/UI/Windows/RefPopup" to="." method="_on_ref_popup_file_selected"]

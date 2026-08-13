@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://b6b0jplks4ps5"]
+
+[ext_resource type="Script" uid="uid://bf26bktb7wgf2" path="res://ui/palette_window.gd" id="1_3bayh"]
+
+[node name="PaletteWindow" type="Window" unique_id=1905367076]
+disable_3d = true
+handle_input_locally = false
+oversampling_override = 1.0
+title = "Character Palette"
+initial_position = 2
+size = Vector2i(256, 256)
+visible = false
+transient = true
+borderless = true
+script = ExtResource("1_3bayh")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1856455109]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1231215129]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Titlebar" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=129983802]
+layout_mode = 2
+
+[node name="Titlebar" type="Button" parent="PanelContainer/VBoxContainer/Titlebar" unique_id=1993217393]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_behavior_recursive = 2
+text = "Character Palette"
+
+[node name="Dismiss" type="Button" parent="PanelContainer/VBoxContainer/Titlebar" unique_id=1444592698]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+text = "X"
+
+[node name="PaletteCharBackground" type="ColorRect" parent="PanelContainer/VBoxContainer" unique_id=1273303626]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PaletteCharContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/PaletteCharBackground" unique_id=871693290]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 16
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="gui_input" from="PanelContainer/VBoxContainer/Titlebar/Titlebar" to="." method="_on_titlebar_gui_input"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Titlebar/Dismiss" to="." method="_on_dismiss_pressed"]

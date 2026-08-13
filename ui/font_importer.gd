@@ -8,18 +8,28 @@ class_name FontImporter extends Window
 
 var myfont: AnsiFont
 
-signal font_submitted(path: String)
+signal font_submitted(data: PackedByteArray)
 
 func _on_font_path_text_changed(new_text: String) -> void:
 	var exists: bool = FileAccess.file_exists(new_text)
-	submit.disabled = not exists
-	no_preview.visible = not exists
+	var extension: String = new_text.to_lower().get_extension()
+
+	preview.texture = null
 
 	if exists:
-		myfont = AnsiFont.from_path(new_text)
-		preview.texture = ImageTexture.create_from_image(myfont.image)
-		var _size: Vector2 = preview.texture.get_size() * %PreviewZoom.value
-		preview.custom_minimum_size = _size
+		if extension == "xb":
+			# TODO: import from xbin without a full document import
+			assert(false, "not implemented yet")
+		elif extension[0] == "f":
+			myfont = AnsiFont.from_path(new_text)
+			preview.texture = ImageTexture.create_from_image(myfont.image)
+			var _size: Vector2 = preview.texture.get_size() * %PreviewZoom.value
+			preview.custom_minimum_size = _size
+		else:
+			exists = false
+
+	submit.disabled = not exists
+	no_preview.visible = not exists
 
 func _on_about_to_popup() -> void:
 	font_path.text = ""
@@ -35,7 +45,7 @@ func _on_open_font_file_selected(path: String) -> void:
 	_on_font_path_text_changed(path)
 
 func _on_submit_pressed() -> void:
-	font_submitted.emit(font_path.text)
+	font_submitted.emit(myfont.font_data)
 	hide()
 
 func _on_summon_picker_pressed() -> void:
