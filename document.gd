@@ -188,6 +188,7 @@ func single_color_update(index: int, to: Color) -> void:
 	update_palette()
 
 func update_palette() -> void:
+	dirty = true
 	palette_texture.update(palette_image)
 	palette_updated.emit()
 
