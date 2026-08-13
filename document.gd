@@ -7,7 +7,10 @@ enum Tool {
 	LINE,
 	RECT_LINE,
 	RECT_FILL,
-	REFERENCE
+	REFERENCE,
+	ELLIPSE_LINE,
+	ELLIPSE_FILL,
+	FILLBUCKET
 }
 
 enum PaintMode {
