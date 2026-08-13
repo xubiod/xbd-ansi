@@ -329,11 +329,24 @@ func paint_with_selected(global_pt: Vector2) -> void:
 	var existing_fg_attr:	int = get_fg_attr(tile)
 	var existing_bg:		int = get_bg(tile)
 
+	var _top_half: bool = (global_pt.y - floorf(global_pt.y)) < 0.5
+
 	match current_paint_mode:
 		PaintMode.HALFBLOCK:
 			# TODO this
 			assert(false, "unimplemented")
-			pass
+			match tile:
+				ansifnt.half_top_block:
+					pass
+
+				ansifnt.half_bottom_block:
+					pass
+
+				ansifnt.full_block:
+					pass
+
+				ansifnt.empty_block, _:
+					pass
 
 		PaintMode.CHARACTER:
 			if not (existing_bg == selected_bg and existing_fg_attr == selected_fg and existing_fg_code == selected_code):
