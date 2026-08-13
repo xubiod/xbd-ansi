@@ -525,13 +525,18 @@ func render(transparent_bg_idx: int = -1) -> Image:
 	var r: Image	= Image.create_empty(int(document_rect.size.x), int(document_rect.size.y), false, Image.FORMAT_RGBA4444)
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
 
+	var p:	Vector2i
+	var bg:	int
+	var fg:	int
+	var region: Vector2i
+
 	for y: int in range(document_size.y):
 		for x: int in range(document_size.x):
-			var p:	Vector2i = Vector2i(x, y)
-			var bg:	int = get_bg(p)
-			var fg:	int = get_fg_attr(p)
+			p	= Vector2i(x, y)
+			bg	= get_bg(p)
+			fg	= get_fg_attr(p)
 
-			var region: Vector2i = foreground.get_cell_atlas_coords(p)
+			region = foreground.get_cell_atlas_coords(p)
 
 			if bg != transparent_bg_idx:
 				r.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), palette_image.get_pixel(bg, 0))
@@ -595,12 +600,15 @@ func save_xbin_to_buffer() -> PackedByteArray:
 	if (flags & FLAGS_FONT) != 0:
 		stream.put_data(ansifnt.font_data)
 
+	var pos: Vector2i
+	var code: int
+	var attr: int
+
 	for y: int in range(document_size.y):
 		for x: int in range(document_size.x):
-			var pos: Vector2i = Vector2i(x, y)
-
-			var code: int = get_fg_code(pos)
-			var attr: int = (get_bg(pos) << 4) | get_fg_attr(pos)
+			pos  = Vector2i(x, y)
+			code = get_fg_code(pos)
+			attr = (get_bg(pos) << 4) | get_fg_attr(pos)
 
 			if code < 0:
 				code = ansifnt.empty_block
@@ -654,10 +662,13 @@ func load_xbin(xbin_path: String) -> void:
 	var p: PackedColorArray
 
 	if has_palette:
+		var r: float
+		var g: float
+		var b: float
 		for i: int in range(16):
-			var r: float = float(f.get_8() & 0x3f) / 63.
-			var g: float = float(f.get_8() & 0x3f) / 63.
-			var b: float = float(f.get_8() & 0x3f) / 63.
+			r = float(f.get_8() & 0x3f) / 63.
+			g = float(f.get_8() & 0x3f) / 63.
+			b = float(f.get_8() & 0x3f) / 63.
 
 			p.append(Color(r, g, b))
 		fill_palette_image(p)
@@ -665,8 +676,7 @@ func load_xbin(xbin_path: String) -> void:
 		p = Global.named_palettes[Global.DEFAULT_PALETTE]
 
 	if has_font:
-		var font_buffer: PackedByteArray = f.get_buffer(256 * font_size)
-		ansifnt = AnsiFont.from_data(font_buffer)
+		ansifnt = AnsiFont.from_data(f.get_buffer(256 * font_size))
 	else:
 		ansifnt.font_path = Global.DEFAULT_FONTPATH
 
@@ -676,31 +686,29 @@ func load_xbin(xbin_path: String) -> void:
 
 	if not compressed:
 		# reads two bytes at a time so should NOT be multiplied
+		var code: int
+		var attr: int
+
 		for i: int in range(width * height):
-			var x: int = i % width
-			var y: int = i / width
+			code = f.get_8()
+			attr = f.get_8()
 
-			var code: int = f.get_8()
-			var attr: int = f.get_8()
-
-			var fg: int = attr & 0xF
-			var bg: int = (attr >> 4) & 0xF
-
-			set_fg_bg(Vector2i(x, y), code, fg, bg)
+			set_fg_bg(Vector2i(i % width, i / width), code, attr & 0xF, (attr >> 4) & 0xF)
 	else: # is compressed
 		var tiles_written: int = 0
+
+		var b: int
+		var compression_type:  int
+		var compression_count: int
+		var code: int
+		var attr: int
+
 		while tiles_written < width * height:
-			var b: int = f.get_8()
-			var compression_type:  int = b & 0xC0 #0b11000000
+			b = f.get_8()
+			compression_type = b & 0xC0 #0b11000000
 
 			# a count of 0 is actually 1
-			var compression_count: int = (b & 0x3F) + 1 # 0b00111111
-
-			var code: int
-			var attr: int
-
-			var fg: int
-			var bg: int
+			compression_count = (b & 0x3F) + 1 # 0b00111111
 
 			match compression_type:
 				XBIN_COMPRESSION_NONE:
@@ -708,42 +716,29 @@ func load_xbin(xbin_path: String) -> void:
 						code = f.get_8()
 						attr = f.get_8()
 
-						fg = attr & 0xF
-						bg = (attr >> 4) & 0xF
-
-						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
+						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, attr & 0xF, (attr >> 4) & 0xF)
 						tiles_written += 1
 				XBIN_COMPRESSION_CHARACTER:
 					code = f.get_8()
 					for i: int in range(compression_count):
 						attr = f.get_8()
 
-						fg = attr & 0xF
-						bg = (attr >> 4) & 0xF
-
-						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
+						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, attr & 0xF, (attr >> 4) & 0xF)
 						tiles_written += 1
 				XBIN_COMPRESSION_ATTRIBUTE:
 					attr = f.get_8()
 
-					fg = attr & 0xF
-					bg = (attr >> 4) & 0xF
 					for i: int in range(compression_count):
 						code = f.get_8()
 
-						fg = attr & 0xF
-						bg = (attr >> 4) & 0xF
-
-						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
+						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, attr & 0xF, (attr >> 4) & 0xF)
 						tiles_written += 1
 				XBIN_COMPRESSION_BOTH:
 					code = f.get_8()
 					attr = f.get_8()
 
-					fg = attr & 0xF
-					bg = (attr >> 4) & 0xF
 					for i: int in range(compression_count):
-						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, fg, bg)
+						set_fg_bg(Vector2i(tiles_written % width, tiles_written / width), code, attr & 0xF, (attr >> 4) & 0xF)
 						tiles_written += 1
 				_:
 					assert(false, "impossible compression type")
