@@ -723,6 +723,7 @@ func load_xbin(xbin_path: String) -> void:
 						tiles_written += 1
 				XBIN_COMPRESSION_CHARACTER:
 					code = f.get_8()
+
 					for i: int in range(compression_count):
 						attr = f.get_8()
 
