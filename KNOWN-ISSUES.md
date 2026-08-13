@@ -5,3 +5,6 @@
 - Half block unimplemented
 - Ellipse tools unimplemented
 - Fillbucket unimplemented
+- Additional XBin fuunctionality
+  - Should be able to load fonts from XBin
+  - Import palette from XBin
