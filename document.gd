@@ -325,21 +325,34 @@ func paint_with_selected(global_pt: Vector2) -> void:
 
 	var tile: Vector2i = global_to_canvas_pos(global_pt)
 
+	var existing_fg_code:	int = get_fg_code(tile)
+	var existing_fg_attr:	int = get_fg_attr(tile)
+	var existing_bg:		int = get_bg(tile)
+
 	match current_paint_mode:
+		PaintMode.HALFBLOCK:
+			# TODO this
+			assert(false, "unimplemented")
+			pass
+
 		PaintMode.CHARACTER:
-			if not (get_bg(tile) == selected_bg and get_fg_attr(tile) == selected_fg and get_fg_code(tile) == selected_code):
+			if not (existing_bg == selected_bg and existing_fg_attr == selected_fg and existing_fg_code == selected_code):
 				set_fg_bg(tile, selected_code, selected_fg, selected_bg)
+
 		PaintMode.COLOURIZE_FG:
-			if get_fg_attr(tile) != selected_fg:
+			if existing_fg_attr != selected_fg:
 				set_fg_attr(tile, selected_fg)
+
 		PaintMode.COLOURIZE_BG:
-			if get_bg(tile) != selected_bg:
+			if existing_bg != selected_bg:
 				set_bg(tile, selected_bg)
+
 		PaintMode.COLOURIZE_FULL:
-			if get_fg_attr(tile) != selected_fg:
+			if existing_fg_attr != selected_fg:
 				set_fg_attr(tile, selected_fg)
-			if get_bg(tile) != selected_bg:
+			if existing_bg != selected_bg:
 				set_bg(tile, selected_bg)
+
 		_:
 			assert(false, "paint mode invalid")
 #endregion
