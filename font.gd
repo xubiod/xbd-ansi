@@ -168,9 +168,7 @@ func generate_tileset() -> TileSet:
 			source.create_tile(pos)
 			for shade: int in range(0, 16):
 				source.create_alternative_tile(pos, get_alt_id(shade))
-
-				var td: TileData = source.get_tile_data(pos, get_alt_id(shade))
-				td.modulate = Color(float(shade) / 15., 0., 0., 1.)
+				source.get_tile_data(pos, get_alt_id(shade)).modulate = Color(float(shade) / 15., 0., 0., 1.)
 
 	var background_source: TileSetAtlasSource = TileSetAtlasSource.new()
 	background_source.texture_region_size = tileset.tile_size
@@ -178,15 +176,12 @@ func generate_tileset() -> TileSet:
 	var bkgd_image: Image = Image.create_empty(8, font_height, false, Image.Format.FORMAT_L8)
 	bkgd_image.fill(Color.WHITE)
 
-	var bkgd_texture: ImageTexture = ImageTexture.create_from_image(bkgd_image)
-	background_source.texture = bkgd_texture
+	background_source.texture = ImageTexture.create_from_image(bkgd_image)
 
 	background_source.create_tile(Vector2i.ZERO)
 	for shade: int in range(0, 16):
 		background_source.create_alternative_tile(Vector2i.ZERO, get_alt_id(shade))
-
-		var td: TileData = background_source.get_tile_data(Vector2i.ZERO, get_alt_id(shade))
-		td.modulate = Color(float(shade) / 15., 0., 0., 1.)
+		background_source.get_tile_data(Vector2i.ZERO, get_alt_id(shade)).modulate = Color(float(shade) / 15., 0., 0., 1.)
 
 	tileset.add_source(background_source)
 
