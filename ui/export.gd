@@ -1,6 +1,6 @@
 class_name Exporter extends Window
 
-signal export_request(path: String, upscale_x: float, upscale_y: float, webplossy: bool, webpquality: float)
+signal export_request(path: String, upscale_x: float, upscale_y: float, webplossy: bool, webpquality: float, transparent_idx: int)
 
 @onready var export_path: LineEdit = %ExportPath
 
@@ -17,6 +17,8 @@ signal export_request(path: String, upscale_x: float, upscale_y: float, webploss
 @onready var webp_quality:			HSlider		= %WebpQuality
 @onready var webp_quality_readable:	Label		= %WebpQualityReadable
 @onready var resulting_size:		Label		= %ResultingSize
+
+@onready var transparent_idx: SpinBox = %TransparentIdx
 
 @onready var submit: Button = %Submit
 
@@ -81,7 +83,7 @@ func _on_about_to_popup() -> void:
 	_on_integer_only_toggled(%IntegerOnly.button_pressed)
 
 func _on_submit_pressed() -> void:
-	export_request.emit(export_path.text, upscale_factor_x.value, upscale_factor_y.value, web_p_lossy.button_pressed, webp_quality.value)
+	export_request.emit(export_path.text, upscale_factor_x.value, upscale_factor_y.value, web_p_lossy.button_pressed, webp_quality.value, int(transparent_idx.value))
 	hide()
 
 func _on_export_to_file_selected(path: String) -> void:
@@ -126,4 +128,7 @@ func _on_integer_only_toggled(toggled_on: bool) -> void:
 	upscale_factor_y.rounded = toggled_on
 	upscale_spinbox_x.rounded = toggled_on
 	upscale_spinbox_y.rounded = toggled_on
+
+func _on_transparent_idx_value_changed(value: float) -> void:
+	%TransparentIdxLbl.text = "None" if is_equal_approx(value, -1) else str(value)
 #endregion

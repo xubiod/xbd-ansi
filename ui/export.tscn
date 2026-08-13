@@ -206,6 +206,36 @@ This can cause artifacts with nearest neighbour upscaling."
 button_pressed = true
 text = "Integer upscales only"
 
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer" unique_id=26494069]
+visible = false
+layout_mode = 2
+text = "Transparent BG index"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer" unique_id=1696477014]
+visible = false
+layout_mode = 2
+
+[node name="TransparentIdx" type="SpinBox" parent="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer/HBoxContainer" unique_id=2130186473]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "If not -1, then the backgroung attribute/colour at this index will be transparent instead of its colour.
+
+This does not affect foreground."
+min_value = -1.0
+max_value = 15.0
+value = -1.0
+rounded = true
+prefix = "Index  "
+
+[node name="TransparentIdxLbl" type="Label" parent="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer/HBoxContainer" unique_id=1947830265]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "None"
+
 [node name="Submit" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1750333958]
 unique_name_in_owner = true
 layout_mode = 2
@@ -231,5 +261,6 @@ filters = PackedStringArray("*.png,*webp;Image Files;image/png,image/webp")
 [connection signal="toggled" from="MarginContainer/VBoxContainer/LockAspect" to="." method="_on_lock_aspect_toggled"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/Foldables/WebpSettings/VBoxContainer/HBoxContainer/WebpQuality" to="." method="_on_webp_quality_value_changed"]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer/IntegerOnly" to="." method="_on_integer_only_toggled"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/Foldables/AdvancedSettings/VBoxContainer/HBoxContainer/TransparentIdx" to="." method="_on_transparent_idx_value_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Submit" to="." method="_on_submit_pressed"]
 [connection signal="file_selected" from="ExportTo" to="." method="_on_export_to_file_selected"]

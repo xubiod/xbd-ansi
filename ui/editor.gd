@@ -33,6 +33,7 @@ var last_upscale_x:		float	= NAN
 var last_upscale_y:		float	= NAN
 var last_webplossy:		bool	= false
 var last_webpquality:	float	= NAN
+var last_transparent:	int		= -1
 
 @onready var hint_labels: Dictionary[Document.Tool, Label] = {
 	Document.Tool.TYPING:		%CtrlHintTyping,
@@ -311,7 +312,7 @@ func request_export(force_reexport: bool = false) -> void:
 	if (not force_reexport) or last_path.is_empty() or is_nan(last_upscale_x) or is_nan(last_upscale_y) or is_nan(last_webpquality):
 		%Exporter.summon(document.document_rect.size)
 	else:
-		_start_export(last_path, last_upscale_x, last_upscale_y, last_webplossy, last_webpquality)
+		_start_export(last_path, last_upscale_x, last_upscale_y, last_webplossy, last_webpquality, last_transparent)
 #endregion
 
 #region Signal connections
@@ -430,14 +431,15 @@ func _on_comments_updated(v: PackedStringArray) -> void:
 func _on_document_dirty(_v: bool) -> void:
 	update_inwindow_doc_name()
 
-func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: bool, webpquality: float) -> void:
+func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: bool, webpquality: float, transparent_idx: int) -> void:
 	last_path = path
 	last_upscale_x = upscale_x
 	last_upscale_y = upscale_y
 	last_webplossy = webplossy
 	last_webpquality = webpquality
+	last_transparent = transparent_idx
 
-	var i: Image = document.render()
+	var i: Image = document.render(transparent_idx)
 	i.resize(i.get_width() * int(upscale_x), i.get_height() * int(upscale_y), Image.INTERPOLATE_NEAREST)
 
 	match path.to_lower().get_extension():
