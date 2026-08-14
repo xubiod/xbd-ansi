@@ -1,6 +1,5 @@
 - Rectangles fucky going in a negative direction
   - Starting with bottom left, bottom right, and top right
-- Half block unimplemented
 - Ellipse tools unimplemented
 - Fillbucket unimplemented
 - Additional XBin fuunctionality
