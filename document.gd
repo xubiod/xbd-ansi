@@ -141,10 +141,7 @@ func _set_current_tool(new_value: Tool) -> void:
 	current_tool = new_value
 	char_preview.visible = not (current_tool in HIDE_CHARACTER_PREVIEW)
 
-	var usehalf: bool = current_paint_mode == PaintMode.HALFBLOCK and current_tool not in DISALLOW_HALF
-	var _ysnap: float = (float(glyph_size.y) / 2.) if usehalf else float(glyph_size.y)
-
-	char_preview.size = Vector2(glyph_size.x, int(_ysnap))
+	char_preview.size = min_preview_size()
 
 func _set_dirty(new_value: Tool) -> void:
 	dirty = new_value
@@ -154,14 +151,15 @@ func _set_current_paint_mode(new_value: PaintMode) -> void:
 	current_paint_mode = new_value
 	%PreviewFullColour.color = selected_fg_as_color() if current_paint_mode == PaintMode.HALFBLOCK else selected_bg_as_color()
 
-	var usehalf: bool = current_paint_mode == PaintMode.HALFBLOCK and current_tool not in DISALLOW_HALF
-	var _ysnap: float = (float(glyph_size.y) / 2.) if usehalf else float(glyph_size.y)
-
-	char_preview.size = Vector2(glyph_size.x, int(_ysnap))
-
+	char_preview.size = min_preview_size()
 #endregion
 
 #region Helpers
+func min_preview_size() -> Vector2:
+	var usehalf: bool = current_paint_mode == PaintMode.HALFBLOCK and current_tool not in DISALLOW_HALF
+	var _ysnap: float = (float(glyph_size.y) / 2.) if usehalf else float(glyph_size.y)
+	return Vector2(glyph_size.x, int(_ysnap))
+
 func selected_fg_as_color() -> Color:
 	return palette_image.get_pixel(selected_fg, 0)
 
