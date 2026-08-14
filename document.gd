@@ -466,17 +466,17 @@ func _process(_delta: float) -> void:
 					make_line(start_canvas_pos, end_canvas_pos)
 				Tool.RECT_FILL:
 					var tl: Vector2 = rect.position
-					var br: Vector2 = rect.position + rect.size
+					var br: Vector2 = rect.position + rect.size - Vector2.ONE
 					var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
 
 					for r: int in range(tl.y, br.y, step):
 						make_line(Vector2(tl.x, r), Vector2(br.x, r))
 				Tool.RECT_LINE:
 					var tl: Vector2 = rect.position
-					var br: Vector2 = rect.position + rect.size
+					var br: Vector2 = rect.position + rect.size - Vector2.ONE
 
-					var _tr: Vector2 = Vector2(br.x - 1., tl.y)
-					var _bl: Vector2 = Vector2(tl.x, br.y - 1.)
+					var _tr: Vector2 = Vector2(br.x - .8, tl.y)
+					var _bl: Vector2 = Vector2(tl.x, br.y - .8)
 
 					make_line(tl, _tr)
 					make_line(_tr, br)
@@ -504,7 +504,7 @@ func _process(_delta: float) -> void:
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
 
 	if current_tool in STRETCH_CHARACTER_PREVIEW and Input.is_action_pressed(&"tool_interaction"):
-		char_preview.position = start_canvas_pos.min(clamped).snapped(glyph_size)
+		char_preview.position = start_canvas_pos.min(clamped).snapped(_vsnap)
 		char_preview.modulate.a = PREVIEW_ALPHA
 	else:
 		char_preview.position = cursor_sprite.position
