@@ -120,7 +120,6 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 tooltip_text = "Unimplemented."
 mouse_default_cursor_shape = 2
-disabled = true
 toggle_mode = true
 button_group = ExtResource("4_gbsbp")
 text = "Half Block"

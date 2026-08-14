@@ -111,6 +111,7 @@ func _ready() -> void:
 
 	%ToolRectBoth.pressed.connect(_update_rect_tool)
 
+	%PaintModeHalf.pressed.connect(			_update_paint_mode.bind(Document.PaintMode.HALFBLOCK))
 	%PaintModeCharacter.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.CHARACTER))
 	%PaintModeColourizeFG.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.COLOURIZE_FG))
 	%PaintModeColourizeBG.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.COLOURIZE_BG))
@@ -377,7 +378,8 @@ func _update_tool(tool: Document.Tool) -> void:
 	else:
 		push_warning("tool has no hint label")
 
-	%PaintModeCharacter.disabled		= tool in TOOLS_THAT_DISABLE_PAINT_MODE
+	%PaintModeHalf.disabled				= tool in TOOLS_THAT_DISABLE_PAINT_MODE
+	%PaintModeCharacter.disabled		= %PaintModeHalf.disabled
 	%PaintModeColourizeFG.disabled		= %PaintModeCharacter.disabled
 	%PaintModeColourizeBG.disabled		= %PaintModeCharacter.disabled
 	%PaintModeColourizeFull.disabled	= %PaintModeCharacter.disabled

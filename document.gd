@@ -53,6 +53,8 @@ const PREVIEW_ALPHA: float = 0.5
 @onready var char_preview: TextureRect = %PreviewFG
 @onready var line_ref: Line2D = $LineRef
 
+#@onready var dbg: Label = $Dbg
+
 var sauce: Sauce
 
 var palette_image: Image
@@ -333,24 +335,32 @@ func paint_with_selected(global_pt: Vector2) -> void:
 	var existing_fg_attr:	int = get_fg_attr(tile)
 	var existing_bg:		int = get_bg(tile)
 
-	var _top_half: bool = (global_pt.y - floorf(global_pt.y)) < 0.5
+	#dbg.text = "%f" % [global_pt.y - float(tile.y * glyph_size.y)]
 
 	match current_paint_mode:
 		PaintMode.HALFBLOCK:
-			# TODO this
-			assert(false, "unimplemented")
-			match tile:
+			var _top_half: bool	= (global_pt.y - float(tile.y * glyph_size.y)) < (glyph_size.y / 2.)
+
+			match existing_fg_code:
 				ansifnt.half_top_block:
-					pass
+					if _top_half and existing_fg_attr != selected_fg:
+						set_fg_attr(tile, selected_fg)
+					elif not _top_half:
+						set_fg_bg(tile, ansifnt.half_bottom_block, selected_fg, existing_fg_attr)
 
 				ansifnt.half_bottom_block:
-					pass
+					if not _top_half and existing_fg_attr != selected_fg:
+						set_fg_attr(tile, selected_fg)
+					elif _top_half:
+						set_fg_bg(tile, ansifnt.half_top_block, selected_fg, existing_fg_attr)
 
 				ansifnt.full_block:
-					pass
+					if existing_fg_attr != selected_fg:
+						var _new_code: int	= ansifnt.half_top_block if _top_half else ansifnt.half_bottom_block
+						set_fg_bg(tile, _new_code, selected_fg, existing_fg_attr)
 
 				ansifnt.empty_block, _:
-					pass
+					set_fg_bg(tile, ansifnt.half_top_block if _top_half else ansifnt.half_bottom_block, selected_fg, existing_bg)
 
 		PaintMode.CHARACTER:
 			if not (existing_bg == selected_bg and existing_fg_attr == selected_fg and existing_fg_code == selected_code):
@@ -387,6 +397,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
 	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
+	var _ysnap: float = (float(glyph_size.y) / 2.) if current_paint_mode == PaintMode.HALFBLOCK else float(glyph_size.y)
+	var _vsnap: Vector2i = Vector2i(glyph_size.x, int(_ysnap))
 
 	if !viewport.is_input_handled():
 		line_ref.visible = Input.is_action_pressed(&"tool_interaction")
@@ -403,7 +415,7 @@ func _process(_delta: float) -> void:
 					Tool.DRAWING:
 						make_line(last_mouse_canvas_pos, clamped)
 						if last_mouse_canvas_pos == clamped:
-							paint_with_selected(global_mouse_pos)
+							paint_with_selected(last_mouse_canvas_pos)
 					Tool.PICKER:
 						var where: Vector2i = global_to_canvas_pos(clamped)
 
@@ -430,7 +442,8 @@ func _process(_delta: float) -> void:
 						ref_snapping = Input.is_key_pressed(KEY_SHIFT)
 				Tool.RECT_LINE, Tool.RECT_FILL:
 					var where: Vector2i = global_to_canvas_pos(clamped)
-					char_preview.size = Vector2(Vector2((where * glyph_size) - start_canvas_pos).abs() + Vector2(glyph_size)).snapped(glyph_size)
+
+					char_preview.size = Vector2(Vector2((where * _vsnap) - start_canvas_pos).abs() + Vector2(_vsnap)).snapped(_vsnap)
 				_:
 					pass
 
@@ -446,8 +459,9 @@ func _process(_delta: float) -> void:
 				Tool.RECT_FILL:
 					var tl: Vector2 = rect.position
 					var br: Vector2 = rect.position + rect.size
+					var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
 
-					for r: int in range(tl.y, br.y, glyph_size.y):
+					for r: int in range(tl.y, br.y, step):
 						make_line(Vector2(tl.x, r), Vector2(br.x, r))
 				Tool.RECT_LINE:
 					var tl: Vector2 = rect.position
@@ -467,8 +481,10 @@ func _process(_delta: float) -> void:
 	last_mouse_canvas_pos = clamped
 	last_global_mouse = global_mouse_pos
 
+	cursor_sprite.scale.y = _ysnap
+
 	cursor_sprite.position = cursor_sprite.position.lerp(
-		(cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size, Global.LERP_SLUG
+		(Vector2(cursor_pos * glyph_size) if current_tool == Tool.TYPING else last_mouse_canvas_pos.snapped(_vsnap)), Global.LERP_SLUG
 	)
 
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
@@ -479,6 +495,9 @@ func _process(_delta: float) -> void:
 	else:
 		char_preview.position = cursor_sprite.position
 		char_preview.modulate.a = PREVIEW_ALPHA if cursor_sprite.visible else 0.0
+
+	if current_paint_mode == PaintMode.HALFBLOCK:
+		char_preview.modulate.a = 0.0
 
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 
