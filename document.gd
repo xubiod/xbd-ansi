@@ -84,6 +84,8 @@ var last_global_mouse:		Vector2 = Vector2.ZERO
 var start_canvas_pos:	Vector2i = Vector2i.ZERO
 var end_canvas_pos:		Vector2i = Vector2i.ZERO
 
+var rectangle_area: Rect2 = Rect2()
+
 var ref_pos: Vector2 = Vector2.ZERO
 var ref_snapping: bool = false
 
@@ -147,6 +149,7 @@ func _set_dirty(new_value: Tool) -> void:
 func _set_current_paint_mode(new_value: PaintMode) -> void:
 	current_paint_mode = new_value
 	%PreviewFullColour.color = selected_fg_as_color() if current_paint_mode == PaintMode.HALFBLOCK else selected_bg_as_color()
+
 #endregion
 
 #region Helpers
@@ -408,6 +411,9 @@ func _process(_delta: float) -> void:
 	var _ysnap: float = (float(glyph_size.y) / 2.) if usehalf else float(glyph_size.y)
 	var _vsnap: Vector2i = Vector2i(glyph_size.x, int(_ysnap))
 
+	rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
+	rectangle_area.size		= Vector2(rectangle_area.position - Vector2(start_canvas_pos.max(clamped))).abs().snapped(_vsnap)
+
 	if !viewport.is_input_handled():
 		line_ref.visible = Input.is_action_pressed(&"tool_interaction")
 
@@ -415,6 +421,10 @@ func _process(_delta: float) -> void:
 			if Input.is_action_just_pressed(&"tool_interaction"):
 				tool_in_use = true
 				start_canvas_pos = clamped
+				if current_tool in STRETCH_CHARACTER_PREVIEW:
+					# bodge-y?
+					rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
+					rectangle_area.size = Vector2.ZERO
 
 			if Input.is_action_pressed(&"tool_interaction"):
 				match current_tool:
@@ -449,9 +459,7 @@ func _process(_delta: float) -> void:
 						ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
 						ref_snapping = Input.is_key_pressed(KEY_SHIFT)
 				Tool.RECT_LINE, Tool.RECT_FILL:
-					var where: Vector2i = global_to_canvas_pos(clamped)
-
-					char_preview.size = Vector2(Vector2((where * _vsnap) - start_canvas_pos).abs() + Vector2(_vsnap)).snapped(_vsnap)
+					char_preview.size = rectangle_area.size.snapped(_vsnap)
 				_:
 					pass
 
@@ -484,13 +492,15 @@ func _process(_delta: float) -> void:
 					make_line(_bl, br)
 				_:
 					pass
-			char_preview.size = Vector2(glyph_size)
+			char_preview.size = _vsnap
+			rectangle_area.size = Vector2(_vsnap)
+
+	char_preview.position = rectangle_area.position.snapped(_vsnap)
 
 	last_mouse_canvas_pos = clamped
 	last_global_mouse = global_mouse_pos
 
 	cursor_sprite.scale.y = _ysnap
-	char_preview.scale.y = _ysnap / glyph_size.y
 
 	if usehalf:
 		var _cvps: Vector2 = global_to_canvas_pos(global_mouse_pos)
@@ -504,16 +514,12 @@ func _process(_delta: float) -> void:
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
 
 	if current_tool in STRETCH_CHARACTER_PREVIEW and Input.is_action_pressed(&"tool_interaction"):
-		char_preview.position = start_canvas_pos.min(clamped).snapped(_vsnap)
 		char_preview.modulate.a = PREVIEW_ALPHA
 	else:
 		char_preview.position = cursor_sprite.position
 		char_preview.modulate.a = PREVIEW_ALPHA if cursor_sprite.visible else 0.0
 
-	if current_paint_mode == PaintMode.HALFBLOCK:
-		char_preview.self_modulate.a = 0.0
-	else:
-		char_preview.self_modulate.a = 1.0
+	char_preview.self_modulate.a = 1.0 if current_paint_mode != PaintMode.HALFBLOCK else 0.0
 
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 

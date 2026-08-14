@@ -35,6 +35,7 @@ size_flags_horizontal = 2
 size_flags_vertical = 2
 mouse_filter = 2
 texture = SubResource("AtlasTexture_w1jfu")
+expand_mode = 1
 stretch_mode = 1
 
 [node name="PreviewFullColour" type="ColorRect" parent="PreviewFG" unique_id=8322965]
