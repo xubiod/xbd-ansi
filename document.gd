@@ -482,8 +482,9 @@ func _process(_delta: float) -> void:
 
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 
+	line_ref.visible = current_tool == Tool.LINE and tool_in_use
 	line_ref.set_point_position(0, Vector2(start_canvas_pos))
-	line_ref.set_point_position(1, Vector2(global_mouse_pos))
+	line_ref.set_point_position(1, Vector2(last_mouse_canvas_pos))
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
 
