@@ -37,7 +37,7 @@ mouse_filter = 2
 texture = SubResource("AtlasTexture_w1jfu")
 stretch_mode = 1
 
-[node name="PreviewBG" type="ColorRect" parent="PreviewFG" unique_id=8322965]
+[node name="PreviewFullColour" type="ColorRect" parent="PreviewFG" unique_id=8322965]
 unique_name_in_owner = true
 show_behind_parent = true
 layout_mode = 1
@@ -88,11 +88,3 @@ points = PackedVector2Array(0, 0, 0, 0)
 width = 1.0
 default_color = Color(1, 1, 1, 0.5)
 antialiased = true
-
-[node name="Dbg" type="Label" parent="." unique_id=378255818]
-visible = false
-offset_right = 40.0
-offset_bottom = 23.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "dbg"

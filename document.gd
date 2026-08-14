@@ -53,8 +53,6 @@ const PREVIEW_ALPHA: float = 0.5
 @onready var char_preview: TextureRect = %PreviewFG
 @onready var line_ref: Line2D = $LineRef
 
-#@onready var dbg: Label = $Dbg
-
 var sauce: Sauce
 
 var palette_image: Image
@@ -78,11 +76,10 @@ var glyph_size: Vector2i
 var last_tool: Tool
 var current_tool: Tool = Tool.TYPING : set = _set_current_tool
 
-var current_paint_mode: PaintMode = PaintMode.CHARACTER
+var current_paint_mode: PaintMode = PaintMode.CHARACTER : set = _set_current_paint_mode
 
-var last_mouse_canvas_pos: Vector2 = Vector2.ZERO
-
-var last_global_mouse: Vector2 = Vector2.ZERO
+var last_mouse_canvas_pos:	Vector2 = Vector2.ZERO
+var last_global_mouse:		Vector2 = Vector2.ZERO
 
 var start_canvas_pos:	Vector2i = Vector2i.ZERO
 var end_canvas_pos:		Vector2i = Vector2i.ZERO
@@ -113,11 +110,15 @@ func _get_document_rect() -> Rect2:
 func _set_selected_foreground(new_value: int) -> void:
 	selected_fg = new_value
 	char_preview.self_modulate = selected_fg_as_color()
+	if current_paint_mode == PaintMode.HALFBLOCK:
+		%PreviewFullColour.color = selected_fg_as_color()
+	else:
+		%PreviewFullColour.color = selected_bg_as_color()
 	foreground_updated.emit()
 
 func _set_selected_background(new_value: int) -> void:
 	selected_bg = new_value
-	%PreviewBG.color = selected_bg_as_color()
+	%PreviewFullColour.color = selected_fg_as_color() if current_paint_mode == PaintMode.HALFBLOCK else selected_bg_as_color()
 	background_updated.emit()
 
 func _set_selected_code(new_value: int) -> void:
@@ -142,6 +143,10 @@ func _set_current_tool(new_value: Tool) -> void:
 func _set_dirty(new_value: Tool) -> void:
 	dirty = new_value
 	dirty_changed.emit(new_value)
+
+func _set_current_paint_mode(new_value: PaintMode) -> void:
+	current_paint_mode = new_value
+	%PreviewFullColour.color = selected_fg_as_color() if current_paint_mode == PaintMode.HALFBLOCK else selected_bg_as_color()
 #endregion
 
 #region Helpers
@@ -337,8 +342,6 @@ func paint_with_selected(global_pt: Vector2) -> void:
 	var existing_fg_attr:	int = get_fg_attr(tile)
 	var existing_bg:		int = get_bg(tile)
 
-	#dbg.text = "%f" % [global_pt.y - float(tile.y * glyph_size.y)]
-
 	match current_paint_mode:
 		PaintMode.HALFBLOCK:
 			var _top_half: bool	= (global_pt.y - float(tile.y * glyph_size.y)) < (glyph_size.y / 2.)
@@ -487,6 +490,7 @@ func _process(_delta: float) -> void:
 	last_global_mouse = global_mouse_pos
 
 	cursor_sprite.scale.y = _ysnap
+	char_preview.scale.y = _ysnap / glyph_size.y
 
 	if usehalf:
 		var _cvps: Vector2 = global_to_canvas_pos(global_mouse_pos)
@@ -507,7 +511,9 @@ func _process(_delta: float) -> void:
 		char_preview.modulate.a = PREVIEW_ALPHA if cursor_sprite.visible else 0.0
 
 	if current_paint_mode == PaintMode.HALFBLOCK:
-		char_preview.modulate.a = 0.0
+		char_preview.self_modulate.a = 0.0
+	else:
+		char_preview.self_modulate.a = 1.0
 
 	reference.position = reference.position.lerp(ref_pos.snapped(glyph_size) if ref_snapping else ref_pos, Global.LERP_SMOOTH)
 
