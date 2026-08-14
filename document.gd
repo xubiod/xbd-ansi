@@ -294,6 +294,10 @@ func type(code: int) -> void:
 ## Uses the method `paint_with_selected` to draw a line on the TileMapLayer(s).
 ## See `paint_with_selected` for how the line is drawn character by character.
 func make_line(from: Vector2, to: Vector2) -> void:
+	if from.is_equal_approx(to):
+		paint_with_selected(from)
+		return
+
 	var dx:  float =  floorf(absf(to.x - from.x))
 	var dy:  float = -floorf(absf(to.y - from.y))
 
@@ -307,12 +311,12 @@ func make_line(from: Vector2, to: Vector2) -> void:
 		paint_with_selected(from)
 		e2 = 2. * err
 		if e2 >= dy:
-			if is_equal_approx(from.x, to.x):
+			if is_equal_approx(roundf(from.x), roundf(to.x)) or not global_point_in_canvas(from):
 				return
 			err += dy
 			from.x += sx
 		if e2 <= dx:
-			if is_equal_approx(from.y, to.y):
+			if is_equal_approx(roundf(from.y), roundf(to.y)) or not global_point_in_canvas(from):
 				return
 			err += dx
 			from.y += sy
