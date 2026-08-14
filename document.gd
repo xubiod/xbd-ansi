@@ -64,6 +64,7 @@ var ansifnt: AnsiFont
 var tileset: TileSet
 
 var cursor_pos: Vector2i = Vector2i.ZERO
+var desired_cursor_pos: Vector2 = Vector2.ZERO
 
 var selected_bg:	int = 0  : set = _set_selected_background
 var selected_fg:	int = 7  : set = _set_selected_foreground
@@ -94,6 +95,7 @@ var tool_in_use: bool = false
 
 const HIDE_CHARACTER_PREVIEW: Array[Tool] = [Tool.TYPING, Tool.REFERENCE, Tool.PICKER]
 const STRETCH_CHARACTER_PREVIEW: Array[Tool] = [Tool.RECT_LINE, Tool.RECT_FILL]
+const DISALLOW_HALF: Array[Tool] = [Tool.PICKER, Tool.TYPING]
 
 signal palette_updated
 signal font_updated
@@ -397,7 +399,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
 	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
-	var _ysnap: float = (float(glyph_size.y) / 2.) if current_paint_mode == PaintMode.HALFBLOCK else float(glyph_size.y)
+
+	var usehalf: bool = current_paint_mode == PaintMode.HALFBLOCK and current_tool not in DISALLOW_HALF
+
+	var _ysnap: float = (float(glyph_size.y) / 2.) if usehalf else float(glyph_size.y)
 	var _vsnap: Vector2i = Vector2i(glyph_size.x, int(_ysnap))
 
 	if !viewport.is_input_handled():
@@ -483,10 +488,15 @@ func _process(_delta: float) -> void:
 
 	cursor_sprite.scale.y = _ysnap
 
-	cursor_sprite.position = cursor_sprite.position.lerp(
-		(Vector2(cursor_pos * glyph_size) if current_tool == Tool.TYPING else last_mouse_canvas_pos.snapped(_vsnap)), Global.LERP_SLUG
-	)
+	if usehalf:
+		var _cvps: Vector2 = global_to_canvas_pos(global_mouse_pos)
+		var _top_half: bool	= (global_mouse_pos.y - float(_cvps.y * glyph_size.y)) < (glyph_size.y / 2.)
 
+		desired_cursor_pos = (_cvps + Vector2(0., 0. if _top_half else 0.5)) * Vector2(glyph_size)
+	else:
+		desired_cursor_pos = (cursor_pos if current_tool == Tool.TYPING else global_to_canvas_pos(global_mouse_pos)) * glyph_size
+
+	cursor_sprite.position = cursor_sprite.position.lerp(desired_cursor_pos, Global.LERP_SLUG)
 	cursor_sprite.visible = global_point_in_canvas(cursor_sprite.global_position)
 
 	if current_tool in STRETCH_CHARACTER_PREVIEW and Input.is_action_pressed(&"tool_interaction"):
