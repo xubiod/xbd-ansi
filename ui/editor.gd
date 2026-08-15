@@ -241,7 +241,7 @@ func new_document() -> void:
 	last_upscale_y = NAN
 	last_webpquality = NAN
 
-	%Editor.reset()
+	%Exporter.reset()
 	camera_desired_pos = document.document_rect.get_center()
 
 func save_document() -> void:
