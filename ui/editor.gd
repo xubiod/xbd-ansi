@@ -8,7 +8,7 @@ const RECT_BOTH: AtlasTexture	= preload("uid://cvkpg31f16453")
 
 @onready var document:		Document	= %Document
 @onready var viewport:		Viewport	= get_viewport()
-@onready var zoom_slider:	HSlider		= $Camera/UI/MainContainer/StatusPanel/StatusHBox/ZoomSlider
+@onready var zoom_slider:	HSlider		= %ZoomSlider
 
 var camera_desired_pos: Vector2
 var panning: bool = false
