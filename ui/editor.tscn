@@ -582,11 +582,11 @@ horizontal_alignment = 2
 
 [node name="ZoomSlider" type="HSlider" parent="Camera/UI/MainContainer/StatusPanel/StatusHBox" unique_id=750759042]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(256, 0)
+custom_minimum_size = Vector2(384, 0)
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 0.125
-max_value = 4.0
+max_value = 8.0
 step = 0.125
 value = 1.0
 
