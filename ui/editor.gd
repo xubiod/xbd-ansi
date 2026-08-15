@@ -6,6 +6,10 @@ const RECT_FILL: AtlasTexture	= preload("uid://mvkafpgtklt6")
 const RECT_LINED: AtlasTexture	= preload("uid://cp6gdi2bocfuu")
 const RECT_BOTH: AtlasTexture	= preload("uid://cvkpg31f16453")
 
+const ELLIPSE_FILL: AtlasTexture = preload("uid://c47xkvw5r1roy")
+const ELLIPSE_LINE: AtlasTexture = preload("uid://33nwrp4tootn")
+const ELLIPSE_BOTH: AtlasTexture = preload("uid://c33pnoy52sxnu")
+
 @onready var document:		Document	= %Document
 @onready var viewport:		Viewport	= get_viewport()
 @onready var zoom_slider:	HSlider		= %ZoomSlider
@@ -41,6 +45,8 @@ var last_transparent:	int		= -1
 	Document.Tool.LINE:			%CtrlHintShape,
 	Document.Tool.RECT_LINE:	%CtrlHintShape,
 	Document.Tool.RECT_FILL:	%CtrlHintShape,
+	Document.Tool.ELLIPSE_LINE:	%CtrlHintShape,
+	Document.Tool.ELLIPSE_FILL:	%CtrlHintShape,
 	Document.Tool.PICKER:		%CtrlHintPick,
 	Document.Tool.REFERENCE:	%CtrlHintReferenceImg
 }
@@ -52,6 +58,8 @@ var last_transparent:	int		= -1
 	Document.Tool.LINE:			%ToolLine,
 	Document.Tool.RECT_FILL:	%ToolRectBoth,
 	Document.Tool.RECT_LINE:	%ToolRectBoth,
+	Document.Tool.ELLIPSE_LINE:	%ToolEllipseBoth,
+	Document.Tool.ELLIPSE_FILL:	%ToolEllipseBoth,
 	Document.Tool.REFERENCE:	%ToolReference
 }
 
@@ -63,7 +71,8 @@ const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 	Document.Tool.REFERENCE
 ]
 
-const TOOLS_RECTANGLE: Array[Document.Tool] = [Document.Tool.RECT_LINE, Document.Tool.RECT_FILL]
+const TOOLS_RECTANGLE:	Array[Document.Tool] = [Document.Tool.RECT_LINE,	Document.Tool.RECT_FILL]
+const TOOLS_ELLIPSE:	Array[Document.Tool] = [Document.Tool.ELLIPSE_LINE,	Document.Tool.ELLIPSE_FILL]
 
 var zoom_magnify_gesture: float = 0.
 
@@ -109,7 +118,8 @@ func _ready() -> void:
 	%ToolLine.pressed.connect(		_update_tool.bind(Document.Tool.LINE))
 	%ToolReference.pressed.connect(	_update_tool.bind(Document.Tool.REFERENCE))
 
-	%ToolRectBoth.pressed.connect(_update_rect_tool)
+	%ToolRectBoth.pressed.connect(		_update_rect_tool)
+	%ToolEllipseBoth.pressed.connect(	_update_ellipse_tool)
 
 	%PaintModeHalf.pressed.connect(			_update_paint_mode.bind(Document.PaintMode.HALFBLOCK))
 	%PaintModeCharacter.pressed.connect(	_update_paint_mode.bind(Document.PaintMode.CHARACTER))
@@ -370,6 +380,9 @@ func _update_tool(tool: Document.Tool) -> void:
 	if tool not in TOOLS_RECTANGLE:
 		%ToolRectBoth.icon = RECT_BOTH
 
+	if tool not in TOOLS_ELLIPSE:
+		%ToolEllipseBoth.icon = ELLIPSE_BOTH
+
 	for key: Document.Tool in hint_labels:
 		hint_labels[key].visible = false
 
@@ -396,6 +409,16 @@ func _update_rect_tool() -> void:
 	%ToolRectBoth.icon = RECT_FILL if tool_fill else RECT_LINED
 
 	_update_tool(Document.Tool.RECT_FILL if tool_fill else Document.Tool.RECT_LINE)
+
+func _update_ellipse_tool() -> void:
+	if document.current_tool in TOOLS_ELLIPSE:
+		tool_fill = !tool_fill
+	else:
+		tool_fill = false
+
+	%ToolEllipseBoth.icon = ELLIPSE_FILL if tool_fill else ELLIPSE_LINE
+
+	_update_tool(Document.Tool.ELLIPSE_FILL if tool_fill else Document.Tool.ELLIPSE_LINE)
 
 func _update_paint_mode(paint_mode: Document.PaintMode) -> void:
 	%Document.current_paint_mode = paint_mode

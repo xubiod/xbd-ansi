@@ -93,7 +93,7 @@ var dirty: bool = false : set = _set_dirty
 var tool_in_use: bool = false
 
 const HIDE_CHARACTER_PREVIEW: Array[Tool] = [Tool.TYPING, Tool.REFERENCE, Tool.PICKER]
-const STRETCH_CHARACTER_PREVIEW: Array[Tool] = [Tool.RECT_LINE, Tool.RECT_FILL]
+const STRETCH_CHARACTER_PREVIEW: Array[Tool] = [Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL]
 const DISALLOW_HALF: Array[Tool] = [Tool.PICKER, Tool.TYPING]
 
 signal palette_updated
@@ -493,7 +493,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 				Tool.LINE:
 					# handled on mouse released
 					pass
-				Tool.RECT_LINE, Tool.RECT_FILL, Tool.REFERENCE:
+				Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL, Tool.REFERENCE:
 					# handled outside of canvas
 					pass
 				_:
@@ -506,7 +506,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 				if reference.visible:
 					ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
 					ref_snapping = Input.is_key_pressed(KEY_SHIFT)
-			Tool.RECT_LINE, Tool.RECT_FILL:
+			Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL:
 				char_preview.size = rectangle_area.size.snapped(_vsnap)
 			_:
 				pass
@@ -538,6 +538,112 @@ func _unhandled_input(_event: InputEvent) -> void:
 				make_line(_tr, br)
 				make_line(tl, _bl)
 				make_line(_bl, br)
+			Tool.ELLIPSE_LINE:
+				var tl: Vector2 = rect.position
+				var br: Vector2 = rect.position + rect.size - Vector2.ONE
+
+				# http://members.chello.at/~easyfilter/bresenham.html
+
+				var _x0: float = tl.x
+				var _y0: float = tl.y
+				var _x1: float = br.x
+				var _y1: float = br.y
+
+				var _a: float = absf(_x1-_x0)
+				var _b: float = absf(_y1-_y0)
+				var _b1: float = float(int(_b) & 1)
+
+				var _dx: float = 4 * (1 - _a)*_b*_b
+				var _dy: float = 4 * (_b1+1)*_a*_a
+				var _err: float = _dx+_dy+_b1*_a*_a
+				var _e2: float
+
+				if _x0 > _x1:
+					_x0 = _x1
+					_x1 += _a
+
+				if _y0 > _y1:
+					_y0 = _y1
+
+				_y0 += (_b + 1) / 2.
+				_y1 = _y0 - _b1
+				_a *= 8. * _a
+				_b1 = 8. * _b * _b
+
+				while _x0 <= _x1:
+					paint_with_selected(Vector2(_x1, _y0))
+					paint_with_selected(Vector2(_x0, _y0))
+					paint_with_selected(Vector2(_x0, _y1))
+					paint_with_selected(Vector2(_x1, _y1))
+					_e2 = 2 * _err
+					if _e2 <= _dy:
+						_y0 += 1
+						_y1 -= 1
+						_dy += _a
+						_err += _dy
+					if _e2 >= _dx or ((2 * _err) > _dy):
+						_x0 += 1
+						_x1 -= 1
+						_dx += _b1
+						_err += _dx
+				while (_y0 - _y1) < _b:
+					paint_with_selected(Vector2(_x0 - 1, _y0))
+					paint_with_selected(Vector2(_x1 + 1, _y0))
+					paint_with_selected(Vector2(_x0 - 1, _y1))
+					paint_with_selected(Vector2(_x1 + 1, _y1))
+					_y0 += 1
+					_y1 -= 1
+			Tool.ELLIPSE_FILL:
+				var tl: Vector2 = rect.position
+				var br: Vector2 = rect.position + rect.size - Vector2.ONE
+
+				# http://members.chello.at/~easyfilter/bresenham.html
+
+				var _x0: float = tl.x
+				var _y0: float = tl.y
+				var _x1: float = br.x
+				var _y1: float = br.y
+
+				var _a: float = absf(_x1-_x0)
+				var _b: float = absf(_y1-_y0)
+				var _b1: float = float(int(_b) & 1)
+
+				var _dx: float = 4 * (1 - _a)*_b*_b
+				var _dy: float = 4 * (_b1+1)*_a*_a
+				var _err: float = _dx+_dy+_b1*_a*_a
+				var _e2: float
+
+				if _x0 > _x1:
+					_x0 = _x1
+					_x1 += _a
+
+				if _y0 > _y1:
+					_y0 = _y1
+
+				_y0 += (_b + 1) / 2.
+				_y1 = _y0 - _b1
+				_a *= 8. * _a
+				_b1 = 8. * _b * _b
+
+				while _x0 <= _x1:
+					make_line(Vector2(_x1, _y0), Vector2(_x0, _y0))
+					make_line(Vector2(_x0, _y1), Vector2(_x1, _y1))
+					_e2 = 2 * _err
+					if _e2 <= _dy:
+						_y0 += 1
+						_y1 -= 1
+						_dy += _a
+						_err += _dy
+					if _e2 >= _dx or ((2 * _err) > _dy):
+						_x0 += 1
+						_x1 -= 1
+						_dx += _b1
+						_err += _dx
+				while (_y0 - _y1) < _b:
+					make_line(Vector2(_x0 - 1, _y0), Vector2(_x1 + 1, _y0))
+					make_line(Vector2(_x0 - 1, _y1), Vector2(_x1 + 1, _y1))
+					_y0 += 1
+					_y1 -= 1
 			_:
 				pass
 		char_preview.size = _vsnap

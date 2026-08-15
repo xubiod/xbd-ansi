@@ -428,7 +428,6 @@ Unimplemented.
 Click and drag to make a ellipse.
 Click again to toggle between filled and outline."
 mouse_default_cursor_shape = 2
-disabled = true
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 icon = ExtResource("11_sb7vj")
