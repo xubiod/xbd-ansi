@@ -6,7 +6,7 @@ var color: Color = Color.TRANSPARENT: set = _set_color
 signal color_changed(id: int, to: Color)
 
 func _ready() -> void:
-	tooltip_text = "Attr. %d" % [id]
+	tooltip_text = tooltip_text % [id]
 
 func _set_color(new_value: Color) -> void:
 	color = new_value
