@@ -1,6 +1,7 @@
 class_name Sauce extends RefCounted
 
 const MAGIC_SAUCE:		String = "SAUCE"
+const MAGIC_SAUCE_VER:	String = "00"
 const MAGIC_COMMENT:	String = "COMNT"
 
 const TITLE_LEN:	int = 35
@@ -70,8 +71,8 @@ static func read_from_fileaccess(f: FileAccess) -> Sauce:
 	var sauce_magic: String = f.get_buffer(len(MAGIC_SAUCE)).get_string_from_ascii()
 	if sauce_magic == MAGIC_SAUCE:
 
-		var version: String = f.get_buffer(2).get_string_from_ascii()
-		if version != "00":
+		var version: String = f.get_buffer(len(MAGIC_SAUCE_VER)).get_string_from_ascii()
+		if version != MAGIC_SAUCE_VER:
 			push_warning("unsupported sauce version, ", version, "; pretending it's 00 anyway")
 
 		sauce.title		= f.get_buffer(TITLE_LEN	).get_string_from_ascii()
@@ -126,7 +127,7 @@ func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
 
 	if len(comments) > 0:
-		stream.put_data("COMNT".to_ascii_buffer())
+		stream.put_data(MAGIC_COMMENT.to_ascii_buffer())
 		for comment: String in comments:
 			var comment_buffer: PackedByteArray = PackedByteArray()
 			comment_buffer.resize(COMMENT_LEN)
@@ -136,11 +137,11 @@ func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 			c.resize(COMMENT_LEN)
 			stream.put_data(c)
 
-	if file_size > 0xFFFFFFFF:
+	if file_size > UINT32_MAX:
 		file_size = 0
 
-	stream.put_data("SAUCE".to_ascii_buffer())
-	stream.put_data("00".to_ascii_buffer())
+	stream.put_data(MAGIC_SAUCE.to_ascii_buffer())
+	stream.put_data(MAGIC_SAUCE_VER.to_ascii_buffer())
 	stream.put_data(title.to_ascii_buffer())
 	stream.put_data(author.to_ascii_buffer())
 	stream.put_data(group.to_ascii_buffer())
