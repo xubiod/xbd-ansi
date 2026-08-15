@@ -558,13 +558,6 @@ func _unhandled_input(_event: InputEvent) -> void:
 				var _err: float = _dx+_dy+_b1*_a*_a
 				var _e2: float
 
-				if _x0 > _x1:
-					_x0 = _x1
-					_x1 += _a
-
-				if _y0 > _y1:
-					_y0 = _y1
-
 				_y0 += (_b + 1) / 2.
 				_y1 = _y0 - _b1
 				_a *= 8. * _a
@@ -612,13 +605,6 @@ func _unhandled_input(_event: InputEvent) -> void:
 				var _dy: float = 4 * (_b1+1)*_a*_a
 				var _err: float = _dx+_dy+_b1*_a*_a
 				var _e2: float
-
-				if _x0 > _x1:
-					_x0 = _x1
-					_x1 += _a
-
-				if _y0 > _y1:
-					_y0 = _y1
 
 				_y0 += (_b + 1) / 2.
 				_y1 = _y0 - _b1
