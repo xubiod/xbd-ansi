@@ -1,6 +1,5 @@
 - Rectangles fucky going in a negative direction
   - Starting with bottom left, bottom right, and top right
-- Ellipse tools unimplemented
 - Fillbucket unimplemented
 - Additional XBin fuunctionality
   - Should be able to load fonts from XBin
