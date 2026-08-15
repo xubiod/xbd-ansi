@@ -421,87 +421,6 @@ func _process(_delta: float) -> void:
 	rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
 	rectangle_area.size		= Vector2(rectangle_area.position - Vector2(start_canvas_pos.max(clamped))).abs().snapped(_vsnap)
 
-	if !viewport.is_input_handled():
-		line_ref.visible = Input.is_action_pressed(&"tool_interaction")
-
-		if global_point_in_canvas(global_mouse_pos):
-			if Input.is_action_just_pressed(&"tool_interaction"):
-				tool_in_use = true
-				start_canvas_pos = clamped
-				if current_tool in STRETCH_CHARACTER_PREVIEW:
-					# bodge-y?
-					rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
-					rectangle_area.size = Vector2.ZERO
-
-			if Input.is_action_pressed(&"tool_interaction"):
-				match current_tool:
-					Tool.TYPING:
-						cursor_pos = clamped / Vector2(glyph_size)
-					Tool.DRAWING:
-						make_line(last_mouse_canvas_pos, clamped)
-						if last_mouse_canvas_pos == clamped:
-							paint_with_selected(last_mouse_canvas_pos)
-					Tool.PICKER:
-						var where: Vector2i = global_to_canvas_pos(clamped)
-
-						selected_fg		= get_fg_attr(where)
-						selected_bg		= get_bg(where)
-						selected_code	= get_fg_code(where)
-
-						current_tool = last_tool
-					Tool.LINE:
-						# handled on mouse released
-						pass
-					Tool.RECT_LINE, Tool.RECT_FILL, Tool.REFERENCE:
-						# handled outside of canvas
-						pass
-					_:
-						push_error("not a tool")
-
-		# point not in canvas (ref, preview size)
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			match current_tool:
-				Tool.REFERENCE:
-					if reference.visible:
-						ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
-						ref_snapping = Input.is_key_pressed(KEY_SHIFT)
-				Tool.RECT_LINE, Tool.RECT_FILL:
-					char_preview.size = rectangle_area.size.snapped(_vsnap)
-				_:
-					pass
-
-		if Input.is_action_just_released(&"tool_interaction") and tool_in_use:
-			tool_in_use = false
-			end_canvas_pos = clamped
-
-			var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
-
-			match current_tool:
-				Tool.LINE:
-					make_line(start_canvas_pos, end_canvas_pos)
-				Tool.RECT_FILL:
-					var tl: Vector2 = rect.position
-					var br: Vector2 = rect.position + rect.size - Vector2.ONE
-					var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
-
-					for r: int in range(tl.y, br.y, step):
-						make_line(Vector2(tl.x, r), Vector2(br.x, r))
-				Tool.RECT_LINE:
-					var tl: Vector2 = rect.position
-					var br: Vector2 = rect.position + rect.size - Vector2.ONE
-
-					var _tr: Vector2 = Vector2(br.x - .8, tl.y)
-					var _bl: Vector2 = Vector2(tl.x, br.y - .8)
-
-					make_line(tl, _tr)
-					make_line(_tr, br)
-					make_line(tl, _bl)
-					make_line(_bl, br)
-				_:
-					pass
-			char_preview.size = _vsnap
-			rectangle_area.size = Vector2(_vsnap)
-
 	char_preview.position = rectangle_area.position.snapped(_vsnap)
 
 	last_mouse_canvas_pos = clamped
@@ -535,6 +454,94 @@ func _process(_delta: float) -> void:
 	line_ref.set_point_position(1, Vector2(last_mouse_canvas_pos))
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
+
+func _unhandled_input(_event: InputEvent) -> void:
+	var global_mouse_pos: Vector2 = get_global_mouse_position()
+	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
+
+	var usehalf: bool = current_paint_mode == PaintMode.HALFBLOCK and current_tool not in DISALLOW_HALF
+
+	var _ysnap: float = (float(glyph_size.y) / 2.) if usehalf else float(glyph_size.y)
+	var _vsnap: Vector2i = Vector2i(glyph_size.x, int(_ysnap))
+	line_ref.visible = Input.is_action_pressed(&"tool_interaction")
+
+	if global_point_in_canvas(global_mouse_pos):
+		if Input.is_action_just_pressed(&"tool_interaction"):
+			tool_in_use = true
+			start_canvas_pos = clamped
+			if current_tool in STRETCH_CHARACTER_PREVIEW:
+				# bodge-y?
+				rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
+				rectangle_area.size = Vector2.ZERO
+
+		if Input.is_action_pressed(&"tool_interaction"):
+			match current_tool:
+				Tool.TYPING:
+					cursor_pos = clamped / Vector2(glyph_size)
+				Tool.DRAWING:
+					make_line(last_mouse_canvas_pos, clamped)
+					if last_mouse_canvas_pos == clamped:
+						paint_with_selected(last_mouse_canvas_pos)
+				Tool.PICKER:
+					var where: Vector2i = global_to_canvas_pos(clamped)
+
+					selected_fg		= get_fg_attr(where)
+					selected_bg		= get_bg(where)
+					selected_code	= get_fg_code(where)
+
+					current_tool = last_tool
+				Tool.LINE:
+					# handled on mouse released
+					pass
+				Tool.RECT_LINE, Tool.RECT_FILL, Tool.REFERENCE:
+					# handled outside of canvas
+					pass
+				_:
+					push_error("not a tool")
+
+	# point not in canvas (ref, preview size)
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		match current_tool:
+			Tool.REFERENCE:
+				if reference.visible:
+					ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
+					ref_snapping = Input.is_key_pressed(KEY_SHIFT)
+			Tool.RECT_LINE, Tool.RECT_FILL:
+				char_preview.size = rectangle_area.size.snapped(_vsnap)
+			_:
+				pass
+
+	if Input.is_action_just_released(&"tool_interaction") and tool_in_use:
+		tool_in_use = false
+		end_canvas_pos = clamped
+
+		var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
+
+		match current_tool:
+			Tool.LINE:
+				make_line(start_canvas_pos, end_canvas_pos)
+			Tool.RECT_FILL:
+				var tl: Vector2 = rect.position
+				var br: Vector2 = rect.position + rect.size - Vector2.ONE
+				var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
+
+				for r: int in range(tl.y, br.y, step):
+					make_line(Vector2(tl.x, r), Vector2(br.x, r))
+			Tool.RECT_LINE:
+				var tl: Vector2 = rect.position
+				var br: Vector2 = rect.position + rect.size - Vector2.ONE
+
+				var _tr: Vector2 = Vector2(br.x - .8, tl.y)
+				var _bl: Vector2 = Vector2(tl.x, br.y - .8)
+
+				make_line(tl, _tr)
+				make_line(_tr, br)
+				make_line(tl, _bl)
+				make_line(_bl, br)
+			_:
+				pass
+		char_preview.size = _vsnap
+		rectangle_area.size = Vector2(_vsnap)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if current_tool != Tool.TYPING:
