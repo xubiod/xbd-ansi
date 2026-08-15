@@ -536,9 +536,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 				make_line(_tr, br)
 				make_line(tl, _bl)
 				make_line(_bl, br)
-			Tool.ELLIPSE_LINE:
-				# http://members.chello.at/~easyfilter/bresenham.html
-
+			Tool.ELLIPSE_LINE: # http://members.chello.at/~easyfilter/bresenham.html
 				var _x0: float = tl.x
 				var _y0: float = tl.y
 				var _x1: float = br.x
@@ -581,9 +579,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 					paint_with_selected(Vector2(_x1 + 1, _y1))
 					_y0 += 1
 					_y1 -= 1
-			Tool.ELLIPSE_FILL:
-				# http://members.chello.at/~easyfilter/bresenham.html
-
+			Tool.ELLIPSE_FILL: # http://members.chello.at/~easyfilter/bresenham.html
 				var _x0: float = tl.x
 				var _y0: float = tl.y
 				var _x1: float = br.x
