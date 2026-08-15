@@ -182,7 +182,7 @@ func _process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and panning:
-		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / %Camera.zoom.x
+		camera_desired_pos -= (event as InputEventMouseMotion).screen_relative / (%Camera.zoom.x / DisplayServer.screen_get_scale())
 
 	if event is InputEventMouseButton:
 		if event.pressed:
