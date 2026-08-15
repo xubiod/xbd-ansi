@@ -517,20 +517,18 @@ func _unhandled_input(_event: InputEvent) -> void:
 
 		var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
 
+		var tl: Vector2 = rect.position
+		var br: Vector2 = rect.position + rect.size - Vector2.ONE
+
 		match current_tool:
 			Tool.LINE:
 				make_line(start_canvas_pos, end_canvas_pos)
 			Tool.RECT_FILL:
-				var tl: Vector2 = rect.position
-				var br: Vector2 = rect.position + rect.size - Vector2.ONE
 				var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
 
 				for r: int in range(tl.y, br.y, step):
 					make_line(Vector2(tl.x, r), Vector2(br.x, r))
 			Tool.RECT_LINE:
-				var tl: Vector2 = rect.position
-				var br: Vector2 = rect.position + rect.size - Vector2.ONE
-
 				var _tr: Vector2 = Vector2(br.x - .8, tl.y)
 				var _bl: Vector2 = Vector2(tl.x, br.y - .8)
 
@@ -539,9 +537,6 @@ func _unhandled_input(_event: InputEvent) -> void:
 				make_line(tl, _bl)
 				make_line(_bl, br)
 			Tool.ELLIPSE_LINE:
-				var tl: Vector2 = rect.position
-				var br: Vector2 = rect.position + rect.size - Vector2.ONE
-
 				# http://members.chello.at/~easyfilter/bresenham.html
 
 				var _x0: float = tl.x
@@ -587,9 +582,6 @@ func _unhandled_input(_event: InputEvent) -> void:
 					_y0 += 1
 					_y1 -= 1
 			Tool.ELLIPSE_FILL:
-				var tl: Vector2 = rect.position
-				var br: Vector2 = rect.position + rect.size - Vector2.ONE
-
 				# http://members.chello.at/~easyfilter/bresenham.html
 
 				var _x0: float = tl.x
