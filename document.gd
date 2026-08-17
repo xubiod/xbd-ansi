@@ -507,119 +507,121 @@ func _unhandled_input(_event: InputEvent) -> void:
 					ref_pos -= Vector2(last_global_mouse) - Vector2(global_mouse_pos)
 					ref_snapping = Input.is_key_pressed(KEY_SHIFT)
 			Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL:
-				char_preview.size = rectangle_area.size.snapped(_vsnap)
+				if tool_in_use:
+					char_preview.size = rectangle_area.size.snapped(_vsnap)
 			_:
 				pass
 
-	if Input.is_action_just_released(&"tool_interaction") and tool_in_use:
-		tool_in_use = false
-		end_canvas_pos = clamped
+	if Input.is_action_just_released(&"tool_interaction"):
+		if tool_in_use:
+			tool_in_use = false
+			end_canvas_pos = clamped
 
-		var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
+			var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
 
-		var tl: Vector2 = rect.position
-		var br: Vector2 = rect.position + rect.size - Vector2.ONE
+			var tl: Vector2 = rect.position
+			var br: Vector2 = rect.position + rect.size - Vector2.ONE
 
-		match current_tool:
-			Tool.LINE:
-				make_line(start_canvas_pos, end_canvas_pos)
-			Tool.RECT_FILL:
-				var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
+			match current_tool:
+				Tool.LINE:
+					make_line(start_canvas_pos, end_canvas_pos)
+				Tool.RECT_FILL:
+					var step: int = int(glyph_size.y / 2.) if current_paint_mode == PaintMode.HALFBLOCK else glyph_size.y
 
-				for r: int in range(tl.y, br.y, step):
-					make_line(Vector2(tl.x, r), Vector2(br.x, r))
-			Tool.RECT_LINE:
-				var _tr: Vector2 = Vector2(br.x - .8, tl.y)
-				var _bl: Vector2 = Vector2(tl.x, br.y - .8)
+					for r: int in range(tl.y, br.y, step):
+						make_line(Vector2(tl.x, r), Vector2(br.x, r))
+				Tool.RECT_LINE:
+					var _tr: Vector2 = Vector2(br.x - .8, tl.y)
+					var _bl: Vector2 = Vector2(tl.x, br.y - .8)
 
-				make_line(tl, _tr)
-				make_line(_tr, br)
-				make_line(tl, _bl)
-				make_line(_bl, br)
-			Tool.ELLIPSE_LINE: # http://members.chello.at/~easyfilter/bresenham.html
-				var _x0: float = tl.x
-				var _y0: float = tl.y
-				var _x1: float = br.x
-				var _y1: float = br.y
+					make_line(tl, _tr)
+					make_line(_tr, br)
+					make_line(tl, _bl)
+					make_line(_bl, br)
+				Tool.ELLIPSE_LINE: # http://members.chello.at/~easyfilter/bresenham.html
+					var _x0: float = tl.x
+					var _y0: float = tl.y
+					var _x1: float = br.x
+					var _y1: float = br.y
 
-				var _a: float = absf(_x1-_x0)
-				var _b: float = absf(_y1-_y0)
-				var _b1: float = float(int(_b) & 1)
+					var _a: float = absf(_x1-_x0)
+					var _b: float = absf(_y1-_y0)
+					var _b1: float = float(int(_b) & 1)
 
-				var _dx: float = 4 * (1 - _a)*_b*_b
-				var _dy: float = 4 * (_b1+1)*_a*_a
-				var _err: float = _dx+_dy+_b1*_a*_a
-				var _e2: float
+					var _dx: float = 4 * (1 - _a)*_b*_b
+					var _dy: float = 4 * (_b1+1)*_a*_a
+					var _err: float = _dx+_dy+_b1*_a*_a
+					var _e2: float
 
-				_y0 += (_b + 1) / 2.
-				_y1 = _y0 - _b1
-				_a *= 8. * _a
-				_b1 = 8. * _b * _b
+					_y0 += (_b + 1) / 2.
+					_y1 = _y0 - _b1
+					_a *= 8. * _a
+					_b1 = 8. * _b * _b
 
-				while _x0 <= _x1:
-					paint_with_selected(Vector2(_x1, _y0))
-					paint_with_selected(Vector2(_x0, _y0))
-					paint_with_selected(Vector2(_x0, _y1))
-					paint_with_selected(Vector2(_x1, _y1))
-					_e2 = 2 * _err
-					if _e2 <= _dy:
+					while _x0 <= _x1:
+						paint_with_selected(Vector2(_x1, _y0))
+						paint_with_selected(Vector2(_x0, _y0))
+						paint_with_selected(Vector2(_x0, _y1))
+						paint_with_selected(Vector2(_x1, _y1))
+						_e2 = 2 * _err
+						if _e2 <= _dy:
+							_y0 += 1
+							_y1 -= 1
+							_dy += _a
+							_err += _dy
+						if _e2 >= _dx or ((2 * _err) > _dy):
+							_x0 += 1
+							_x1 -= 1
+							_dx += _b1
+							_err += _dx
+					while (_y0 - _y1) < _b:
+						paint_with_selected(Vector2(_x0 - 1, _y0))
+						paint_with_selected(Vector2(_x1 + 1, _y0))
+						paint_with_selected(Vector2(_x0 - 1, _y1))
+						paint_with_selected(Vector2(_x1 + 1, _y1))
 						_y0 += 1
 						_y1 -= 1
-						_dy += _a
-						_err += _dy
-					if _e2 >= _dx or ((2 * _err) > _dy):
-						_x0 += 1
-						_x1 -= 1
-						_dx += _b1
-						_err += _dx
-				while (_y0 - _y1) < _b:
-					paint_with_selected(Vector2(_x0 - 1, _y0))
-					paint_with_selected(Vector2(_x1 + 1, _y0))
-					paint_with_selected(Vector2(_x0 - 1, _y1))
-					paint_with_selected(Vector2(_x1 + 1, _y1))
-					_y0 += 1
-					_y1 -= 1
-			Tool.ELLIPSE_FILL: # http://members.chello.at/~easyfilter/bresenham.html
-				var _x0: float = tl.x
-				var _y0: float = tl.y
-				var _x1: float = br.x
-				var _y1: float = br.y
+				Tool.ELLIPSE_FILL: # http://members.chello.at/~easyfilter/bresenham.html
+					var _x0: float = tl.x
+					var _y0: float = tl.y
+					var _x1: float = br.x
+					var _y1: float = br.y
 
-				var _a: float = absf(_x1-_x0)
-				var _b: float = absf(_y1-_y0)
-				var _b1: float = float(int(_b) & 1)
+					var _a: float = absf(_x1-_x0)
+					var _b: float = absf(_y1-_y0)
+					var _b1: float = float(int(_b) & 1)
 
-				var _dx: float = 4 * (1 - _a)*_b*_b
-				var _dy: float = 4 * (_b1+1)*_a*_a
-				var _err: float = _dx+_dy+_b1*_a*_a
-				var _e2: float
+					var _dx: float = 4 * (1 - _a)*_b*_b
+					var _dy: float = 4 * (_b1+1)*_a*_a
+					var _err: float = _dx+_dy+_b1*_a*_a
+					var _e2: float
 
-				_y0 += (_b + 1) / 2.
-				_y1 = _y0 - _b1
-				_a *= 8. * _a
-				_b1 = 8. * _b * _b
+					_y0 += (_b + 1) / 2.
+					_y1 = _y0 - _b1
+					_a *= 8. * _a
+					_b1 = 8. * _b * _b
 
-				while _x0 <= _x1:
-					make_line(Vector2(_x1, _y0), Vector2(_x0, _y0))
-					make_line(Vector2(_x0, _y1), Vector2(_x1, _y1))
-					_e2 = 2 * _err
-					if _e2 <= _dy:
+					while _x0 <= _x1:
+						make_line(Vector2(_x1, _y0), Vector2(_x0, _y0))
+						make_line(Vector2(_x0, _y1), Vector2(_x1, _y1))
+						_e2 = 2 * _err
+						if _e2 <= _dy:
+							_y0 += 1
+							_y1 -= 1
+							_dy += _a
+							_err += _dy
+						if _e2 >= _dx or ((2 * _err) > _dy):
+							_x0 += 1
+							_x1 -= 1
+							_dx += _b1
+							_err += _dx
+					while (_y0 - _y1) < _b:
+						make_line(Vector2(_x0 - 1, _y0), Vector2(_x1 + 1, _y0))
+						make_line(Vector2(_x0 - 1, _y1), Vector2(_x1 + 1, _y1))
 						_y0 += 1
 						_y1 -= 1
-						_dy += _a
-						_err += _dy
-					if _e2 >= _dx or ((2 * _err) > _dy):
-						_x0 += 1
-						_x1 -= 1
-						_dx += _b1
-						_err += _dx
-				while (_y0 - _y1) < _b:
-					make_line(Vector2(_x0 - 1, _y0), Vector2(_x1 + 1, _y0))
-					make_line(Vector2(_x0 - 1, _y1), Vector2(_x1 + 1, _y1))
-					_y0 += 1
-					_y1 -= 1
-			_:
-				pass
+				_:
+					pass
 		char_preview.size = _vsnap
 		rectangle_area.size = Vector2(_vsnap)
 
