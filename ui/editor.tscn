@@ -118,7 +118,8 @@ mouse_filter = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-tooltip_text = "Unimplemented."
+tooltip_text = "Half block mode paints with half block characters.
+On 8x16 fonts this can be considered a helper for pixel art."
 mouse_default_cursor_shape = 2
 toggle_mode = true
 button_group = ExtResource("4_gbsbp")
