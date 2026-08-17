@@ -217,6 +217,46 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 		Color(0x0000FF_FF),
 		Color(0x7777DD_FF)
 	]),
+
+	# TMS9918 order, datasheet
+	"MSX (Datasheet)": PackedColorArray([
+		Color(0x000000_FF),
+		Color(0x000000_FF),
+		Color(0x40B64A_FF),
+		Color(0x73CE7C_FF),
+		Color(0x5955DF_FF),
+		Color(0x7E75F0_FF),
+		Color(0xB75E51_FF),
+		Color(0x64DAEE_FF),
+		Color(0xD96459_FF),
+		Color(0xFE877C_FF),
+		Color(0xCAC15E_FF),
+		Color(0xDDCE85_FF),
+		Color(0x3CA042_FF),
+		Color(0xB565B3_FF),
+		Color(0xCACACA_FF),
+		Color(0xFFFFFF_FF),
+	]),
+
+	# TMS9918 order, crt from wikipedia
+	"MSX (CRT)": PackedColorArray([
+		Color(0x000000_FF),
+		Color(0x000000_FF),
+		Color(0x0AAD1E_FF),
+		Color(0x34C84C_FF),
+		Color(0x2B2DE3_FF),
+		Color(0x514BFB_FF),
+		Color(0xBD2925_FF),
+		Color(0x1EE2EF_FF),
+		Color(0xFB2C2B_FF),
+		Color(0xFF5F4C_FF),
+		Color(0xBDA22B_FF),
+		Color(0xD7B454_FF),
+		Color(0x0A8C18_FF),
+		Color(0xAF329A_FF),
+		Color(0xB2B2B2_FF),
+		Color(0xFFFFFF_FF),
+	]),
 #endregion
 
 #region Notable Software
