@@ -35,10 +35,10 @@ static func from_data(data: PackedByteArray) -> AnsiFont:
 	f.font_data = data
 
 	# can't determine this from data, just default it all
-	f.empty_block	= DEFAULT_EMPTY_BLOCK
-	f.top_block		= DEFAULT_TOP_BLOCK
-	f.bottom_block	= DEFAULT_BOTTOM_BLOCK
-	f.full_block	= DEFAULT_FULL_BLOCK
+	f.empty_block		= DEFAULT_EMPTY_BLOCK
+	f.top_block			= DEFAULT_TOP_BLOCK
+	f.bottom_block		= DEFAULT_BOTTOM_BLOCK
+	f.full_block		= DEFAULT_FULL_BLOCK
 
 	return f
 
@@ -47,14 +47,16 @@ static func from_path(path: String = Global.DEFAULT_FONTPATH) -> AnsiFont:
 
 	f.font_path = path
 
-	f.empty_block	= DEFAULT_EMPTY_BLOCK
-	f.top_block		= DEFAULT_TOP_BLOCK
-	f.bottom_block	= DEFAULT_BOTTOM_BLOCK
-	f.full_block	= DEFAULT_FULL_BLOCK
+	f.empty_block		= DEFAULT_EMPTY_BLOCK
+	f.top_block			= DEFAULT_TOP_BLOCK
+	f.bottom_block		= DEFAULT_BOTTOM_BLOCK
+	f.full_block		= DEFAULT_FULL_BLOCK
 
 	if Global.FONT_SETTING_OVERRIDES.has(path):
-		f.full_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("full", f.full_block)
-		f.bottom_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("bottom", f.bottom_block)
+		f.empty_block =		(Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("empty", f.empty_block)
+		f.top_block =		(Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("top", f.top_block)
+		f.bottom_block =	(Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("bottom", f.bottom_block)
+		f.full_block =		(Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("full", f.full_block)
 
 	return f
 #endregion
