@@ -39,7 +39,6 @@ const FONT_SETTING_OVERRIDES: Dictionary = {
 		"full": 0xA0
 	},
 	"res://fonts/custom/TES-SYM5.F16": {
-		#"top":		0x92,
 		"bottom":	0x92,
 		"full":		0x93
 	}
