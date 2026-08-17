@@ -1,5 +1,9 @@
 - Rectangles fucky going in a negative direction
   - Starting with bottom left, bottom right, and top right
+  - Currently mostly a preview issue
+- Off canvas shape drawing unsupported
+  - Example: starting a rectangle off canvas and dragging across canvas
+  - Example: ellipses cannot be cut off
 - Fillbucket unimplemented
 - Additional XBin fuunctionality
   - Should be able to load fonts from XBin
