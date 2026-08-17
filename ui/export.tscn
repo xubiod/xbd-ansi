@@ -46,76 +46,6 @@ custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 text = "..."
 
-[node name="UpscaleX" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=891310314]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/UpscaleX" unique_id=1400598136]
-custom_minimum_size = Vector2(96, 0)
-layout_mode = 2
-text = "Scale X"
-
-[node name="UpscaleFactorX" type="HSlider" parent="MarginContainer/VBoxContainer/UpscaleX" unique_id=1116117388]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-min_value = 1.0
-max_value = 8.0
-step = 0.1
-value = 1.0
-tick_count = 8
-ticks_on_borders = true
-
-[node name="UpscaleSpinboxX" type="SpinBox" parent="MarginContainer/VBoxContainer/UpscaleX" unique_id=488018334]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = 100.0
-max_value = 800.0
-step = 10.0
-value = 100.0
-rounded = true
-alignment = 2
-suffix = "%"
-custom_arrow_step = 100.0
-
-[node name="UpscaleY" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=266453715]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/UpscaleY" unique_id=570253830]
-custom_minimum_size = Vector2(96, 0)
-layout_mode = 2
-text = "Scale Y"
-
-[node name="UpscaleFactorY" type="HSlider" parent="MarginContainer/VBoxContainer/UpscaleY" unique_id=1970808549]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-min_value = 1.0
-max_value = 8.0
-step = 0.1
-value = 1.0
-tick_count = 8
-ticks_on_borders = true
-
-[node name="UpscaleSpinboxY" type="SpinBox" parent="MarginContainer/VBoxContainer/UpscaleY" unique_id=715894621]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = 100.0
-max_value = 800.0
-step = 10.0
-value = 100.0
-rounded = true
-alignment = 2
-suffix = "%"
-custom_arrow_step = 100.0
-
-[node name="LockAspect" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=1519802713]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-text = "Enforce 1:1 pixel ratio"
-
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=695515299]
 layout_mode = 2
 size_flags_vertical = 3
@@ -125,6 +55,88 @@ vertical_scroll_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Scaling" type="FoldableContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables" unique_id=573335991]
+layout_mode = 2
+title = "Upscale Settings"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling" unique_id=104970862]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer" unique_id=681758051]
+layout_mode = 2
+
+[node name="UpscaleX" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer" unique_id=891310314]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleX" unique_id=1400598136]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Scale X"
+
+[node name="UpscaleFactorX" type="HSlider" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleX" unique_id=1116117388]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 8.0
+step = 0.1
+value = 1.0
+tick_count = 8
+ticks_on_borders = true
+
+[node name="UpscaleSpinboxX" type="SpinBox" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleX" unique_id=488018334]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 100.0
+max_value = 800.0
+step = 10.0
+value = 100.0
+rounded = true
+alignment = 2
+suffix = "%"
+custom_arrow_step = 100.0
+
+[node name="UpscaleY" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer" unique_id=266453715]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleY" unique_id=570253830]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Scale Y"
+
+[node name="UpscaleFactorY" type="HSlider" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleY" unique_id=1970808549]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 8.0
+step = 0.1
+value = 1.0
+tick_count = 8
+ticks_on_borders = true
+
+[node name="UpscaleSpinboxY" type="SpinBox" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleY" unique_id=715894621]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 100.0
+max_value = 800.0
+step = 10.0
+value = 100.0
+rounded = true
+alignment = 2
+suffix = "%"
+custom_arrow_step = 100.0
+
+[node name="LockAspect" type="CheckButton" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer" unique_id=1519802713]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Enforce 1:1 pixel ratio"
 
 [node name="WebpSettings" type="FoldableContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/Foldables" unique_id=392024408]
 layout_mode = 2
@@ -266,11 +278,11 @@ filters = PackedStringArray("*.png;PNG Files;image/png", "*webp;WebP Files;image
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/ExportPathPicker/ExportPath" to="." method="_on_export_path_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ExportPathPicker/SummonPicker" to="." method="_on_summon_picker_pressed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/UpscaleX/UpscaleFactorX" to="." method="_on_upscale_factor_x_value_changed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/UpscaleX/UpscaleSpinboxX" to="." method="_on_upscale_spinbox_x_value_changed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/UpscaleY/UpscaleFactorY" to="." method="_on_upscale_factor_y_value_changed"]
-[connection signal="value_changed" from="MarginContainer/VBoxContainer/UpscaleY/UpscaleSpinboxY" to="." method="_on_upscale_spinbox_y_value_changed"]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/LockAspect" to="." method="_on_lock_aspect_toggled"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleX/UpscaleFactorX" to="." method="_on_upscale_factor_x_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleX/UpscaleSpinboxX" to="." method="_on_upscale_spinbox_x_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleY/UpscaleFactorY" to="." method="_on_upscale_factor_y_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/UpscaleY/UpscaleSpinboxY" to="." method="_on_upscale_spinbox_y_value_changed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/Scaling/MarginContainer/VBoxContainer/LockAspect" to="." method="_on_lock_aspect_toggled"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/WebpSettings/MarginContainer/VBoxContainer/HBoxContainer/WebpQuality" to="." method="_on_webp_quality_value_changed"]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/AdvancedSettings/MarginContainer/VBoxContainer/IntegerOnly" to="." method="_on_integer_only_toggled"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/ScrollContainer/Foldables/AdvancedSettings/MarginContainer/VBoxContainer/HBoxContainer/TransparentIdx" to="." method="_on_transparent_idx_value_changed"]
