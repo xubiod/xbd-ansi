@@ -628,6 +628,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventKey:
+		if (event.get_modifiers_mask() & (KEY_MASK_META | KEY_MASK_CTRL)) != 0:
+			return
+
 		var key_ev: InputEventKey = event as InputEventKey
 
 		if key_ev.unicode != 0:
