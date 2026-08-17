@@ -357,25 +357,25 @@ func paint_with_selected(global_pt: Vector2) -> void:
 			var _top_half: bool	= (global_pt.y - float(tile.y * glyph_size.y)) < (glyph_size.y / 2.)
 
 			match existing_fg_code:
-				ansifnt.half_top_block:
+				ansifnt.top_block:
 					if _top_half and existing_fg_attr != selected_fg:
 						set_fg_attr(tile, selected_fg)
 					elif not _top_half:
-						set_fg_bg(tile, ansifnt.half_bottom_block, selected_fg, existing_fg_attr)
+						set_fg_bg(tile, ansifnt.bottom_block, selected_fg, existing_fg_attr)
 
-				ansifnt.half_bottom_block:
+				ansifnt.bottom_block:
 					if not _top_half and existing_fg_attr != selected_fg:
 						set_fg_attr(tile, selected_fg)
 					elif _top_half:
-						set_fg_bg(tile, ansifnt.half_top_block, selected_fg, existing_fg_attr)
+						set_fg_bg(tile, ansifnt.top_block, selected_fg, existing_fg_attr)
 
 				ansifnt.full_block:
 					if existing_fg_attr != selected_fg:
-						var _new_code: int	= ansifnt.half_top_block if _top_half else ansifnt.half_bottom_block
+						var _new_code: int	= ansifnt.top_block if _top_half else ansifnt.bottom_block
 						set_fg_bg(tile, _new_code, selected_fg, existing_fg_attr)
 
 				ansifnt.empty_block, _:
-					set_fg_bg(tile, ansifnt.half_top_block if _top_half else ansifnt.half_bottom_block, selected_fg, existing_bg)
+					set_fg_bg(tile, ansifnt.top_block if _top_half else ansifnt.bottom_block, selected_fg, existing_bg)
 
 		PaintMode.CHARACTER:
 			if not (existing_bg == selected_bg and existing_fg_attr == selected_fg and existing_fg_code == selected_code):

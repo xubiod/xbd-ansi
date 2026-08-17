@@ -14,16 +14,16 @@ enum FontHeightGuessHeuristic {
 
 @export_category("Code configurations")
 
-const DEFAULT_EMPTY_BLOCK:		 int = 0x20
-const DEFAULT_HALF_TOP_BLOCK:	 int = 0xDF
-const DEFAULT_HALF_BOTTOM_BLOCK: int = 0xDC
-const DEFAULT_FULL_BLOCK:		 int = 0xDB
+const DEFAULT_EMPTY_BLOCK:	int = 0x20
+const DEFAULT_TOP_BLOCK:	int = 0xDF
+const DEFAULT_BOTTOM_BLOCK:	int = 0xDC
+const DEFAULT_FULL_BLOCK:	int = 0xDB
 
 @export_subgroup("Half-blocks")
-@export_range(0.0, 255.0) var empty_block:		 int = DEFAULT_EMPTY_BLOCK
-@export_range(0.0, 255.0) var half_top_block:	 int = DEFAULT_HALF_TOP_BLOCK
-@export_range(0.0, 255.0) var half_bottom_block: int = DEFAULT_HALF_BOTTOM_BLOCK
-@export_range(0.0, 255.0) var full_block:		 int = DEFAULT_FULL_BLOCK
+@export_range(0.0, 255.0) var empty_block:	int = DEFAULT_EMPTY_BLOCK
+@export_range(0.0, 255.0) var top_block:	int = DEFAULT_TOP_BLOCK
+@export_range(0.0, 255.0) var bottom_block:	int = DEFAULT_BOTTOM_BLOCK
+@export_range(0.0, 255.0) var full_block:	int = DEFAULT_FULL_BLOCK
 
 var image: Image = null : get = _get_image
 
@@ -35,10 +35,10 @@ static func from_data(data: PackedByteArray) -> AnsiFont:
 	f.font_data = data
 
 	# can't determine this from data, just default it all
-	f.empty_block		= DEFAULT_EMPTY_BLOCK
-	f.half_top_block	= DEFAULT_HALF_TOP_BLOCK
-	f.half_bottom_block	= DEFAULT_HALF_BOTTOM_BLOCK
-	f.full_block		= DEFAULT_FULL_BLOCK
+	f.empty_block	= DEFAULT_EMPTY_BLOCK
+	f.top_block		= DEFAULT_TOP_BLOCK
+	f.bottom_block	= DEFAULT_BOTTOM_BLOCK
+	f.full_block	= DEFAULT_FULL_BLOCK
 
 	return f
 
@@ -47,14 +47,14 @@ static func from_path(path: String = Global.DEFAULT_FONTPATH) -> AnsiFont:
 
 	f.font_path = path
 
-	f.empty_block		= DEFAULT_EMPTY_BLOCK
-	f.half_top_block	= DEFAULT_HALF_TOP_BLOCK
-	f.half_bottom_block	= DEFAULT_HALF_BOTTOM_BLOCK
-	f.full_block		= DEFAULT_FULL_BLOCK
+	f.empty_block	= DEFAULT_EMPTY_BLOCK
+	f.top_block		= DEFAULT_TOP_BLOCK
+	f.bottom_block	= DEFAULT_BOTTOM_BLOCK
+	f.full_block	= DEFAULT_FULL_BLOCK
 
 	if Global.FONT_SETTING_OVERRIDES.has(path):
 		f.full_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("full", f.full_block)
-		f.half_bottom_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("bottom", f.half_bottom_block)
+		f.bottom_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("bottom", f.bottom_block)
 
 	return f
 #endregion
