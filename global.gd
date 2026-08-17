@@ -149,7 +149,6 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 		Color(0x00D8D8_FF),
 		Color(0xD8D800_FF),
 		Color(0xD8D8D8_FF),
-
 		Color(0x000000_FF),
 		Color(0x0000FF_FF),
 		Color(0xFF0000_FF),
