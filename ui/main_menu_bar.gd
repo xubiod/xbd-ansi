@@ -28,14 +28,16 @@ enum DocumentIds {
 const ID_MASK: int = INT32_MAX
 
 func _ready() -> void:
-	$File.add_item("New", FileIds.NEW,			KEY_MASK_CMD_OR_CTRL | KEY_N)
-	$File.add_item("Open", FileIds.OPEN,		KEY_MASK_CMD_OR_CTRL | KEY_O)
+	var _modifier: KeyModifierMask = KEY_MASK_META if OS.get_name() == "macOS" else KEY_MASK_CTRL
+
+	$File.add_item("New", FileIds.NEW,			_modifier | KEY_N)
+	$File.add_item("Open", FileIds.OPEN,		_modifier | KEY_O)
 	$File.add_separator("", ID_MASK)
-	$File.add_item("Save", FileIds.SAVE,		KEY_MASK_CMD_OR_CTRL | KEY_S)
-	$File.add_item("Save as", FileIds.SAVE_AS,	KEY_MASK_CMD_OR_CTRL | KEY_MASK_SHIFT | KEY_S)
+	$File.add_item("Save", FileIds.SAVE,		_modifier | KEY_S)
+	$File.add_item("Save as", FileIds.SAVE_AS,	_modifier | KEY_MASK_SHIFT | KEY_S)
 	$File.add_separator("", ID_MASK - 1)
-	$File.add_item("Export", FileIds.EXPORT, 	KEY_MASK_CMD_OR_CTRL | KEY_MASK_SHIFT | KEY_MASK_ALT | KEY_S)
-	$File.add_item("Repeat last export", FileIds.EXPORT_AGAIN, KEY_MASK_CMD_OR_CTRL | KEY_MASK_SHIFT | KEY_X)
+	$File.add_item("Export", FileIds.EXPORT, 	_modifier | KEY_MASK_SHIFT | KEY_MASK_ALT | KEY_S)
+	$File.add_item("Repeat last export", FileIds.EXPORT_AGAIN, _modifier | KEY_MASK_SHIFT | KEY_X)
 
 	var built_in_fonts: PopupMenu = PopupMenu.new()
 
@@ -66,7 +68,7 @@ func _ready() -> void:
 	$Document.add_separator("", ID_MASK - 1)
 
 	$Document.add_item("SAUCE info...", DocumentIds.SAUCE_EDITOR)
-	$Document.add_item("Resize", DocumentIds.RESIZE, KEY_MASK_CMD_OR_CTRL | KEY_R)
+	$Document.add_item("Resize", DocumentIds.RESIZE, _modifier | KEY_R)
 
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
 	$View.add_item("Control hints", ViewIds.CONTROL_HINT)
