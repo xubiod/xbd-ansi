@@ -33,10 +33,14 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 # TODO: fill more for half-block drawing
 const FONT_SETTING_OVERRIDES: Dictionary = {
 	"res://fonts/c64/PETSCII shifted.F08": {
-		"full": 0xA0
+		"top":		0xE2,
+		"bottom":	0x62,
+		"full":		0xA0
 	},
 	"res://fonts/c64/PETSCII unshifted.F08": {
-		"full": 0xA0
+		"top":		0xE2,
+		"bottom":	0x62,
+		"full":		0xA0
 	},
 	"res://fonts/custom/TES-SYM5.F16": {
 		"bottom":	0x92,
