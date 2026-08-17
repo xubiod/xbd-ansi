@@ -53,7 +53,8 @@ static func from_path(path: String = Global.DEFAULT_FONTPATH) -> AnsiFont:
 	f.full_block		= DEFAULT_FULL_BLOCK
 
 	if Global.FONT_SETTING_OVERRIDES.has(path):
-		f.full_block = Global.FONT_SETTING_OVERRIDES[path]["full"]
+		f.full_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("full", f.full_block)
+		f.half_bottom_block = (Global.FONT_SETTING_OVERRIDES[path] as Dictionary).get("bottom", f.half_bottom_block)
 
 	return f
 #endregion
