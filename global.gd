@@ -140,7 +140,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 	# colours use 0xD8) HOWEVER:
 	# - this is in hardware order
 	# - bright black is here (albeit still 0x000000)
-	"ZX Spectrum": PackedColorArray([
+	"ZX Spectrum (Hardware Order)": PackedColorArray([
 		Color(0x000000_FF),
 		Color(0x0000D8_FF),
 		Color(0xD80000_FF),
@@ -219,7 +219,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 	]),
 
 	# TMS9918 order, datasheet
-	"MSX (Datasheet)": PackedColorArray([
+	"MSX (Datasheet, Hardware Order)": PackedColorArray([
 		Color(0x000000_FF),
 		Color(0x000000_FF),
 		Color(0x40B64A_FF),
@@ -239,7 +239,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 	]),
 
 	# TMS9918 order, crt from wikipedia
-	"MSX (CRT)": PackedColorArray([
+	"MSX (CRT, Hardware Order)": PackedColorArray([
 		Color(0x000000_FF),
 		Color(0x000000_FF),
 		Color(0x0AAD1E_FF),
