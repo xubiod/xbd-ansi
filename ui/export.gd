@@ -22,7 +22,7 @@ signal export_request(path: String, upscale_x: float, upscale_y: float, webploss
 
 @onready var submit: Button = %Submit
 
-const VALID_EXPORT_FORMATS: PackedStringArray = ["png", "webp"]
+const VALID_EXPORT_FORMATS: PackedStringArray = ["png", "webp", "qoi"]
 
 ## GPU limitations
 const MAX_SIDE: int = 16384

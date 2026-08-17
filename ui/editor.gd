@@ -472,6 +472,11 @@ func _start_export(path: String, upscale_x: float, upscale_y: float, webplossy: 
 			i.save_png(path)
 		"webp":
 			i.save_webp(path, webplossy, webpquality)
+		"qoi":
+			var b: PackedByteArray = Qoi.save_to_buffer(i, 4 if transparent_idx != -1 else 3)
+			var f: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+			f.store_buffer(b)
+			f.close()
 		_:
 			push_error("unknown extension?")
 

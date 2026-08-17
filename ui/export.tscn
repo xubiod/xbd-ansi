@@ -247,7 +247,7 @@ title = "Export to..."
 initial_position = 2
 size = Vector2i(800, 480)
 access = 2
-filters = PackedStringArray("*.png,*webp;Image Files;image/png,image/webp")
+filters = PackedStringArray("*.png;PNG Files;image/png", "*webp;WebP Files;image/webp", "*.qoi;QOI Files;image/qoi")
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
