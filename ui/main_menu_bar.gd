@@ -30,14 +30,18 @@ const ID_MASK: int = INT32_MAX
 func _ready() -> void:
 	var _modifier: KeyModifierMask = KEY_MASK_META if OS.get_name() == "macOS" else KEY_MASK_CTRL
 
-	$File.add_item("New", FileIds.NEW,			_modifier | KEY_N)
-	$File.add_item("Open", FileIds.OPEN,		_modifier | KEY_O)
+	$File.add_item("New", FileIds.NEW,		_modifier | KEY_N)
+	$File.add_item("Open", FileIds.OPEN,	_modifier | KEY_O)
+
 	$File.add_separator("", ID_MASK)
+
 	$File.add_item("Save", FileIds.SAVE,		_modifier | KEY_S)
 	$File.add_item("Save as", FileIds.SAVE_AS,	_modifier | KEY_MASK_SHIFT | KEY_S)
+
 	$File.add_separator("", ID_MASK - 1)
-	$File.add_item("Export", FileIds.EXPORT, 	_modifier | KEY_MASK_SHIFT | KEY_MASK_ALT | KEY_S)
-	$File.add_item("Repeat last export", FileIds.EXPORT_AGAIN, _modifier | KEY_MASK_SHIFT | KEY_X)
+
+	$File.add_item("Export", FileIds.EXPORT,					_modifier | KEY_MASK_SHIFT | KEY_MASK_ALT | KEY_S)
+	$File.add_item("Repeat last export", FileIds.EXPORT_AGAIN,	_modifier | KEY_MASK_SHIFT | KEY_X)
 
 	var built_in_fonts: PopupMenu = PopupMenu.new()
 
