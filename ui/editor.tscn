@@ -599,6 +599,7 @@ theme_override_font_sizes/font_size = 10
 text = "Recenter"
 
 [node name="Windows" type="Node" parent="Camera/UI" unique_id=1706040997]
+unique_name_in_owner = true
 
 [node name="OpenXBin" type="FileDialog" parent="Camera/UI/Windows" unique_id=1461863555]
 unique_name_in_owner = true

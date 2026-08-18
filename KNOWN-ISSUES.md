@@ -10,6 +10,3 @@
   - Import palette from XBin
 - Lines are jaggy
 - Halfblock glyphs are not changeable to user
-- Out of canvas reference image
-  - In a window
-  - Pannable, zoomable

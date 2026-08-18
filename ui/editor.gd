@@ -1,6 +1,7 @@
 class_name Editor extends Node2D
 
 const COLOR_BTN: PackedScene = preload("uid://bhoyf3yuruu8v")
+const EXTERNAL_REFERENCE: PackedScene = preload("uid://c7nkf8cs6f7ip")
 
 const RECT_FILL: AtlasTexture	= preload("uid://mvkafpgtklt6")
 const RECT_LINED: AtlasTexture	= preload("uid://cp6gdi2bocfuu")
@@ -324,6 +325,12 @@ func request_export(force_reexport: bool = false) -> void:
 		%Exporter.summon(document.document_rect.size)
 	else:
 		_start_export(last_path, last_upscale_x, last_upscale_y, last_webplossy, last_webpquality, last_transparent)
+
+func request_new_external_ref() -> void:
+	if EXTERNAL_REFERENCE.can_instantiate():
+		var e: ExternalReference = EXTERNAL_REFERENCE.instantiate()
+		%Windows.add_child(e)
+		e.show()
 #endregion
 
 #region Signal connections

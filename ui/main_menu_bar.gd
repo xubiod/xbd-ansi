@@ -13,7 +13,8 @@ enum FileIds {
 
 enum ViewIds {
 	CHARACTER_PALETTE = 0,
-	CONTROL_HINT = 1
+	CONTROL_HINT = 1,
+	EXTERNAL_REF = 2
 }
 
 enum DocumentIds {
@@ -76,6 +77,7 @@ func _ready() -> void:
 
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
 	$View.add_item("Control hints", ViewIds.CONTROL_HINT)
+	$View.add_item("Open external reference", ViewIds.EXTERNAL_REF)
 
 	$File.id_pressed.connect(_on_file_id_pressed)
 	$Document.id_pressed.connect(_on_doc_id_pressed)
@@ -126,6 +128,8 @@ func _on_view_id_pressed(id: int) -> void:
 				%PaletteWindow.hide()
 		ViewIds.CONTROL_HINT:
 			editor.control_hints = !editor.control_hints
+		ViewIds.EXTERNAL_REF:
+			editor.request_new_external_ref()
 		_:
 			assert(false, "invalid view option")
 
