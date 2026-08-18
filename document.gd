@@ -21,9 +21,9 @@ enum PaintMode {
 	HALFBLOCK
 }
 
-enum AnsiStyle {
-	CLASSIC
-}
+#enum AnsiStyle {
+	#CLASSIC
+#}
 
 const FLAGS_PALETTE:	int = 0b00000001
 const FLAGS_FONT:		int = 0b00000010
@@ -954,11 +954,34 @@ func load_xbin(xbin_path: String) -> void:
 	dirty = false
 
 func load_ansi(ansi_path: String) -> void:
-	assert(false, "unimplemented")
+	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^\[(?:\d+;?)+m')
+
 	var f: FileAccess = FileAccess.open(ansi_path, FileAccess.READ)
-
 	sauce = Sauce.read_from_fileaccess(f)
+	f.close()
 
-	f.seek(0)
+	var data: PackedByteArray = FileAccess.get_file_as_bytes(ansi_path)
+
+	var keep_going:	bool = true
+
+	var byte:		int = 0x00
+	var str_buffer:	String = ""
+	var i: int = 0
+
+	var pending_bg: int = DEFAULT_BG
+	var pending_fg: int = DEFAULT_FG
+	cursor_pos = Vector2.ZERO
+
+	while i < len(data) and keep_going:
+		byte = data.get(i)
+
+		if byte == ANSIConsts.ESCAPE:
+			pass
+		type(byte)
+
+		if byte == XBIN_EOF:
+			keep_going = false
+			continue
+		i += 1
 	pass
 #endregion

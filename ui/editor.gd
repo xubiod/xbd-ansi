@@ -502,9 +502,13 @@ func _on_the_pit_focus_entered() -> void:
 	%ThePit.release_focus()
 
 func _on_open_x_bin_file_selected(path: String) -> void:
-	if not path.to_lower().ends_with(".xb"):
-		return
-	document.load_xbin(path)
+	match path.to_lower().get_extension():
+		"xb":
+			document.load_xbin(path)
+		"ans":
+			document.load_ansi(path)
+		_:
+			return
 	loaded_path = path
 	camera_desired_pos = document.document_rect.get_center()
 

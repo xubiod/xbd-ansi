@@ -1,6 +1,7 @@
 class_name ANSIConsts extends RefCounted
 
 const ANSI_ESCAPE_START: String = "\u001b["
+const ESCAPE: int = 0x1B
 
 ## Supported ANSI codes, this is specifically for colours/graphics.
 enum AnsiCodes {
