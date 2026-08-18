@@ -21,6 +21,10 @@ enum PaintMode {
 	HALFBLOCK
 }
 
+enum AnsiStyle {
+	CLASSIC
+}
+
 const FLAGS_PALETTE:	int = 0b00000001
 const FLAGS_FONT:		int = 0b00000010
 const FLAGS_COMPRESSED:	int = 0b00000100
@@ -948,4 +952,13 @@ func load_xbin(xbin_path: String) -> void:
 	@warning_ignore_restore("integer_division")
 	f.close()
 	dirty = false
+
+func load_ansi(ansi_path: String) -> void:
+	assert(false, "unimplemented")
+	var f: FileAccess = FileAccess.open(ansi_path, FileAccess.READ)
+
+	sauce = Sauce.read_from_fileaccess(f)
+
+	f.seek(0)
+	pass
 #endregion
