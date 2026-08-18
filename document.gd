@@ -64,9 +64,13 @@ var tileset: TileSet
 var cursor_pos: Vector2i = Vector2i.ZERO
 var desired_cursor_pos: Vector2 = Vector2.ZERO
 
-var selected_bg:	int = 0  : set = _set_selected_background
-var selected_fg:	int = 7  : set = _set_selected_foreground
-var selected_code:	int = 32 : set = _set_selected_code
+const DEFAULT_BG:	int = 0
+const DEFAULT_FG:	int = 7
+const DEFAULT_CODE:	int = 0x20
+
+var selected_bg:	int = DEFAULT_BG	: set = _set_selected_background
+var selected_fg:	int = DEFAULT_FG	: set = _set_selected_foreground
+var selected_code:	int = DEFAULT_CODE	: set = _set_selected_code
 
 var document_size: Vector2i = DEFAULT_SIZE
 var document_rect: Rect2 : get = _get_document_rect
@@ -679,9 +683,9 @@ func make_new(
 
 	resize(size)
 
-	selected_bg = 0
-	selected_fg = 7
-	selected_code = 32
+	selected_bg = DEFAULT_BG
+	selected_fg = DEFAULT_FG
+	selected_code = DEFAULT_CODE
 
 	cursor_pos = Vector2.ZERO
 	reference.texture = null
