@@ -9,6 +9,7 @@ const LERP_SNAP: float = 1.0
 
 ## Human friendly names to paths.
 const FONT_MAP: Dictionary[String, Dictionary] = {
+#region All IBM
 	"IBM, CP437 (MS-DOS Latin US)": {
 		"8x8":	"res://fonts/ibm/CP437.F08",
 		"8x14":	"res://fonts/ibm/CP437.F14",
@@ -116,6 +117,12 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 		"CP869 (MS-DOS Greek 2) 8x14": "res://fonts/ibm/CP869.F14",
 		"CP869 (MS-DOS Greek 2) 8x16": "res://fonts/ibm/CP869.F16",
 	},
+#endregion
+
+	"C64": {
+		"PETSCII shifted":		"res://fonts/c64/PETSCII shifted.F08",
+		"PETSCII unshifted":	"res://fonts/c64/PETSCII unshifted.F08"
+	},
 
 	"Amiga": {
 		"--Topaz": "",
@@ -135,14 +142,9 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 		"MicroKnight":	"res://fonts/amiga/MicroKnight.F16",
 		"MicroKnight+":	"res://fonts/amiga/MicroKnightPlus.F16",
 
-		"--Unsure how to categorize": "",
+		"--Miscellaneous": "",
 		"mO'sOul (Desoto/Mo'Soul)":				"res://fonts/amiga/mO'sOul.F16",
 		"P0T-NOoDLE (Leo 'Nudel' Davidson)":	"res://fonts/amiga/P0T-NOoDLE.F16",
-	},
-
-	"C64": {
-		"PETSCII shifted":		"res://fonts/c64/PETSCII shifted.F08",
-		"PETSCII unshifted":	"res://fonts/c64/PETSCII unshifted.F08"
 	},
 
 	"Custom": {
