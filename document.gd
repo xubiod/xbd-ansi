@@ -1026,22 +1026,25 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 							push_warning("unknown code: ", code)
 
 				i += len(search.get_string(0))
+				continue
 
 		elif new_line_on == AnsiLoadNewLine.CRLF and byte == AnsiConsts.CARRIAGE_RETURN and data.get(i + 1) == AnsiConsts.LINEFEED:
 			pretend_enter()
 			i += 2
+			continue
 
 		elif (new_line_on == AnsiLoadNewLine.LF and byte == AnsiConsts.LINEFEED) or \
 			 (new_line_on == AnsiLoadNewLine.CR and byte == AnsiConsts.CARRIAGE_RETURN):
 			pretend_enter()
 			i += 1
+			continue
 
 		elif byte == XBIN_EOF:
 			keep_going = false
+			continue
 
-		else:
-			type(byte)
-			i += 1
+		type(byte)
+		i += 1
 
 	selected_bg = DEFAULT_BG
 	selected_fg = DEFAULT_FG
