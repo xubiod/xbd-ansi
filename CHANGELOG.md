@@ -41,3 +41,4 @@ This version also includes a web export. It "works", in quotes as **there's no d
 - Add Amiga fonts
   - 13 font files
 - Add separators to palettes
+- Font subcollections and palette menus now have search bars

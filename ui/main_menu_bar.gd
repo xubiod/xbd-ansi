@@ -48,6 +48,7 @@ func _ready() -> void:
 
 	for key: String in Global.FONT_MAP:
 		var collection_submenu: PopupMenu = PopupMenu.new()
+		collection_submenu.search_bar_enabled = true
 		for in_collection: String in Global.FONT_MAP[key]:
 			var _k: String = key + in_collection
 			if in_collection.begins_with("--"):
@@ -64,6 +65,7 @@ func _ready() -> void:
 	$Document.add_separator("", ID_MASK)
 
 	var built_in_palette: PopupMenu = PopupMenu.new()
+	built_in_palette.search_bar_enabled = true
 
 	for key: String in Global.named_palettes:
 		if key.begins_with("--"):
