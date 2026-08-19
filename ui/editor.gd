@@ -371,7 +371,8 @@ func _selected_code_changed() -> void:
 
 	%CodeButton.texture_normal.region.position = Vector2(pos)
 
-## To be used with `bind` setting `id` for the `gui_input` signal.
+## To be used with [code]bind[/code] setting [code]id[/code] for the
+## [code]gui_input[/code] signal.
 func _color_btn_clicked(event: InputEvent, id: int, node: UIColor) -> void:
 	if event is InputEventMouseButton:
 		var mouseev: InputEventMouseButton = event as InputEventMouseButton

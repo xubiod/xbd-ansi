@@ -85,12 +85,13 @@ func _font_updated() -> void:
 	min_size = (Vector2i(16, 16) * btn_min_size * 2) + Vector2i(64, 32)
 	size = min_size
 
-## For signals: bind `code`
+## For use in signals: bind [code]code[/code] before connecting to
+## [code]mouse_entered[/code].
 func _mouse_in_character(code: int) -> void:
 	if not window_dragging and Input.is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT): # chars_can_be_dragged_over:
 		%Document.selected_code = code
 
-## For signals: bind `code`
+## For use in signals: bind [code]code[/code] before connecting to [code]pressed[/code].
 func _character_picked(code: int) -> void:
 	if not window_dragging:
 		%Document.selected_code = code

@@ -331,8 +331,9 @@ func type(code: int) -> void:
 	if cursor_pos.y >= document_size.y:
 		cursor_pos.y = 0
 
-## Uses the method `paint_with_selected` to draw a line on the TileMapLayer(s).
-## See `paint_with_selected` for how the line is drawn character by character.
+## Uses the method [code]paint_with_selected[/code] to draw a line on the
+## TileMapLayer(s). See [code]paint_with_selected[/code] for how the line is drawn
+## character by character.
 func make_line(from: Vector2, to: Vector2) -> void:
 	if from.is_equal_approx(to):
 		paint_with_selected(from)
@@ -361,8 +362,9 @@ func make_line(from: Vector2, to: Vector2) -> void:
 			err += dx
 			from.y += sy
 
-## Uses `selected_code`, `selected_fg`, `selected_bg` and `current_paint_mode`
-## to change a tile on the foreground/background layers.
+## Uses [code]selected_code[/code], [code]selected_fg[/code], [code]selected_bg[/code]
+## and [code]current_paint_mode[/code] to change a tile on the foreground/background
+## layers.
 func paint_with_selected(global_pt: Vector2) -> void:
 	if not global_point_in_canvas(global_pt):
 		return
