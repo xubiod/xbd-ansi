@@ -117,6 +117,29 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 		"CP869 (MS-DOS Greek 2) 8x16": "res://fonts/ibm/CP869.F16",
 	},
 
+	"Amiga": {
+		"--Topaz": "",
+		"Topaz 1":	"res://fonts/amiga/Topaz_a500.F16",
+		"Topaz 1+":	"res://fonts/amiga/TopazPlus_a500.F16",
+		"Topaz 2":	"res://fonts/amiga/Topaz_a1200.F16",
+		"Topaz 2+":	"res://fonts/amiga/TopazPlus_a1200.F16",
+
+		"--Topaz Kickstart": "",
+		"Topaz Kickstart v0.7": "res://fonts/amiga/Topaz_Kickstart_v0.7.F16",
+		"Topaz Kickstart v1.0": "res://fonts/amiga/Topaz_Kickstart_v1.0.F16",
+		"Topaz Kickstart v1.2": "res://fonts/amiga/Topaz_Kickstart_v1.2.F16",
+		"Topaz Kickstart v1.4": "res://fonts/amiga/Topaz_Kickstart_v1.4.F16",
+		"Topaz Kickstart v2.0": "res://fonts/amiga/Topaz_Kickstart_v2.0.F16",
+
+		"--MicroKnight": "",
+		"MicroKnight":	"res://fonts/amiga/MicroKnight.F16",
+		"MicroKnight+":	"res://fonts/amiga/MicroKnightPlus.F16",
+
+		"--Unsure how to categorize": "",
+		"mO'sOul (Desoto/Mo'Soul)":				"res://fonts/amiga/mO'sOul.F16",
+		"P0T-NOoDLE (Leo 'Nudel' Davidson)":	"res://fonts/amiga/P0T-NOoDLE.F16",
+	},
+
 	"C64": {
 		"PETSCII shifted":		"res://fonts/c64/PETSCII shifted.F08",
 		"PETSCII unshifted":	"res://fonts/c64/PETSCII unshifted.F08"
