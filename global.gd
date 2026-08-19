@@ -32,28 +32,30 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 	# names from notes at https://www.acid.org/info/sauce/sauce.htm#ANSiFlags
 	"IBM, CP850 - CP857": {
 		"--Western Europe": "",
-		"CP850 (MS-DOS Latin-1, Western Europe) 8x8":  "res://fonts/ibm/CP850.F08",
-		"CP850 (MS-DOS Latin-1, Western Europe) 8x14": "res://fonts/ibm/CP850.F14",
-		"CP850 (MS-DOS Latin-1, Western Europe) 8x16": "res://fonts/ibm/CP850.F16",
-		"CP850 (MS-DOS Latin-1, Western Europe) 8x19": "res://fonts/ibm/CP850.F19",
+		"CP850 (MS-DOS Latin 1, Western Europe) 8x8":  "res://fonts/ibm/CP850.F08",
+		"CP850 (MS-DOS Latin 1, Western Europe) 8x14": "res://fonts/ibm/CP850.F14",
+		"CP850 (MS-DOS Latin 1, Western Europe) 8x16": "res://fonts/ibm/CP850.F16",
+		"CP850 (MS-DOS Latin 1, Western Europe) 8x19": "res://fonts/ibm/CP850.F19",
 
-		"--CP851 (Unknown name)": "",
-		"CP851 8x8":  "res://fonts/ibm/CP851.F08",
-		"CP851 8x14": "res://fonts/ibm/CP851.F14",
-		"CP851 8x16": "res://fonts/ibm/CP851.F16",
-		"CP851 8x19": "res://fonts/ibm/CP851.F19",
+		# https://en.wikibooks.org/wiki/Character_Encodings/Code_Tables/MS-DOS/Code_page_851
+		"--Greek 1": "",
+		"CP851 (MS-DOS Greek 1) 8x8":  "res://fonts/ibm/CP851.F08",
+		"CP851 (MS-DOS Greek 1) 8x14": "res://fonts/ibm/CP851.F14",
+		"CP851 (MS-DOS Greek 1) 8x16": "res://fonts/ibm/CP851.F16",
+		"CP851 (MS-DOS Greek 1) 8x19": "res://fonts/ibm/CP851.F19",
 
 		"--Central Europe": "",
-		"CP852 (MS-DOS Latin-2, Central Europe) 8x8":  "res://fonts/ibm/CP852.F08",
-		"CP852 (MS-DOS Latin-2, Central Europe) 8x14": "res://fonts/ibm/CP852.F14",
-		"CP852 (MS-DOS Latin-2, Central Europe) 8x16": "res://fonts/ibm/CP852.F16",
-		"CP852 (MS-DOS Latin-2, Central Europe) 8x19": "res://fonts/ibm/CP852.F19",
+		"CP852 (MS-DOS Latin 2, Central Europe) 8x8":  "res://fonts/ibm/CP852.F08",
+		"CP852 (MS-DOS Latin 2, Central Europe) 8x14": "res://fonts/ibm/CP852.F14",
+		"CP852 (MS-DOS Latin 2, Central Europe) 8x16": "res://fonts/ibm/CP852.F16",
+		"CP852 (MS-DOS Latin 2, Central Europe) 8x19": "res://fonts/ibm/CP852.F19",
 
-		"--CP853 (Unknown name)": "",
-		"CP853 8x8":  "res://fonts/ibm/CP853.F08",
-		"CP853 8x14": "res://fonts/ibm/CP853.F14",
-		"CP853 8x16": "res://fonts/ibm/CP853.F16",
-		"CP853 8x19": "res://fonts/ibm/CP853.F19",
+		# https://en.wikibooks.org/wiki/Character_Encodings/Code_Tables/MS-DOS/Code_page_853
+		"--Latin 3": "",
+		"CP853 (MS-DOS Latin 3) 8x8":  "res://fonts/ibm/CP853.F08",
+		"CP853 (MS-DOS Latin 3) 8x14": "res://fonts/ibm/CP853.F14",
+		"CP853 (MS-DOS Latin 3) 8x16": "res://fonts/ibm/CP853.F16",
+		"CP853 (MS-DOS Latin 3) 8x19": "res://fonts/ibm/CP853.F19",
 
 		"--Cyrillic": "",
 		"CP855 (MS-DOS Cyrillic) 8x8":  "res://fonts/ibm/CP855.F08",
