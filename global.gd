@@ -18,7 +18,7 @@ const FONT_MAP: Dictionary[String, Dictionary] = {
 	},
 
 	# names from notes at https://www.acid.org/info/sauce/sauce.htm#ANSiFlags
-	"IBM, CP7**": {
+	"IBM, CP737, CP775": {
 		"--Greek": "",
 		"CP737 (MS-DOS Greek) 8x8":  "res://fonts/ibm/CP737.F08",
 		"CP737 (MS-DOS Greek) 8x14": "res://fonts/ibm/CP737.F14",
