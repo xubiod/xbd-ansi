@@ -50,7 +50,10 @@ func _ready() -> void:
 		var collection_submenu: PopupMenu = PopupMenu.new()
 		for in_collection: String in Global.FONT_MAP[key]:
 			var _k: String = key + in_collection
-			collection_submenu.add_item(in_collection, _k.hash() & ID_MASK)
+			if in_collection.begins_with("--"):
+				collection_submenu.add_separator(in_collection.trim_prefix("--"), _k.hash() & ID_MASK)
+			else:
+				collection_submenu.add_item(in_collection, _k.hash() & ID_MASK)
 		collection_submenu.id_pressed.connect(_on_builtin_font_id_pressed.bind(key))
 
 		built_in_fonts.add_submenu_node_item(key, collection_submenu)

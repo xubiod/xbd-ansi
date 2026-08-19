@@ -1,7 +1,7 @@
 extends Node
 
 const SHADER_CURSOR_HEIGHT: float = 0.8
-const DEFAULT_FONTPATH: String = FONT_MAP["IBM, CP437"]["VGA 8x16"]
+const DEFAULT_FONTPATH: String = FONT_MAP["IBM, CP437 (MS-DOS Latin US)"]["8x16"]
 
 const LERP_SLUG: float = 0.5
 const LERP_SMOOTH: float = 0.8
@@ -9,16 +9,117 @@ const LERP_SNAP: float = 1.0
 
 ## Human friendly names to paths.
 const FONT_MAP: Dictionary[String, Dictionary] = {
-	"IBM, CP437": {
-		"VGA 8x8":	"res://fonts/ibm/CP437.F08",
-		"VGA 8x14":	"res://fonts/ibm/CP437.F14",
-		"VGA 8x16":	"res://fonts/ibm/CP437.F16",
-		"VGA 8x19":	"res://fonts/ibm/CP437.F19"
+	"IBM, CP437 (MS-DOS Latin US)": {
+		"8x8":	"res://fonts/ibm/CP437.F08",
+		"8x14":	"res://fonts/ibm/CP437.F14",
+		"8x16":	"res://fonts/ibm/CP437.F16",
+		"8x19":	"res://fonts/ibm/CP437.F19"
 	},
+
+	# names from notes at https://www.acid.org/info/sauce/sauce.htm#ANSiFlags
+	"IBM, CP7**": {
+		"--Greek": "",
+		"CP737 (MS-DOS Greek) 8x8":  "res://fonts/ibm/CP737.F08",
+		"CP737 (MS-DOS Greek) 8x14": "res://fonts/ibm/CP737.F14",
+		"CP737 (MS-DOS Greek) 8x16": "res://fonts/ibm/CP737.F16",
+
+		"--Baltic Rim": "",
+		"CP775 (MS-DOS Baltic Rim) 8x8":  "res://fonts/ibm/CP775.F08",
+		"CP775 (MS-DOS Baltic Rim) 8x14": "res://fonts/ibm/CP775.F14",
+		"CP775 (MS-DOS Baltic Rim) 8x16": "res://fonts/ibm/CP775.F16",
+	},
+
+	# names from notes at https://www.acid.org/info/sauce/sauce.htm#ANSiFlags
+	"IBM, CP850 - CP857": {
+		"--Western Europe": "",
+		"CP850 (MS-DOS Latin-1, Western Europe) 8x8":  "res://fonts/ibm/CP850.F08",
+		"CP850 (MS-DOS Latin-1, Western Europe) 8x14": "res://fonts/ibm/CP850.F14",
+		"CP850 (MS-DOS Latin-1, Western Europe) 8x16": "res://fonts/ibm/CP850.F16",
+		"CP850 (MS-DOS Latin-1, Western Europe) 8x19": "res://fonts/ibm/CP850.F19",
+
+		"--CP851 (Unknown name)": "",
+		"CP851 8x8":  "res://fonts/ibm/CP851.F08",
+		"CP851 8x14": "res://fonts/ibm/CP851.F14",
+		"CP851 8x16": "res://fonts/ibm/CP851.F16",
+		"CP851 8x19": "res://fonts/ibm/CP851.F19",
+
+		"--Central Europe": "",
+		"CP852 (MS-DOS Latin-2, Central Europe) 8x8":  "res://fonts/ibm/CP852.F08",
+		"CP852 (MS-DOS Latin-2, Central Europe) 8x14": "res://fonts/ibm/CP852.F14",
+		"CP852 (MS-DOS Latin-2, Central Europe) 8x16": "res://fonts/ibm/CP852.F16",
+		"CP852 (MS-DOS Latin-2, Central Europe) 8x19": "res://fonts/ibm/CP852.F19",
+
+		"--CP853 (Unknown name)": "",
+		"CP853 8x8":  "res://fonts/ibm/CP853.F08",
+		"CP853 8x14": "res://fonts/ibm/CP853.F14",
+		"CP853 8x16": "res://fonts/ibm/CP853.F16",
+		"CP853 8x19": "res://fonts/ibm/CP853.F19",
+
+		"--Cyrillic": "",
+		"CP855 (MS-DOS Cyrillic) 8x8":  "res://fonts/ibm/CP855.F08",
+		"CP855 (MS-DOS Cyrillic) 8x14": "res://fonts/ibm/CP855.F14",
+		"CP855 (MS-DOS Cyrillic) 8x16": "res://fonts/ibm/CP855.F16",
+
+		"--Turkish": "",
+		"CP857 (MS-DOS Turkish) 8x8":  "res://fonts/ibm/CP857.F08",
+		"CP857 (MS-DOS Turkish) 8x14": "res://fonts/ibm/CP857.F14",
+		"CP857 (MS-DOS Turkish) 8x16": "res://fonts/ibm/CP857.F16",
+	},
+
+	# names from notes at https://www.acid.org/info/sauce/sauce.htm#ANSiFlags
+	"IBM, CP860 - CP863": {
+		"--Portuguese": "",
+		"CP860 (MS-DOS Portuguese) 8x8":  "res://fonts/ibm/CP860.F08",
+		"CP860 (MS-DOS Portuguese) 8x14": "res://fonts/ibm/CP860.F14",
+		"CP860 (MS-DOS Portuguese) 8x16": "res://fonts/ibm/CP860.F16",
+		"CP860 (MS-DOS Portuguese) 8x19": "res://fonts/ibm/CP860.F19",
+
+		"--Icelandic": "",
+		"CP861 (MS-DOS Icelandic) 8x8":  "res://fonts/ibm/CP861.F08",
+		"CP861 (MS-DOS Icelandic) 8x14": "res://fonts/ibm/CP861.F14",
+		"CP861 (MS-DOS Icelandic) 8x16": "res://fonts/ibm/CP861.F16",
+		"CP861 (MS-DOS Icelandic) 8x19": "res://fonts/ibm/CP861.F19",
+
+		"--Hebrew": "",
+		"CP862 (MS-DOS Hebrew) 8x8":  "res://fonts/ibm/CP862.F08",
+		"CP862 (MS-DOS Hebrew) 8x14": "res://fonts/ibm/CP862.F14",
+		"CP862 (MS-DOS Hebrew) 8x16": "res://fonts/ibm/CP862.F16",
+
+		"--French Canada": "",
+		"CP863 (MS-DOS French Canada) 8x8":  "res://fonts/ibm/CP863.F08",
+		"CP863 (MS-DOS French Canada) 8x14": "res://fonts/ibm/CP863.F14",
+		"CP863 (MS-DOS French Canada) 8x16": "res://fonts/ibm/CP863.F16",
+		"CP863 (MS-DOS French Canada) 8x19": "res://fonts/ibm/CP863.F19",
+	},
+
+	"IBM, CP864 - CP869": {
+		"--Arabic": "",
+		"CP864 (Arabic) 8x8":  "res://fonts/ibm/CP864.F08",
+		"CP864 (Arabic) 8x14": "res://fonts/ibm/CP864.F14",
+		"CP864 (Arabic) 8x16": "res://fonts/ibm/CP864.F16",
+
+		"--Nordic": "",
+		"CP865 (Nordic) 8x8":  "res://fonts/ibm/CP865.F08",
+		"CP865 (Nordic) 8x14": "res://fonts/ibm/CP865.F14",
+		"CP865 (Nordic) 8x16": "res://fonts/ibm/CP865.F16",
+		"CP865 (Nordic) 8x19": "res://fonts/ibm/CP865.F19",
+
+		"--Cyrillic": "",
+		"CP866 (Cyrillic) 8x8":  "res://fonts/ibm/CP866.F08",
+		"CP866 (Cyrillic) 8x14": "res://fonts/ibm/CP866.F14",
+		"CP866 (Cyrillic) 8x16": "res://fonts/ibm/CP866.F16",
+
+		"--Greek 2": "",
+		"CP869 (MS-DOS Greek 2) 8x8":  "res://fonts/ibm/CP869.F08",
+		"CP869 (MS-DOS Greek 2) 8x14": "res://fonts/ibm/CP869.F14",
+		"CP869 (MS-DOS Greek 2) 8x16": "res://fonts/ibm/CP869.F16",
+	},
+
 	"C64": {
 		"PETSCII shifted":		"res://fonts/c64/PETSCII shifted.F08",
 		"PETSCII unshifted":	"res://fonts/c64/PETSCII unshifted.F08"
 	},
+
 	"Custom": {
 		"FROGBLOCK (by Polyducks)":			"res://fonts/custom/FROGBLOCK.F08",
 		"GJSCI-3 (by GrymmJack)":			"res://fonts/custom/GJSCI-3.F16",
