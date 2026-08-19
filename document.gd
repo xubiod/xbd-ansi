@@ -995,44 +995,44 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 	while i < len(data) and keep_going:
 		byte = data.get(i)
 
-		if byte == ANSIConsts.ESCAPE:
+		if byte == AnsiConsts.ESCAPE:
 			search = ansi_escape_pat.search(data.slice(i, i + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
 			if search:
-				for code: int in ANSIConsts.break_open(search.get_string(0)):
-					match code as ANSIConsts.AnsiCodes:
-						ANSIConsts.AnsiCodes.RESET:
+				for code: int in AnsiConsts.break_open(search.get_string(0)):
+					match code as AnsiConsts.AnsiCodes:
+						AnsiConsts.AnsiCodes.RESET:
 							selected_bg = DEFAULT_BG
 							selected_fg = DEFAULT_FG
 
-						ANSIConsts.AnsiCodes.SET_BOLD:
+						AnsiConsts.AnsiCodes.SET_BOLD:
 							selected_fg = (selected_fg & 0b0111) | 0b1000
 
-						ANSIConsts.AnsiCodes.RESET_BOLD:
+						AnsiConsts.AnsiCodes.RESET_BOLD:
 							selected_fg = (selected_fg & 0b0111)
 
-						ANSIConsts.AnsiCodes.SET_BLINKING:
+						AnsiConsts.AnsiCodes.SET_BLINKING:
 							selected_bg = (selected_bg & 0b0111) | 0b1000
 
-						ANSIConsts.AnsiCodes.RESET_BLINKING:
+						AnsiConsts.AnsiCodes.RESET_BLINKING:
 							selected_bg = (selected_bg & 0b0111)
 
-						_ when ANSIConsts.FG_TO_ATTRIBUTE.has(code):
-							selected_fg = (selected_fg & 0b1000) | ANSIConsts.FG_TO_ATTRIBUTE[code]
+						_ when AnsiConsts.FG_TO_ATTRIBUTE.has(code):
+							selected_fg = (selected_fg & 0b1000) | AnsiConsts.FG_TO_ATTRIBUTE[code]
 
-						_ when ANSIConsts.BG_TO_ATTRIBUTE.has(code):
-							selected_bg = (selected_bg & 0b1000) | ANSIConsts.BG_TO_ATTRIBUTE[code]
+						_ when AnsiConsts.BG_TO_ATTRIBUTE.has(code):
+							selected_bg = (selected_bg & 0b1000) | AnsiConsts.BG_TO_ATTRIBUTE[code]
 
 						_:
 							push_warning("unknown code: ", code)
 
 				i += len(search.get_string(0))
 
-		elif new_line_on == AnsiLoadNewLine.CRLF and byte == ANSIConsts.CARRIAGE_RETURN and data.get(i + 1) == ANSIConsts.LINEFEED:
+		elif new_line_on == AnsiLoadNewLine.CRLF and byte == AnsiConsts.CARRIAGE_RETURN and data.get(i + 1) == AnsiConsts.LINEFEED:
 			pretend_enter()
 			i += 2
 
-		elif (new_line_on == AnsiLoadNewLine.LF and byte == ANSIConsts.LINEFEED) or \
-			 (new_line_on == AnsiLoadNewLine.CR and byte == ANSIConsts.CARRIAGE_RETURN):
+		elif (new_line_on == AnsiLoadNewLine.LF and byte == AnsiConsts.LINEFEED) or \
+			 (new_line_on == AnsiLoadNewLine.CR and byte == AnsiConsts.CARRIAGE_RETURN):
 			pretend_enter()
 			i += 1
 

@@ -1,7 +1,7 @@
-class_name ANSIConsts extends RefCounted
+class_name AnsiConsts extends RefCounted
 
 const ANSI_ESCAPE_START: String = "\u001b["
-const ESCAPE: int = 0x1B
+const ESCAPE: int = 0x1b
 
 const CARRIAGE_RETURN:	int = 0x0d
 const LINEFEED:			int = 0x0a
