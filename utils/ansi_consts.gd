@@ -7,14 +7,21 @@ const CARRIAGE_RETURN:	int = 0x0d
 const LINEFEED:			int = 0x0a
 
 ## Supported ANSI codes, this is specifically for colours/graphics.
+##
+## See https://ansi.tools/lookup .
 enum AnsiCodes {
 	RESET = 0,
 
-	SET_BOLD		= 1,
-	SET_BLINKING	= 5,
+	SET_BOLD		= 1,	# bold		-> high intensity FG
+	SET_BLINKING	= 5,	# blinking	-> high intensity BG
 
-	RESET_BOLD		= 22,
-	RESET_BLINKING	= 25,
+	RESET_BOLD		= 22,	# bold		-> high intensity FG
+	RESET_BLINKING	= 25,	# blinking	-> high intensity BG
+
+	# unused mode(s) (maybe later?)
+	SET_REVERSE		= 7,	# seems to swap FG/BG, unsure if gets emitted
+	RESET_REVERSE	= 27,	# seems to swap FG/BG, unsure if gets emitted
+	# end unused mode(s)
 
 	FG_BLACK	= 30,
 	FG_RED		= 31,
@@ -37,6 +44,26 @@ enum AnsiCodes {
 	BG_WHITE	= 47,
 
 	BG_DEFAULT	= 49,
+
+	# unused colours (maybe later?)
+	FG_BRIGHT_BLACK		= 90,
+	FG_BRIGHT_RED		= 91,
+	FG_BRIGHT_GREEN		= 92,
+	FG_BRIGHT_YELLOW	= 93,
+	FG_BRIGHT_BLUE		= 94,
+	FG_BRIGHT_MAGENTA	= 95,
+	FG_BRIGHT_CYAN		= 96,
+	FG_BRIGHT_WHITE		= 97,
+
+	BG_BRIGHT_BLACK		= 100,
+	BG_BRIGHT_RED		= 101,
+	BG_BRIGHT_GREEN		= 102,
+	BG_BRIGHT_YELLOW	= 103,
+	BG_BRIGHT_BLUE		= 104,
+	BG_BRIGHT_MAGENTA	= 105,
+	BG_BRIGHT_CYAN		= 106,
+	BG_BRIGHT_WHITE		= 107,
+	# end unused colours
 }
 
 static func assemble(codes: Array[AnsiCodes]) -> String:
@@ -67,6 +94,15 @@ const FG_TO_ATTRIBUTE: Dictionary[AnsiCodes, int] = {
 	AnsiCodes.FG_YELLOW:	6,
 	AnsiCodes.FG_WHITE:		7,
 
+	AnsiCodes.FG_BRIGHT_BLACK:		8,
+	AnsiCodes.FG_BRIGHT_BLUE:		9,
+	AnsiCodes.FG_BRIGHT_GREEN:		10,
+	AnsiCodes.FG_BRIGHT_CYAN:		11,
+	AnsiCodes.FG_BRIGHT_RED:		12,
+	AnsiCodes.FG_BRIGHT_MAGENTA:	13,
+	AnsiCodes.FG_BRIGHT_YELLOW:		14,
+	AnsiCodes.FG_BRIGHT_WHITE:		15,
+
 	AnsiCodes.FG_DEFAULT:	Document.DEFAULT_FG,
 }
 
@@ -79,6 +115,15 @@ const BG_TO_ATTRIBUTE: Dictionary[AnsiCodes, int] = {
 	AnsiCodes.BG_MAGENTA:	5,
 	AnsiCodes.BG_YELLOW:	6,
 	AnsiCodes.BG_WHITE:		7,
+
+	AnsiCodes.BG_BRIGHT_BLACK:		8,
+	AnsiCodes.BG_BRIGHT_BLUE:		9,
+	AnsiCodes.BG_BRIGHT_GREEN:		10,
+	AnsiCodes.BG_BRIGHT_CYAN:		11,
+	AnsiCodes.BG_BRIGHT_RED:		12,
+	AnsiCodes.BG_BRIGHT_MAGENTA:	13,
+	AnsiCodes.BG_BRIGHT_YELLOW:		14,
+	AnsiCodes.BG_BRIGHT_WHITE:		15,
 
 	AnsiCodes.BG_DEFAULT:	Document.DEFAULT_BG,
 }
