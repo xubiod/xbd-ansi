@@ -114,11 +114,6 @@ func code_to_atlas(code: int) -> Vector2i:
 
 func atlas_to_code(pos: Vector2i) -> int:
 	return pos.x + (pos.y * 16)
-
-## Uses full block to simulate a full cell for the background
-func background_atlas() -> Vector2i:
-	return Vector2i(full_block % 16, floor(full_block / 16))
-
 @warning_ignore_restore("integer_division")
 
 func get_alt_id(shade: int) -> int:
