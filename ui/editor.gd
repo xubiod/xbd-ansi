@@ -505,11 +505,12 @@ func _on_the_pit_focus_entered() -> void:
 	%ThePit.release_focus()
 
 func _on_open_x_bin_file_selected(path: String) -> void:
+	var options: Dictionary = %OpenXBin.get_selected_options()
 	match path.to_lower().get_extension():
 		"xb":
 			document.load_xbin(path)
 		"ans":
-			document.load_ansi(path)
+			document.load_ansi(path, options.get(options.keys()[0]) as Document.AnsiLoadNewLine)
 		_:
 			return
 	loaded_path = path

@@ -24,8 +24,8 @@ enum PaintMode {
 enum AnsiLoadNewLine {
 	IGNORE,
 	CRLF,
-	CR,
-	LF
+	LF,
+	CR
 }
 
 const ANSI_LOAD_LOOKAHEAD: int = 32
