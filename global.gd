@@ -265,6 +265,84 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 		Color(0xFFFFB0_FF)
 	]),
 
+	"Macintosh II": PackedColorArray([
+		Color(0xFFFFFF_FF),
+		Color(0xFFFF00_FF),
+		Color(0xFF6500_FF),
+		Color(0xDC0000_FF),
+		Color(0xFF0097_FF),
+		Color(0x360097_FF),
+		Color(0x0000CA_FF),
+		Color(0x0097FF_FF),
+		Color(0x00A800_FF),
+		Color(0x006500_FF),
+		Color(0x653600_FF),
+		Color(0x976536_FF),
+		Color(0xB9B9B9_FF),
+		Color(0x868686_FF),
+		Color(0x454545_FF),
+		Color(0x000000_FF)
+	]),
+
+	# TMS9918 order, datasheet
+	"MSX (Datasheet, Hardware Order)": PackedColorArray([
+		Color(0x000000_FF),
+		Color(0x000000_FF),
+		Color(0x40B64A_FF),
+		Color(0x73CE7C_FF),
+		Color(0x5955DF_FF),
+		Color(0x7E75F0_FF),
+		Color(0xB75E51_FF),
+		Color(0x64DAEE_FF),
+		Color(0xD96459_FF),
+		Color(0xFE877C_FF),
+		Color(0xCAC15E_FF),
+		Color(0xDDCE85_FF),
+		Color(0x3CA042_FF),
+		Color(0xB565B3_FF),
+		Color(0xCACACA_FF),
+		Color(0xFFFFFF_FF),
+	]),
+
+	# TMS9918 order, crt from wikipedia
+	"MSX (CRT, Hardware Order)": PackedColorArray([
+		Color(0x000000_FF),
+		Color(0x000000_FF),
+		Color(0x0AAD1E_FF),
+		Color(0x34C84C_FF),
+		Color(0x2B2DE3_FF),
+		Color(0x514BFB_FF),
+		Color(0xBD2925_FF),
+		Color(0x1EE2EF_FF),
+		Color(0xFB2C2B_FF),
+		Color(0xFF5F4C_FF),
+		Color(0xBDA22B_FF),
+		Color(0xD7B454_FF),
+		Color(0x0A8C18_FF),
+		Color(0xAF329A_FF),
+		Color(0xB2B2B2_FF),
+		Color(0xFFFFFF_FF),
+	]),
+
+	"Thomson M05": PackedColorArray([
+		Color(0x000000_FF),
+		Color(0xBBBBBB_FF),
+		Color(0xFF0000_FF),
+		Color(0xDD7777_FF),
+		Color(0xEEBB00_FF),
+		Color(0xFFFF00_FF),
+		Color(0xDDDD77_FF),
+		Color(0x00FF00_FF),
+		Color(0x77DD77_FF),
+		Color(0x00FFFF_FF),
+		Color(0xBBFFFF_FF),
+		Color(0xFFFFFF_FF),
+		Color(0xFF00FF_FF),
+		Color(0xDD77EE_FF),
+		Color(0x0000FF_FF),
+		Color(0x7777DD_FF)
+	]),
+
 	# partly based on https://lospec.com/palette-list/zx-spectrum (making dim
 	# colours use 0xD8) HOWEVER:
 	# - this is in hardware order
@@ -307,84 +385,6 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 		Color(0xBFBFBD_FF),
 		Color(0xF2F1ED_FF)
 	]),
-
-	"Macintosh II": PackedColorArray([
-		Color(0xFFFFFF_FF),
-		Color(0xFFFF00_FF),
-		Color(0xFF6500_FF),
-		Color(0xDC0000_FF),
-		Color(0xFF0097_FF),
-		Color(0x360097_FF),
-		Color(0x0000CA_FF),
-		Color(0x0097FF_FF),
-		Color(0x00A800_FF),
-		Color(0x006500_FF),
-		Color(0x653600_FF),
-		Color(0x976536_FF),
-		Color(0xB9B9B9_FF),
-		Color(0x868686_FF),
-		Color(0x454545_FF),
-		Color(0x000000_FF)
-	]),
-
-	"Thomson M05": PackedColorArray([
-		Color(0x000000_FF),
-		Color(0xBBBBBB_FF),
-		Color(0xFF0000_FF),
-		Color(0xDD7777_FF),
-		Color(0xEEBB00_FF),
-		Color(0xFFFF00_FF),
-		Color(0xDDDD77_FF),
-		Color(0x00FF00_FF),
-		Color(0x77DD77_FF),
-		Color(0x00FFFF_FF),
-		Color(0xBBFFFF_FF),
-		Color(0xFFFFFF_FF),
-		Color(0xFF00FF_FF),
-		Color(0xDD77EE_FF),
-		Color(0x0000FF_FF),
-		Color(0x7777DD_FF)
-	]),
-
-	# TMS9918 order, datasheet
-	"MSX (Datasheet, Hardware Order)": PackedColorArray([
-		Color(0x000000_FF),
-		Color(0x000000_FF),
-		Color(0x40B64A_FF),
-		Color(0x73CE7C_FF),
-		Color(0x5955DF_FF),
-		Color(0x7E75F0_FF),
-		Color(0xB75E51_FF),
-		Color(0x64DAEE_FF),
-		Color(0xD96459_FF),
-		Color(0xFE877C_FF),
-		Color(0xCAC15E_FF),
-		Color(0xDDCE85_FF),
-		Color(0x3CA042_FF),
-		Color(0xB565B3_FF),
-		Color(0xCACACA_FF),
-		Color(0xFFFFFF_FF),
-	]),
-
-	# TMS9918 order, crt from wikipedia
-	"MSX (CRT, Hardware Order)": PackedColorArray([
-		Color(0x000000_FF),
-		Color(0x000000_FF),
-		Color(0x0AAD1E_FF),
-		Color(0x34C84C_FF),
-		Color(0x2B2DE3_FF),
-		Color(0x514BFB_FF),
-		Color(0xBD2925_FF),
-		Color(0x1EE2EF_FF),
-		Color(0xFB2C2B_FF),
-		Color(0xFF5F4C_FF),
-		Color(0xBDA22B_FF),
-		Color(0xD7B454_FF),
-		Color(0x0A8C18_FF),
-		Color(0xAF329A_FF),
-		Color(0xB2B2B2_FF),
-		Color(0xFFFFFF_FF),
-	]),
 #endregion
 
 #region Notable Software
@@ -408,7 +408,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 		Color(0x06FFFF_FF)
 	]),
 
-	"Campbell (Modern Windows)": PackedColorArray([
+	"Microsoft Windows (Modern, Campbell)": PackedColorArray([
 		Color(0x0C0C0C_FF),
 		Color(0x0037DA_FF),
 		Color(0x13A10E_FF),
