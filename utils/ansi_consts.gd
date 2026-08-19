@@ -8,7 +8,9 @@ const LINEFEED:			int = 0x0a
 
 ## Supported ANSI codes, this is specifically for colours/graphics.
 ##
-## See https://ansi.tools/lookup .
+## See https://ansi.tools/lookup for a full list. This project can only support
+## [code]SGR[/code] codes, starting with [code]\u001b[[/code] and ending with
+## [code]m[/code]. All others are considered invalid.
 enum AnsiCodes {
 	RESET = 0,
 
