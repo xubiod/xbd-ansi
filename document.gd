@@ -21,6 +21,13 @@ enum PaintMode {
 	HALFBLOCK
 }
 
+enum AnsiLoadNewLine {
+	IGNORE,
+	CRLF,
+	CR,
+	LF
+}
+
 const ANSI_LOAD_LOOKAHEAD: int = 32
 
 const FLAGS_PALETTE:	int = 0b00000001
@@ -232,6 +239,14 @@ func update_palette() -> void:
 func update_character_preview() -> void:
 	@warning_ignore("integer_division")
 	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
+
+## Pretend to press Enter. Directly calls [code]_unhandled_key_input[/code] with
+## an input event.
+func pretend_enter() -> void:
+	var e: InputEventKey = InputEventKey.new()
+	e.keycode = KEY_ENTER
+	e.pressed = true
+	_unhandled_key_input(e)
 #endregion
 
 #region Tile helpers
@@ -951,7 +966,7 @@ func load_xbin(xbin_path: String) -> void:
 	f.close()
 	dirty = false
 
-func load_ansi(ansi_path: String) -> void:
+func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine.CRLF) -> void:
 	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^\[(?:\d+;?)+m')
 	var search: RegExMatch
 
@@ -964,13 +979,15 @@ func load_ansi(ansi_path: String) -> void:
 		sauce = Sauce.new()
 	else:
 		resize(Vector2i(sauce.tinfo[0],sauce.tinfo[1]))
-		foreground.clear()
+
+	foreground.clear()
 
 	var keep_going:	bool = true
 
 	var byte:	int = 0x00
 	var i:		int = 0
 
+	current_tool = Tool.TYPING
 	cursor_pos = Vector2.ZERO
 
 	while i < len(data) and keep_going:
@@ -1007,8 +1024,19 @@ func load_ansi(ansi_path: String) -> void:
 							push_warning("unknown code: ", code)
 
 				i += len(search.get_string(0))
+
+		elif new_line_on == AnsiLoadNewLine.CRLF and byte == ANSIConsts.CARRIAGE_RETURN and data.get(i + 1) == ANSIConsts.LINEFEED:
+			pretend_enter()
+			i += 2
+
+		elif (new_line_on == AnsiLoadNewLine.LF and byte == ANSIConsts.LINEFEED) or \
+			 (new_line_on == AnsiLoadNewLine.CR and byte == ANSIConsts.CARRIAGE_RETURN):
+			pretend_enter()
+			i += 1
+
 		elif byte == XBIN_EOF:
 			keep_going = false
+
 		else:
 			type(byte)
 			i += 1
