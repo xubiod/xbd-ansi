@@ -125,6 +125,24 @@ func type_for_xbin(document_width: int, document_height: int) -> void:
 	tinfos.resize(22)
 	tinfos.fill(0x00)
 
+func type_for_ansi(document_width: int, document_height: int, font_name: String = "IBM VGA") -> void:
+	datatype = 0x01
+	filetype = 0x01
+
+	tinfo[0] = document_width & 0xFF
+	tinfo[1] = document_height & 0xFF
+	tinfo[2] = 0x00
+	tinfo[3] = 0x00
+
+	# 8 px wide, square pixels, non-blink
+	tflags = 0b00010011
+
+	tinfos = PackedByteArray()
+	tinfos.resize(22)
+	tinfos.fill(0x00)
+	for i: int in range(mini(len(tinfos), len(font_name))):
+		tinfos[i] = font_name.unicode_at(i) & 0xFF
+
 func save_to_buffer(file_size: int = 0) -> PackedByteArray:
 	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
 
