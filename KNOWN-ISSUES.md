@@ -11,6 +11,4 @@
 - Lines are jaggy
 - Halfblock glyphs are not changeable to user
 - ANSI support
-  - Background attributes:
-	- `[0mA[44mA[42mA[46mA[41mA[45mA[43mA[47mA[5;40mA[44mA[42mA[46mA[41mA[45mA[43mA[47mA[0m`
-  - Bright foreground is `bold`
+  - Improvement
