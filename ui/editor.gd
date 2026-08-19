@@ -248,6 +248,8 @@ func new_document() -> void:
 func save_document() -> void:
 	assert(not loaded_path.is_empty(), "path cannot be empty")
 	assert(loaded_path.is_absolute_path() or loaded_path.is_relative_path(), "path isn't valid")
+	if loaded_path.get_extension().to_lower() != "xb":
+		loaded_path = "%s.xb" % [loaded_path]
 
 	var b: PackedByteArray = %Document.save_xbin_to_buffer()
 	var f: FileAccess = FileAccess.open(loaded_path, FileAccess.WRITE)
