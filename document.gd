@@ -1005,16 +1005,16 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 							selected_fg = DEFAULT_FG
 
 						AnsiConsts.AnsiCodes.SET_BOLD:
-							selected_fg = (selected_fg & 0b0111) | 0b1000
+							selected_fg = selected_fg | 0b1000
 
 						AnsiConsts.AnsiCodes.RESET_BOLD:
-							selected_fg = (selected_fg & 0b0111)
+							selected_fg = selected_fg & 0b0111
 
 						AnsiConsts.AnsiCodes.SET_BLINKING:
-							selected_bg = (selected_bg & 0b0111) | 0b1000
+							selected_bg = selected_bg | 0b1000
 
 						AnsiConsts.AnsiCodes.RESET_BLINKING:
-							selected_bg = (selected_bg & 0b0111)
+							selected_bg = selected_bg & 0b0111
 
 						_ when AnsiConsts.FG_TO_ATTRIBUTE.has(code):
 							selected_fg = (selected_fg & 0b1000) | AnsiConsts.FG_TO_ATTRIBUTE[code]
