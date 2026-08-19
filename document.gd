@@ -1007,14 +1007,11 @@ func load_ansi(ansi_path: String) -> void:
 							push_warning("unknown code: ", code)
 
 				i += len(search.get_string(0))
-				continue
-
-		if byte == XBIN_EOF:
+		elif byte == XBIN_EOF:
 			keep_going = false
-			continue
-
-		type(byte)
-		i += 1
+		else:
+			type(byte)
+			i += 1
 
 	selected_bg = DEFAULT_BG
 	selected_fg = DEFAULT_FG
