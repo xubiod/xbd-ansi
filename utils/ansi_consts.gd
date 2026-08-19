@@ -53,3 +53,29 @@ static func break_open(segment: String) -> PackedInt32Array:
 		r.append(code.to_int())
 
 	return r
+
+const FG_TO_ATTRIBUTE: Dictionary[AnsiCodes, int] = {
+	AnsiCodes.FG_BLACK:		0,
+	AnsiCodes.FG_BLUE:		1,
+	AnsiCodes.FG_GREEN:		2,
+	AnsiCodes.FG_CYAN:		3,
+	AnsiCodes.FG_RED:		4,
+	AnsiCodes.FG_MAGENTA:	5,
+	AnsiCodes.FG_YELLOW:	6,
+	AnsiCodes.FG_WHITE:		7,
+
+	AnsiCodes.FG_DEFAULT:	Document.DEFAULT_FG,
+}
+
+const BG_TO_ATTRIBUTE: Dictionary[AnsiCodes, int] = {
+	AnsiCodes.BG_BLACK:		0,
+	AnsiCodes.BG_BLUE:		1,
+	AnsiCodes.BG_GREEN:		2,
+	AnsiCodes.BG_CYAN:		3,
+	AnsiCodes.BG_RED:		4,
+	AnsiCodes.BG_MAGENTA:	5,
+	AnsiCodes.BG_YELLOW:	6,
+	AnsiCodes.BG_WHITE:		7,
+
+	AnsiCodes.BG_DEFAULT:	Document.DEFAULT_BG,
+}

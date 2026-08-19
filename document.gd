@@ -21,9 +21,7 @@ enum PaintMode {
 	HALFBLOCK
 }
 
-#enum AnsiStyle {
-	#CLASSIC
-#}
+const ANSI_LOAD_LOOKAHEAD: int = 32
 
 const FLAGS_PALETTE:	int = 0b00000001
 const FLAGS_FONT:		int = 0b00000010
@@ -955,12 +953,18 @@ func load_xbin(xbin_path: String) -> void:
 
 func load_ansi(ansi_path: String) -> void:
 	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^\[(?:\d+;?)+m')
+	var search: RegExMatch
 
 	var f: FileAccess = FileAccess.open(ansi_path, FileAccess.READ)
 	sauce = Sauce.read_from_fileaccess(f)
 	f.close()
 
 	var data: PackedByteArray = FileAccess.get_file_as_bytes(ansi_path)
+	if sauce == null:
+		sauce = Sauce.new()
+	else:
+		resize(Vector2i(sauce.tinfo[0],sauce.tinfo[1]))
+		foreground.clear()
 
 	var keep_going:	bool = true
 
@@ -970,18 +974,48 @@ func load_ansi(ansi_path: String) -> void:
 
 	var pending_bg: int = DEFAULT_BG
 	var pending_fg: int = DEFAULT_FG
+
 	cursor_pos = Vector2.ZERO
 
 	while i < len(data) and keep_going:
 		byte = data.get(i)
 
 		if byte == ANSIConsts.ESCAPE:
-			pass
-		type(byte)
+			str_buffer = data.slice(i, i + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii()
+			search = ansi_escape_pat.search(str_buffer)
+			if search:
+				for code: int in ANSIConsts.break_open(search.get_string(0)):
+					match code as ANSIConsts.AnsiCodes:
+						ANSIConsts.AnsiCodes.RESET:
+							pending_bg = DEFAULT_BG
+							pending_fg = DEFAULT_FG
+						ANSIConsts.AnsiCodes.SET_BOLD:
+							pending_fg = (pending_fg & 0b0111) | 0b1000
+						ANSIConsts.AnsiCodes.RESET_BOLD:
+							pending_fg = (pending_fg & 0b0111)
+						ANSIConsts.AnsiCodes.SET_BLINKING:
+							pending_bg = (pending_bg & 0b0111) | 0b1000
+						ANSIConsts.AnsiCodes.RESET_BLINKING:
+							pending_bg = (pending_bg & 0b0111)
+						_ when ANSIConsts.FG_TO_ATTRIBUTE.has(code):
+							pending_fg = (pending_fg & 0b1000) | ANSIConsts.FG_TO_ATTRIBUTE[code]
+						_ when ANSIConsts.BG_TO_ATTRIBUTE.has(code):
+							pending_bg = (pending_bg & 0b1000) | ANSIConsts.BG_TO_ATTRIBUTE[code]
+						_:
+							push_warning("unknown code: ", code)
+				i += len(search.get_string(0))
+				continue
+		selected_bg = pending_bg
+		selected_fg = pending_fg
 
 		if byte == XBIN_EOF:
 			keep_going = false
 			continue
+		type(byte)
+
 		i += 1
-	pass
+
+	pending_bg = DEFAULT_BG
+	pending_fg = DEFAULT_FG
+	dirty = false
 #endregion
