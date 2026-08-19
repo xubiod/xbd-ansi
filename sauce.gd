@@ -70,7 +70,6 @@ static func read_from_fileaccess(f: FileAccess) -> Sauce:
 
 	var sauce_magic: String = f.get_buffer(len(MAGIC_SAUCE)).get_string_from_ascii()
 	if sauce_magic == MAGIC_SAUCE:
-
 		var version: String = f.get_buffer(len(MAGIC_SAUCE_VER)).get_string_from_ascii()
 		if version != MAGIC_SAUCE_VER:
 			push_warning("unsupported sauce version, ", version, "; pretending it's 00 anyway")
@@ -105,6 +104,9 @@ static func read_from_fileaccess(f: FileAccess) -> Sauce:
 			if comment_magic == MAGIC_COMMENT:
 				for comment_idx: int in range(comment_count):
 					sauce.comments.append(f.get_buffer(COMMENT_LEN).get_string_from_ascii())
+	else:
+		sauce = null
+		f.seek(0)
 	f.seek(0)
 	return sauce
 
