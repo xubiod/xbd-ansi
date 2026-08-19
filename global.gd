@@ -206,6 +206,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 # fantasy conoles can be under software, but also makes sense to section off
 
 #region Physical Hardware
+	"--Physical Hardware": [],
 	"Commodore 64": PackedColorArray([
 		Color(0x000000_FF),
 		Color(0x626262_FF),
@@ -387,6 +388,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 #endregion
 
 #region Notable Software
+	"--Software": [],
 	"Microsoft Windows (Early)": PackedColorArray([
 		Color(0x000000_FF),
 		Color(0x7E7E7E_FF),
@@ -446,6 +448,7 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 #endregion
 
 #region Notable Fantasy Consoles
+	"--Fantasy Consoles": [],
 	"PICO-8": PackedColorArray([
 		Color(0x000000_FF),
 		Color(0x1D2B53_FF),

@@ -66,7 +66,10 @@ func _ready() -> void:
 	var built_in_palette: PopupMenu = PopupMenu.new()
 
 	for key: String in Global.named_palettes:
-		built_in_palette.add_item(key, key.hash() & ID_MASK)
+		if key.begins_with("--"):
+			built_in_palette.add_separator(key.trim_prefix("--"), key.hash() & ID_MASK)
+		else:
+			built_in_palette.add_item(key, key.hash() & ID_MASK)
 
 	built_in_palette.id_pressed.connect(_on_builtint_palette_id_pressed)
 
