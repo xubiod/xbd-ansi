@@ -968,12 +968,8 @@ func load_ansi(ansi_path: String) -> void:
 
 	var keep_going:	bool = true
 
-	var byte:		int = 0x00
-	var str_buffer:	String = ""
-	var i: int = 0
-
-	var pending_bg: int = DEFAULT_BG
-	var pending_fg: int = DEFAULT_FG
+	var byte:	int = 0x00
+	var i:		int = 0
 
 	cursor_pos = Vector2.ZERO
 
@@ -981,41 +977,46 @@ func load_ansi(ansi_path: String) -> void:
 		byte = data.get(i)
 
 		if byte == ANSIConsts.ESCAPE:
-			str_buffer = data.slice(i, i + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii()
-			search = ansi_escape_pat.search(str_buffer)
+			search = ansi_escape_pat.search(data.slice(i, i + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
 			if search:
 				for code: int in ANSIConsts.break_open(search.get_string(0)):
 					match code as ANSIConsts.AnsiCodes:
 						ANSIConsts.AnsiCodes.RESET:
-							pending_bg = DEFAULT_BG
-							pending_fg = DEFAULT_FG
+							selected_bg = DEFAULT_BG
+							selected_fg = DEFAULT_FG
+
 						ANSIConsts.AnsiCodes.SET_BOLD:
-							pending_fg = (pending_fg & 0b0111) | 0b1000
+							selected_fg = (selected_fg & 0b0111) | 0b1000
+
 						ANSIConsts.AnsiCodes.RESET_BOLD:
-							pending_fg = (pending_fg & 0b0111)
+							selected_fg = (selected_fg & 0b0111)
+
 						ANSIConsts.AnsiCodes.SET_BLINKING:
-							pending_bg = (pending_bg & 0b0111) | 0b1000
+							selected_bg = (selected_bg & 0b0111) | 0b1000
+
 						ANSIConsts.AnsiCodes.RESET_BLINKING:
-							pending_bg = (pending_bg & 0b0111)
+							selected_bg = (selected_bg & 0b0111)
+
 						_ when ANSIConsts.FG_TO_ATTRIBUTE.has(code):
-							pending_fg = (pending_fg & 0b1000) | ANSIConsts.FG_TO_ATTRIBUTE[code]
+							selected_fg = (selected_fg & 0b1000) | ANSIConsts.FG_TO_ATTRIBUTE[code]
+
 						_ when ANSIConsts.BG_TO_ATTRIBUTE.has(code):
-							pending_bg = (pending_bg & 0b1000) | ANSIConsts.BG_TO_ATTRIBUTE[code]
+							selected_bg = (selected_bg & 0b1000) | ANSIConsts.BG_TO_ATTRIBUTE[code]
+
 						_:
 							push_warning("unknown code: ", code)
+
 				i += len(search.get_string(0))
 				continue
-		selected_bg = pending_bg
-		selected_fg = pending_fg
 
 		if byte == XBIN_EOF:
 			keep_going = false
 			continue
-		type(byte)
 
+		type(byte)
 		i += 1
 
-	pending_bg = DEFAULT_BG
-	pending_fg = DEFAULT_FG
+	selected_bg = DEFAULT_BG
+	selected_fg = DEFAULT_FG
 	dirty = false
 #endregion
