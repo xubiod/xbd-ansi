@@ -13,7 +13,7 @@ const ESCAPE:			int = 0x1b
 ## See https://ansi.tools/lookup for a full list. This project can only support
 ## [code]SGR[/code] codes, starting with [code]\u001b[[/code] and ending with
 ## [code]m[/code]. All others are considered invalid.
-enum AnsiCodes {
+enum AnsiCodesSGR {
 	RESET = 0,
 
 	SET_BOLD		= 1,	# bold		-> high intensity FG
@@ -70,64 +70,64 @@ enum AnsiCodes {
 	# end unused colours
 }
 
-static func assemble(codes: Array[AnsiCodes]) -> String:
+static func assemble(codes: Array[AnsiCodesSGR]) -> String:
 	var r: String = ANSI_ESCAPE_START
-	for code: AnsiCodes in codes:
+	for code: AnsiCodesSGR in codes:
 		r = "%s%d;" % [r, code]
 	r = "%sm" % [r.trim_suffix(";")]
 	return r
 
-static func break_open(segment: String) -> Array[AnsiCodes]:
+static func break_open(segment: String) -> Array[AnsiCodesSGR]:
 	assert(segment.begins_with(ANSI_ESCAPE_START),	"does not start valid")
 	assert(segment.ends_with("m"),					"does not end valid")
 
-	var r: Array[AnsiCodes] = []
+	var r: Array[AnsiCodesSGR] = []
 
 	for code: String in segment.trim_prefix(ANSI_ESCAPE_START).trim_suffix("m").split(";", false):
-		r.append(code.to_int() as AnsiCodes)
+		r.append(code.to_int() as AnsiCodesSGR)
 
 	return r
 
-const FG_TO_ATTRIBUTE: Dictionary[AnsiCodes, int] = {
-	AnsiCodes.FG_BLACK:		0x0,
-	AnsiCodes.FG_BLUE:		0x1,
-	AnsiCodes.FG_GREEN:		0x2,
-	AnsiCodes.FG_CYAN:		0x3,
-	AnsiCodes.FG_RED:		0x4,
-	AnsiCodes.FG_MAGENTA:	0x5,
-	AnsiCodes.FG_YELLOW:	0x6,
-	AnsiCodes.FG_WHITE:		0x7,
+const FG_TO_ATTRIBUTE: Dictionary[AnsiCodesSGR, int] = {
+	AnsiCodesSGR.FG_BLACK:		0x0,
+	AnsiCodesSGR.FG_BLUE:		0x1,
+	AnsiCodesSGR.FG_GREEN:		0x2,
+	AnsiCodesSGR.FG_CYAN:		0x3,
+	AnsiCodesSGR.FG_RED:		0x4,
+	AnsiCodesSGR.FG_MAGENTA:	0x5,
+	AnsiCodesSGR.FG_YELLOW:		0x6,
+	AnsiCodesSGR.FG_WHITE:		0x7,
 
-	AnsiCodes.FG_BRIGHT_BLACK:		0x8,
-	AnsiCodes.FG_BRIGHT_BLUE:		0x9,
-	AnsiCodes.FG_BRIGHT_GREEN:		0xa,
-	AnsiCodes.FG_BRIGHT_CYAN:		0xb,
-	AnsiCodes.FG_BRIGHT_RED:		0xc,
-	AnsiCodes.FG_BRIGHT_MAGENTA:	0xd,
-	AnsiCodes.FG_BRIGHT_YELLOW:		0xe,
-	AnsiCodes.FG_BRIGHT_WHITE:		0xf,
+	AnsiCodesSGR.FG_BRIGHT_BLACK:	0x8,
+	AnsiCodesSGR.FG_BRIGHT_BLUE:	0x9,
+	AnsiCodesSGR.FG_BRIGHT_GREEN:	0xa,
+	AnsiCodesSGR.FG_BRIGHT_CYAN:	0xb,
+	AnsiCodesSGR.FG_BRIGHT_RED:		0xc,
+	AnsiCodesSGR.FG_BRIGHT_MAGENTA:	0xd,
+	AnsiCodesSGR.FG_BRIGHT_YELLOW:	0xe,
+	AnsiCodesSGR.FG_BRIGHT_WHITE:	0xf,
 
-	AnsiCodes.FG_DEFAULT:	Document.DEFAULT_FG,
+	AnsiCodesSGR.FG_DEFAULT:	Document.DEFAULT_FG,
 }
 
-const BG_TO_ATTRIBUTE: Dictionary[AnsiCodes, int] = {
-	AnsiCodes.BG_BLACK:		0x0,
-	AnsiCodes.BG_BLUE:		0x1,
-	AnsiCodes.BG_GREEN:		0x2,
-	AnsiCodes.BG_CYAN:		0x3,
-	AnsiCodes.BG_RED:		0x4,
-	AnsiCodes.BG_MAGENTA:	0x5,
-	AnsiCodes.BG_YELLOW:	0x6,
-	AnsiCodes.BG_WHITE:		0x7,
+const BG_TO_ATTRIBUTE: Dictionary[AnsiCodesSGR, int] = {
+	AnsiCodesSGR.BG_BLACK:		0x0,
+	AnsiCodesSGR.BG_BLUE:		0x1,
+	AnsiCodesSGR.BG_GREEN:		0x2,
+	AnsiCodesSGR.BG_CYAN:		0x3,
+	AnsiCodesSGR.BG_RED:		0x4,
+	AnsiCodesSGR.BG_MAGENTA:	0x5,
+	AnsiCodesSGR.BG_YELLOW:		0x6,
+	AnsiCodesSGR.BG_WHITE:		0x7,
 
-	AnsiCodes.BG_BRIGHT_BLACK:		0x8,
-	AnsiCodes.BG_BRIGHT_BLUE:		0x9,
-	AnsiCodes.BG_BRIGHT_GREEN:		0xa,
-	AnsiCodes.BG_BRIGHT_CYAN:		0xb,
-	AnsiCodes.BG_BRIGHT_RED:		0xc,
-	AnsiCodes.BG_BRIGHT_MAGENTA:	0xd,
-	AnsiCodes.BG_BRIGHT_YELLOW:		0xe,
-	AnsiCodes.BG_BRIGHT_WHITE:		0xf,
+	AnsiCodesSGR.BG_BRIGHT_BLACK:	0x8,
+	AnsiCodesSGR.BG_BRIGHT_BLUE:	0x9,
+	AnsiCodesSGR.BG_BRIGHT_GREEN:	0xa,
+	AnsiCodesSGR.BG_BRIGHT_CYAN:	0xb,
+	AnsiCodesSGR.BG_BRIGHT_RED:		0xc,
+	AnsiCodesSGR.BG_BRIGHT_MAGENTA:	0xd,
+	AnsiCodesSGR.BG_BRIGHT_YELLOW:	0xe,
+	AnsiCodesSGR.BG_BRIGHT_WHITE:	0xf,
 
-	AnsiCodes.BG_DEFAULT:	Document.DEFAULT_BG,
+	AnsiCodesSGR.BG_DEFAULT:	Document.DEFAULT_BG,
 }

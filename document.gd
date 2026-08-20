@@ -1003,22 +1003,22 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 		if byte == AnsiConsts.ESCAPE:
 			search = ansi_escape_pat.search(data.slice(i, i + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
 			if search:
-				for code: AnsiConsts.AnsiCodes in AnsiConsts.break_open(search.get_string(0)):
+				for code: AnsiConsts.AnsiCodesSGR in AnsiConsts.break_open(search.get_string(0)):
 					match code:
-						AnsiConsts.AnsiCodes.RESET:
+						AnsiConsts.AnsiCodesSGR.RESET:
 							selected_bg = DEFAULT_BG
 							selected_fg = DEFAULT_FG
 
-						AnsiConsts.AnsiCodes.SET_BOLD:
+						AnsiConsts.AnsiCodesSGR.SET_BOLD:
 							selected_fg = selected_fg | 0b1000
 
-						AnsiConsts.AnsiCodes.RESET_BOLD:
+						AnsiConsts.AnsiCodesSGR.RESET_BOLD:
 							selected_fg = selected_fg & 0b0111
 
-						AnsiConsts.AnsiCodes.SET_BLINKING:
+						AnsiConsts.AnsiCodesSGR.SET_BLINKING:
 							selected_bg = selected_bg | 0b1000
 
-						AnsiConsts.AnsiCodes.RESET_BLINKING:
+						AnsiConsts.AnsiCodesSGR.RESET_BLINKING:
 							selected_bg = selected_bg & 0b0111
 
 						_ when AnsiConsts.FG_TO_ATTRIBUTE.has(code):
