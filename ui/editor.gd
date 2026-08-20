@@ -510,7 +510,10 @@ func _on_open_x_bin_file_selected(path: String) -> void:
 		"xb":
 			document.load_xbin(path)
 		"ans":
-			document.load_ansi(path, options.get(options.keys()[0]) as Document.AnsiLoadNewLine)
+			document.load_ansi(path,
+				options.get(options.keys()[0]) as Document.AnsiLoadNewLine,
+				options.get(options.keys()[1]) as Document.AnsiLoadTabs
+			)
 		_:
 			return
 	loaded_path = path

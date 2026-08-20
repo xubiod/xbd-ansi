@@ -611,13 +611,16 @@ file_mode = 0
 display_mode = 1
 access = 2
 filters = PackedStringArray("*.xb;XBin;application/octet-stream", "*.ans;ANSI files;text/plain")
-option_count = 1
+option_count = 2
 folder_creation_enabled = false
 favorites_enabled = false
 deleting_enabled = false
 option_0/name = "For loading .ANS files, newlines are..."
 option_0/values = PackedStringArray("completely ignored.", "CRLF (MS-DOS/Windows-style).", "LF (Unix-style).", "CR (Macintosh-style).")
 option_0/default = 1
+option_1/name = "For loading .ANS files, tabs..."
+option_1/values = PackedStringArray("printed as glyphs.", "move the cursor 8 columns.")
+option_1/default = 1
 
 [node name="SaveDocument" type="FileDialog" parent="Camera/UI/Windows" unique_id=508781406]
 unique_name_in_owner = true

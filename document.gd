@@ -28,6 +28,11 @@ enum AnsiLoadNewLine {
 	CR
 }
 
+enum AnsiLoadTabs {
+	IGNORE,
+	MOVE_8
+}
+
 const ANSI_LOAD_LOOKAHEAD: int = 32
 
 const FLAGS_PALETTE:	int = 0b00000001
@@ -39,7 +44,7 @@ const FLAGS_BIGFONT:	int = 0b00010000
 const FLAGS_MASK:		int = 0b00011111
 
 const XBIN_MAGIC:	String = "XBIN"
-const XBIN_EOF:		int = 0x1A
+const XBIN_EOF:		int = AnsiConsts.EOF
 
 const XBIN_COMPRESSION_NONE:		int = 0x00
 const XBIN_COMPRESSION_CHARACTER:	int = 0x40
@@ -968,7 +973,7 @@ func load_xbin(xbin_path: String) -> void:
 	f.close()
 	dirty = false
 
-func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine.CRLF) -> void:
+func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine.CRLF, tab_does: AnsiLoadTabs = AnsiLoadTabs.IGNORE) -> void:
 	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^\[(?:\d+;?)+m')
 	var search: RegExMatch
 
@@ -1036,6 +1041,14 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 		elif (new_line_on == AnsiLoadNewLine.LF and byte == AnsiConsts.LINEFEED) or \
 			 (new_line_on == AnsiLoadNewLine.CR and byte == AnsiConsts.CARRIAGE_RETURN):
 			pretend_enter()
+			i += 1
+			continue
+		elif tab_does == AnsiLoadTabs.MOVE_8 and byte == AnsiConsts.TAB:
+			cursor_pos.x += 8
+			if cursor_pos.x > document_size.x:
+				cursor_pos.x = wrapi(cursor_pos.x,		0, document_size.x)
+				cursor_pos.y = wrapi(cursor_pos.y + 1,	0, document_size.y)
+
 			i += 1
 			continue
 

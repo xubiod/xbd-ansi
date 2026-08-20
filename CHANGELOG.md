@@ -36,6 +36,7 @@ This version also includes a web export. It "works", in quotes as **there's no d
 
 - ANSI file loader via `.ans`
   - Can handle different kinds of newlines if needed
+  - Can handle tabs with moving the cursor over or using the glyph
 - Add many more IBM codepage fonts
   - 56 new font files
   - 16 code pages (now 17 pages total)

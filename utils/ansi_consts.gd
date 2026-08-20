@@ -5,6 +5,8 @@ const ESCAPE: int = 0x1b
 
 const CARRIAGE_RETURN:	int = 0x0d
 const LINEFEED:			int = 0x0a
+const TAB:				int = 0x09
+const EOF:				int = 0x1a
 
 ## Supported ANSI codes, this is specifically for colours/graphics.
 ##
