@@ -77,14 +77,14 @@ static func assemble(codes: Array[AnsiCodes]) -> String:
 	r = "%sm" % [r.trim_suffix(";")]
 	return r
 
-static func break_open(segment: String) -> PackedInt32Array:
+static func break_open(segment: String) -> Array[AnsiCodes]:
 	assert(segment.begins_with(ANSI_ESCAPE_START),	"does not start valid")
 	assert(segment.ends_with("m"),					"does not end valid")
 
-	var r: PackedInt32Array = []
+	var r: Array[AnsiCodes] = []
 
 	for code: String in segment.trim_prefix(ANSI_ESCAPE_START).trim_suffix("m").split(";", false):
-		r.append(code.to_int())
+		r.append(code.to_int() as AnsiCodes)
 
 	return r
 
