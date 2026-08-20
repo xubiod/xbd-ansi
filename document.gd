@@ -743,6 +743,8 @@ func resize(to: Vector2i) -> void:
 
 	dirty = true
 	document_size = to
+
+	# TODO: don't necessarily do this every time
 	sauce.type_for_xbin(document_size.x, document_size.y)
 
 func render(transparent_bg_idx: int = -1) -> Image:
