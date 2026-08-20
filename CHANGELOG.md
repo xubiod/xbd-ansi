@@ -37,6 +37,8 @@ This version also includes a web export. It "works", in quotes as **there's no d
 - ANSI file loader via `.ans`
   - Can handle different kinds of newlines if needed
   - Can handle tabs with moving the cursor over or using the glyph
+  - Can extend the canvas if running out of space because of no SAUCE or incorrect SAUCE
+    - Incorrect SAUCE is probably not the reason and the incorrect parsing settings were used
 - Add many more IBM codepage fonts
   - 56 new font files
   - 16 code pages (now 17 pages total)
