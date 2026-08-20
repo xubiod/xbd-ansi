@@ -1,12 +1,12 @@
 class_name AnsiConsts extends RefCounted
 
 const ANSI_ESCAPE_START: String = "\u001b["
-const ESCAPE: int = 0x1b
 
-const CARRIAGE_RETURN:	int = 0x0d
-const LINEFEED:			int = 0x0a
 const TAB:				int = 0x09
+const LINEFEED:			int = 0x0a
+const CARRIAGE_RETURN:	int = 0x0d
 const EOF:				int = 0x1a
+const ESCAPE:			int = 0x1b
 
 ## Supported ANSI codes, this is specifically for colours/graphics.
 ##
