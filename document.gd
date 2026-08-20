@@ -1005,17 +1005,17 @@ func load_ansi(
 
 	var keep_going:	bool = true
 
-	var byte:	int = 0x00
-	var i:		int = 0
+	var byte:			int = 0x00
+	var bytes_parsed:	int = 0
 
 	current_tool = Tool.TYPING
 	cursor_pos = Vector2.ZERO
 
-	while i < len(data) and keep_going:
-		byte = data.get(i)
+	while bytes_parsed < len(data) and keep_going:
+		byte = data.get(bytes_parsed)
 
 		if byte == AnsiConsts.ESCAPE:
-			search = ansi_escape_pat.search(data.slice(i, i + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
+			search = ansi_escape_pat.search(data.slice(bytes_parsed, bytes_parsed + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
 			if search:
 				for code: AnsiConsts.AnsiCodesSGR in AnsiConsts.break_open(search.get_string(0)):
 					match code:
@@ -1044,18 +1044,18 @@ func load_ansi(
 						_:
 							push_warning("unknown code: ", code)
 
-				i += len(search.get_string(0))
+				bytes_parsed += len(search.get_string(0))
 				continue
 
-		elif new_line_on == AnsiLoadNewLine.CRLF and byte == AnsiConsts.CARRIAGE_RETURN and data.get(i + 1) == AnsiConsts.LINEFEED:
+		elif new_line_on == AnsiLoadNewLine.CRLF and byte == AnsiConsts.CARRIAGE_RETURN and data.get(bytes_parsed + 1) == AnsiConsts.LINEFEED:
 			pretend_enter()
-			i += 2
+			bytes_parsed += 2
 			continue
 
 		elif (new_line_on == AnsiLoadNewLine.LF and byte == AnsiConsts.LINEFEED) or \
 			 (new_line_on == AnsiLoadNewLine.CR and byte == AnsiConsts.CARRIAGE_RETURN):
 			pretend_enter()
-			i += 1
+			bytes_parsed += 1
 			continue
 		elif tab_does == AnsiLoadTabs.MOVE_8 and byte == AnsiConsts.TAB:
 			cursor_pos.x += 8
@@ -1063,7 +1063,7 @@ func load_ansi(
 				cursor_pos.x = wrapi(cursor_pos.x,		0, document_size.x)
 				cursor_pos.y = wrapi(cursor_pos.y + 1,	0, document_size.y)
 
-			i += 1
+			bytes_parsed += 1
 			continue
 
 		elif byte == AnsiConsts.EOF:
@@ -1071,10 +1071,11 @@ func load_ansi(
 			continue
 
 		type(byte)
-		if allow_growing_y and cursor_pos.y == 0 and i > 0:
+		if allow_growing_y and cursor_pos.y == 0 and bytes_parsed > 0:
 			grow_y_by(1)
 			cursor_pos.y = document_size.y - 1
-		i += 1
+
+		bytes_parsed += 1
 
 	selected_bg = DEFAULT_BG
 	selected_fg = DEFAULT_FG
