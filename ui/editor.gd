@@ -512,7 +512,8 @@ func _on_open_x_bin_file_selected(path: String) -> void:
 		"ans":
 			document.load_ansi(path,
 				options.get(options.keys()[0]) as Document.AnsiLoadNewLine,
-				options.get(options.keys()[1]) as Document.AnsiLoadTabs
+				options.get(options.keys()[1]) as Document.AnsiLoadTabs,
+				true
 			)
 		_:
 			return

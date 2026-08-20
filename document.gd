@@ -746,6 +746,14 @@ func resize(to: Vector2i) -> void:
 	# TODO: don't necessarily do this every time
 	sauce.type_for_xbin(document_size.x, document_size.y)
 
+# HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
+func grow_y_by(amount: int) -> void:
+	for x: int in range(document_size.x):
+		for y: int in range(document_size.y, document_size.y + amount):
+			set_bg(Vector2i(x, y), 0)
+	dirty = true
+	document_size.y += amount
+
 func render(transparent_bg_idx: int = -1) -> Image:
 	var r: Image	= Image.create_empty(int(document_rect.size.x), int(document_rect.size.y), false, Image.FORMAT_RGBA4444)
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
@@ -974,7 +982,12 @@ func load_xbin(xbin_path: String) -> void:
 	f.close()
 	dirty = false
 
-func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine.CRLF, tab_does: AnsiLoadTabs = AnsiLoadTabs.IGNORE) -> void:
+func load_ansi(
+	ansi_path: String,
+	new_line_on: AnsiLoadNewLine = AnsiLoadNewLine.CRLF,
+	tab_does: AnsiLoadTabs = AnsiLoadTabs.IGNORE,
+	allow_growing_y: bool = true
+	) -> void:
 	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^\[(?:\d+;?)+m')
 	var search: RegExMatch
 
@@ -1058,6 +1071,9 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 			continue
 
 		type(byte)
+		if allow_growing_y and cursor_pos.y == 0 and i > 0:
+			grow_y_by(1)
+			cursor_pos.y = document_size.y - 1
 		i += 1
 
 	selected_bg = DEFAULT_BG
