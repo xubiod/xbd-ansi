@@ -988,7 +988,7 @@ func load_ansi(
 	tab_does: AnsiLoadTabs = AnsiLoadTabs.IGNORE,
 	allow_growing_y: bool = true
 	) -> void:
-	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^\[(?:\d+;?)+m')
+	var ansi_escape_pat: RegEx = RegEx.create_from_string(r'^' + "\u001b" + r'\[(?:\d+;?)+m')
 	var search: RegExMatch
 
 	var f: FileAccess = FileAccess.open(ansi_path, FileAccess.READ)
