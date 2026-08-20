@@ -57,25 +57,25 @@ const REF_IMAGE_DEFAULT_ALPHA: float = 0.5
 
 const PREVIEW_ALPHA: float = 0.5
 
-@onready var viewport: Viewport = get_viewport()
+@onready var viewport:		Viewport		= get_viewport()
 
-@onready var foreground: TileMapLayer = %Foreground
-@onready var background: TileMapLayer = %Background
-@onready var cursor_sprite: Sprite2D = $Cursor
-@onready var reference: Sprite2D = %Reference
-@onready var char_preview: TextureRect = %PreviewFG
-@onready var line_ref: Line2D = $LineRef
+@onready var foreground:	TileMapLayer	= %Foreground
+@onready var background:	TileMapLayer	= %Background
+@onready var cursor_sprite:	Sprite2D		= $Cursor
+@onready var reference:		Sprite2D		= %Reference
+@onready var char_preview:	TextureRect		= %PreviewFG
+@onready var line_ref:		Line2D			= $LineRef
 
 var sauce: Sauce
 
-var palette_image: Image
-var palette_texture: ImageTexture
+var palette_image:		Image
+var palette_texture:	ImageTexture
 
 var ansifnt: AnsiFont
 var tileset: TileSet
 
-var cursor_pos: Vector2i = Vector2i.ZERO
-var desired_cursor_pos: Vector2 = Vector2.ZERO
+var cursor_pos:			Vector2i = Vector2i.ZERO
+var desired_cursor_pos: Vector2  = Vector2.ZERO
 
 const DEFAULT_BG:	int = 0
 const DEFAULT_FG:	int = 7
@@ -90,8 +90,8 @@ var document_rect: Rect2 : get = _get_document_rect
 
 var glyph_size: Vector2i
 
-var last_tool: Tool
-var current_tool: Tool = Tool.TYPING : set = _set_current_tool
+var last_tool:		Tool
+var current_tool:	Tool = Tool.TYPING : set = _set_current_tool
 
 var current_paint_mode: PaintMode = PaintMode.CHARACTER : set = _set_current_paint_mode
 
@@ -109,9 +109,21 @@ var ref_snapping: bool = false
 var dirty: bool = false : set = _set_dirty
 var tool_in_use: bool = false
 
-const HIDE_CHARACTER_PREVIEW: Array[Tool] = [Tool.TYPING, Tool.REFERENCE, Tool.PICKER]
-const STRETCH_CHARACTER_PREVIEW: Array[Tool] = [Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL]
-const DISALLOW_HALF: Array[Tool] = [Tool.PICKER, Tool.TYPING]
+## Tools that don't use the character preview at all.
+const HIDE_CHARACTER_PREVIEW: Array[Tool] = [
+	Tool.TYPING, Tool.REFERENCE, Tool.PICKER
+]
+
+## Tools that can stretch the character preview. Used for shapes to give an area.
+const STRETCH_CHARACTER_PREVIEW: Array[Tool] = [
+	Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL
+]
+
+## Tools that ignore half-block mode no matter what. Used for correcting the cursor
+## shape for tools that don't abide by half-block mode.
+const DISALLOW_HALF: Array[Tool] = [
+	Tool.PICKER, Tool.TYPING
+]
 
 signal palette_updated
 signal font_updated
