@@ -44,7 +44,6 @@ const FLAGS_BIGFONT:	int = 0b00010000
 const FLAGS_MASK:		int = 0b00011111
 
 const XBIN_MAGIC:	String = "XBIN"
-const XBIN_EOF:		int = AnsiConsts.EOF
 
 const XBIN_COMPRESSION_NONE:		int = 0x00
 const XBIN_COMPRESSION_CHARACTER:	int = 0x40
@@ -798,7 +797,7 @@ func save_xbin_to_buffer() -> PackedByteArray:
 	var stream: StreamPeerBuffer = StreamPeerBuffer.new()
 
 	stream.put_data(XBIN_MAGIC.to_ascii_buffer())
-	stream.put_8(XBIN_EOF)
+	stream.put_8(AnsiConsts.EOF)
 
 	stream.put_16(document_size.x & UINT16_MAX)
 	stream.put_16(document_size.y & UINT16_MAX)
@@ -859,7 +858,7 @@ func load_xbin(xbin_path: String) -> void:
 		push_error("no magic")
 		return
 
-	if f.get_8() != XBIN_EOF:
+	if f.get_8() != AnsiConsts.EOF:
 		push_error("no EOF")
 		return
 
@@ -1054,7 +1053,7 @@ func load_ansi(ansi_path: String, new_line_on: AnsiLoadNewLine = AnsiLoadNewLine
 			i += 1
 			continue
 
-		elif byte == XBIN_EOF:
+		elif byte == AnsiConsts.EOF:
 			keep_going = false
 			continue
 
