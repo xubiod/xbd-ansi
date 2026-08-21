@@ -32,8 +32,9 @@ Mainly for itch posts.
 
 This version also includes a web export. It "works", in quotes as **there's no dedicated way to open/save anything made in it**.
 
-## Update 3 (unpublished)
+## Update 3 (2020-08-21)
 
+- Now using Godot Engine 4.7.2.stable.
 - ANSI file loader via `.ans`
   - Can handle different kinds of newlines if needed
   - Can handle tabs with moving the cursor over or using the glyph
