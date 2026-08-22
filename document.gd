@@ -79,7 +79,7 @@ var desired_cursor_pos: Vector2  = Vector2.ZERO
 
 const DEFAULT_BG:	int = 0
 const DEFAULT_FG:	int = 7
-const DEFAULT_CODE:	int = 0x20
+const DEFAULT_CODE:	int = 0xDB # Full Block character
 
 var selected_bg:	int = DEFAULT_BG	: set = _set_selected_background
 var selected_fg:	int = DEFAULT_FG	: set = _set_selected_foreground
