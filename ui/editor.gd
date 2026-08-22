@@ -245,6 +245,9 @@ func new_document() -> void:
 	%Exporter.reset()
 	camera_desired_pos = document.document_rect.get_center()
 
+	tool_to_btn[document.current_tool].button_pressed = true;
+	tool_to_btn[document.current_tool].pressed.emit()
+
 func save_document() -> void:
 	assert(not loaded_path.is_empty(), "path cannot be empty")
 	assert(loaded_path.is_absolute_path() or loaded_path.is_relative_path(), "path isn't valid")
