@@ -66,6 +66,8 @@ const PREVIEW_ALPHA: float = 0.5
 @onready var char_preview:	TextureRect		= %PreviewFG
 @onready var line_ref:		Line2D			= $LineRef
 
+var history: UndoRedo
+
 var sauce: Sauce
 
 var palette_image:		Image

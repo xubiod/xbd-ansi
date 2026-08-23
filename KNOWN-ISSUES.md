@@ -4,6 +4,7 @@
 - Off canvas shape drawing unsupported
   - Example: starting a rectangle off canvas and dragging across canvas
   - Example: ellipses cannot be cut off
+- Undo/redo unimplemented
 - Fillbucket unimplemented
 - Additional XBin fuunctionality
   - Should be able to load fonts from XBin
