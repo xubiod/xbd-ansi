@@ -32,7 +32,7 @@ Mainly for itch posts.
 
 This version also includes a web export. It "works", in quotes as **there's no dedicated way to open/save anything made in it**.
 
-## Update 3 (2020-08-21)
+## Update 3 (2026-08-21)
 
 - Now using Godot Engine 4.7.2.stable.
 - ANSI file loader via `.ans`
