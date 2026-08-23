@@ -47,3 +47,6 @@ This version also includes a web export. It "works", in quotes as **there's no d
   - 13 font files
 - Add separators to palettes
 - Font subcollections and palette menus now have search bars
+
+## Update 4 (unreleased)
+- Tool button now reflects current tool properly on new document (TheMarcsOv)
