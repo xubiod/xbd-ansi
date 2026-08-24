@@ -49,7 +49,10 @@ This version also includes a web export. It "works", in quotes as **there's no d
 - Font subcollections and palette menus now have search bars
 
 ## Update 4 (unreleased)
+
 - Tool button now reflects current tool properly on new document (TheMarcsOv)
 - [Internal] Unused assets removed
 - Fixed invalid saving of blank foreground characters/attributes
   - This resulted in empty foreground (not SPACES) in saving with a background of yellow.
+- Properly display licenses and credits in about window
+  - Also shows properly on OS request (macOS)
