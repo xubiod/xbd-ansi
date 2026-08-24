@@ -217,6 +217,8 @@ func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_WM_CLOSE_REQUEST:
 			request_close()
+		NOTIFICATION_WM_ABOUT:
+			%About.show()
 		_:
 			pass
 

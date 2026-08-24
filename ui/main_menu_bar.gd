@@ -14,7 +14,8 @@ enum FileIds {
 enum ViewIds {
 	CHARACTER_PALETTE = 0,
 	CONTROL_HINT = 1,
-	EXTERNAL_REF = 2
+	EXTERNAL_REF = 2,
+	ABOUT_CREDITS = 3
 }
 
 enum DocumentIds {
@@ -83,6 +84,8 @@ func _ready() -> void:
 	$Document.add_item("SAUCE info...", DocumentIds.SAUCE_EDITOR)
 	$Document.add_item("Resize", DocumentIds.RESIZE, _modifier | KEY_R)
 
+	$View.add_item("About/Credits", ViewIds.ABOUT_CREDITS)
+	$View.add_separator("", ID_MASK)
 	$View.add_item("Character palette", ViewIds.CHARACTER_PALETTE)
 	$View.add_item("Control hints", ViewIds.CONTROL_HINT)
 	$View.add_item("Open external reference", ViewIds.EXTERNAL_REF)
@@ -138,6 +141,8 @@ func _on_view_id_pressed(id: int) -> void:
 			editor.control_hints = !editor.control_hints
 		ViewIds.EXTERNAL_REF:
 			editor.request_new_external_ref()
+		ViewIds.ABOUT_CREDITS:
+			(%About as Window).show()
 		_:
 			assert(false, "invalid view option")
 

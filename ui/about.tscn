@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://drq8idv2y6d1s"]
+
+[ext_resource type="Script" uid="uid://cfsusai51favq" path="res://ui/about.gd" id="1_2y2k4"]
+[ext_resource type="FontFile" uid="uid://d3ke0gylnihpj" path="res://ui/MxPlus_IBM_VGA_8x16.ttf" id="2_d7e5c"]
+
+[node name="About" type="Window" unique_id=418146490]
+disable_3d = true
+oversampling_override = 1.0
+title = "About"
+initial_position = 1
+size = Vector2i(680, 480)
+script = ExtResource("1_2y2k4")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1994507601]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1528084084]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TextualContent" type="RichTextLabel" parent="MarginContainer" unique_id=1123090985]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_fonts/normal_font = ExtResource("2_d7e5c")
+theme_override_fonts/bold_font = ExtResource("2_d7e5c")
+theme_override_fonts/mono_font = ExtResource("2_d7e5c")
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_font_size = 24
+bbcode_enabled = true
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="meta_clicked" from="MarginContainer/TextualContent" to="." method="_on_textual_content_meta_clicked"]
+[connection signal="meta_hover_ended" from="MarginContainer/TextualContent" to="." method="_on_textual_content_meta_hover_ended"]
+[connection signal="meta_hover_started" from="MarginContainer/TextualContent" to="." method="_on_textual_content_meta_hover_started"]
