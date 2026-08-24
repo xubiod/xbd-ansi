@@ -757,10 +757,6 @@ func resize(to: Vector2i) -> void:
 	dirty = true
 	document_size = to
 
-	# TODO: don't necessarily do this every time
-	if sauce != null:
-		sauce.type_for_xbin(document_size.x, document_size.y)
-
 # HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
 func grow_y_by(amount: int) -> void:
 	for x: int in range(document_size.x):
@@ -864,6 +860,7 @@ func save_xbin_to_buffer() -> PackedByteArray:
 			stream.put_8(code)
 			stream.put_8(attr)
 
+	sauce.type_for_xbin(document_size.x, document_size.y)
 	stream.put_data(sauce.save_to_buffer(stream.get_size()))
 	return stream.data_array
 #endregion
