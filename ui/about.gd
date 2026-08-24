@@ -18,7 +18,8 @@ Project contributions from:
 	Engine.get_version_info()['string'],
 	FileAccess.get_file_as_string("res://credits/CONTRIBUTORS.txt"),
 	Engine.get_license_text(),
-	FileAccess.get_file_as_string("res://credits/ADDITIONAL-CREDITS.txt")
+	FileAccess.get_file_as_string("res://credits/ADDITIONAL-CREDITS.txt") \
+		.replace("{{FROGBLOCK}}", FileAccess.get_file_as_string("res://credits/FROGBLOCK.txt"))
 	]
 
 func _on_textual_content_meta_clicked(meta: Variant) -> void:
