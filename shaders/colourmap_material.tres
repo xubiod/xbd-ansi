@@ -1,8 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://bi68ovh24d45h"]
 
 [ext_resource type="Shader" uid="uid://7pbkjq4nhj2a" path="res://shaders/colourmap.gdshader" id="1_2vwfo"]
-[ext_resource type="Texture2D" uid="uid://cuc2hb2lf1vam" path="res://palettes/cga.png" id="2_p4f32"]
 
 [resource]
 shader = ExtResource("1_2vwfo")
-shader_parameter/palette = ExtResource("2_p4f32")

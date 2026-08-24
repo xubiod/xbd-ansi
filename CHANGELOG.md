@@ -50,3 +50,4 @@ This version also includes a web export. It "works", in quotes as **there's no d
 
 ## Update 4 (unreleased)
 - Tool button now reflects current tool properly on new document (TheMarcsOv)
+- [Internal] Unused assets removed
