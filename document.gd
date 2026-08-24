@@ -758,7 +758,8 @@ func resize(to: Vector2i) -> void:
 	document_size = to
 
 	# TODO: don't necessarily do this every time
-	sauce.type_for_xbin(document_size.x, document_size.y)
+	if sauce != null:
+		sauce.type_for_xbin(document_size.x, document_size.y)
 
 # HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
 func grow_y_by(amount: int) -> void:
