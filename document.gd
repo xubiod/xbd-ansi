@@ -856,7 +856,7 @@ func save_xbin_to_buffer() -> PackedByteArray:
 		for x: int in range(document_size.x):
 			pos  = Vector2i(x, y)
 			code = get_fg_code(pos)
-			attr = (get_bg(pos) << 4) | get_fg_attr(pos)
+			attr = ((get_bg(pos) & 0xF) << 4) | (get_fg_attr(pos) & 0xF)
 
 			if code < 0:
 				code = ansifnt.empty_block
