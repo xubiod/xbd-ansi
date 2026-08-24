@@ -316,7 +316,7 @@ func get_fg_code(canvas_pos: Vector2i) -> int:
 
 ## Gets attribute for the foreground at this position.
 func get_fg_attr(canvas_pos: Vector2i) -> int:
-	return ansifnt.get_shade(foreground.get_cell_alternative_tile(canvas_pos))
+	return clampi(ansifnt.get_shade(foreground.get_cell_alternative_tile(canvas_pos)), 0x0, 0xF)
 
 ## Gets attribute for the background at this position.
 func get_bg(canvas_pos: Vector2i) -> int:
