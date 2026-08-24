@@ -13,6 +13,5 @@
 - Halfblock glyphs are not changeable to user
 - ANSI support
   - Improvement
-	- SAUCE-less but also tall works are not compatible
 	- Some of my works are not compatible because of emitted escape codes
 	  - "that guy that i hate" uses codes like `3055` which I cannot find documentation on ANYWHERE
