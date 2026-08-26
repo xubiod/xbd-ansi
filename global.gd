@@ -474,3 +474,4 @@ var named_palettes: Dictionary[String, PackedColorArray] = {
 ## Immediately asserts to halt.
 func crash_and_burn(_v: Variant) -> void:
 	assert(false, "cannot be set")
+	OS.crash("bad !!")
