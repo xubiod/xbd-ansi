@@ -462,7 +462,7 @@ func _process(_delta: float) -> void:
 	rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
 	rectangle_area.size		= Vector2(rectangle_area.position - Vector2(start_canvas_pos.max(clamped))).abs().snapped(_vsnap)
 
-	char_preview.position = rectangle_area.position.snapped(_vsnap)
+	char_preview.position = Vector2(rectangle_area.position / Vector2(_vsnap)).floor() * Vector2(_vsnap)
 
 	last_mouse_canvas_pos = clamped
 	last_global_mouse = global_mouse_pos
@@ -549,7 +549,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 					ref_snapping = Input.is_key_pressed(KEY_SHIFT)
 			Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL:
 				if tool_in_use:
-					char_preview.size = rectangle_area.size.snapped(_vsnap)
+					char_preview.size = Vector2(rectangle_area.size / Vector2(_vsnap)).ceil() * Vector2(_vsnap)
 			_:
 				pass
 
@@ -558,7 +558,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 			tool_in_use = false
 			end_canvas_pos = clamped
 
-			var rect: Rect2 = Rect2(char_preview.position, char_preview.size)
+			var rect: Rect2 = Rect2(char_preview.position.snapped(_vsnap), char_preview.size)
 
 			var tl: Vector2 = rect.position
 			var br: Vector2 = rect.position + rect.size - Vector2.ONE

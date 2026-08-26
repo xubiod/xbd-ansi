@@ -57,3 +57,4 @@ This version also includes a web export. It "works", in quotes as **there's no d
 - Properly display licenses and credits in about window
   - Also shows properly on OS request (macOS)
 - Default paint mode is now half-blocks
+- Shape bounding box adjustments
