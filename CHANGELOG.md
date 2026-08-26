@@ -56,3 +56,4 @@ This version also includes a web export. It "works", in quotes as **there's no d
   - This resulted in empty foreground (not SPACES) in saving with a background of yellow.
 - Properly display licenses and credits in about window
   - Also shows properly on OS request (macOS)
+- Default paint mode is now half-blocks

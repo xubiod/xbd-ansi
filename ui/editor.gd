@@ -179,6 +179,7 @@ func _ready() -> void:
 
 	%ControlHints.visible = true
 	_update_tool(Document.Tool.TYPING)
+	_update_paint_mode(Document.PaintMode.HALFBLOCK)
 	update_inwindow_doc_name()
 
 func _process(_delta: float) -> void:
