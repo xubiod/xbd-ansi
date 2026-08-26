@@ -709,6 +709,8 @@ func make_new(
 	document_size = Vector2i.ZERO
 	ansifnt = font
 
+	history = UndoRedo.new()
+
 	background.clear()
 	foreground.clear()
 
