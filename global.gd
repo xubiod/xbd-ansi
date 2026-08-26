@@ -1,11 +1,12 @@
 extends Node
 
 const SHADER_CURSOR_HEIGHT: float = 0.8
+
 const DEFAULT_FONTPATH: String = FONT_MAP["IBM, CP437 (MS-DOS Latin US)"]["8x16"]
 
-const LERP_SLUG: float = 0.5
-const LERP_SMOOTH: float = 0.8
-const LERP_SNAP: float = 1.0
+const LERP_SLUG:	float = 0.5
+const LERP_SMOOTH:	float = 0.8
+const LERP_SNAP:	float = 1.0
 
 ## Human friendly names to paths.
 const FONT_MAP: Dictionary[String, Dictionary] = {
