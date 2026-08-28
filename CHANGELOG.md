@@ -48,7 +48,7 @@ This version also includes a web export. It "works", in quotes as **there's no d
 - Add separators to palettes
 - Font subcollections and palette menus now have search bars
 
-## Update 4 (unreleased)
+## Update 4 (2026-08-28)
 
 - Tool button now reflects current tool properly on new document (TheMarcsOv)
 - [Internal] Unused assets removed
@@ -58,3 +58,4 @@ This version also includes a web export. It "works", in quotes as **there's no d
   - Also shows properly on OS request (macOS)
 - Default paint mode is now half-blocks
 - Shape bounding box adjustments
+- About window added with licenses and other credits
