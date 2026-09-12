@@ -59,8 +59,6 @@ const PREVIEW_ALPHA: float = 0.5
 
 @onready var viewport:		Viewport		= get_viewport()
 
-@onready var foreground:	TileMapLayer	= %Foreground
-@onready var background:	TileMapLayer	= %Background
 @onready var cursor_sprite:	Sprite2D		= $Cursor
 @onready var reference:		Sprite2D		= %Reference
 @onready var char_preview:	TextureRect		= %PreviewFG
@@ -224,9 +222,6 @@ func change_font_data(font_data: PackedByteArray) -> void:
 
 func update_font_tileset() -> void:
 	tileset = ansifnt.generate_tileset()
-
-	foreground.tile_set = tileset
-	background.tile_set = tileset
 
 	(char_preview.texture as AtlasTexture).atlas = (tileset.get_source(0) as TileSetAtlasSource).texture
 

@@ -156,7 +156,7 @@ func _ready() -> void:
 	%FontImporter.font_submitted.connect(_update_font)
 
 	var code_btn_tex: AtlasTexture = AtlasTexture.new()
-	var code_btn_source: TileSetAtlasSource = document.foreground.tile_set.get_source(0)
+	var code_btn_source: TileSetAtlasSource = document.tileset.get_source(0)
 
 	code_btn_tex.atlas = code_btn_source.texture
 
@@ -361,12 +361,12 @@ func _tool_changed() -> void:
 func _font_updated() -> void:
 	var t: AtlasTexture = %CodeButton.texture_normal as AtlasTexture
 
-	t.atlas = document.foreground.tile_set.get_source(0).texture
+	t.atlas = document.tileset.get_source(0).texture
 
 	@warning_ignore("integer_division")
 	t.region = Rect2i(
 		Vector2i(document.selected_code % 16, document.selected_code / 16) * document.glyph_size,
-		document.foreground.tile_set.get_source(0).texture_region_size
+		document.tileset.get_source(0).texture_region_size
 	)
 
 	%CodeButton.custom_minimum_size.x = document.glyph_size.x * (%CodeButton.custom_minimum_size.y / document.glyph_size.y)

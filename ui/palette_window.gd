@@ -10,7 +10,7 @@ var chars_can_be_dragged_over: bool = false
 var position_map: Dictionary
 
 func _ready() -> void:
-	var source: TileSetAtlasSource = %Document.foreground.tile_set.get_source(0)
+	var source: TileSetAtlasSource = %Document.tileset.get_source(0)
 	var btn_min_size: Vector2i = %Document.glyph_size
 
 	@warning_ignore("integer_division")
@@ -76,7 +76,7 @@ func _font_updated() -> void:
 
 	for child_idx: int in range(%PaletteCharContainer.get_children().size()):
 		var child: TextureButton = %PaletteCharContainer.get_child(child_idx)
-		(child.texture_normal as AtlasTexture).atlas = %Document.foreground.tile_set.get_source(0).texture
+		(child.texture_normal as AtlasTexture).atlas = %Document.tileset.get_source(0).texture
 
 		@warning_ignore("integer_division")
 		(child.texture_normal as AtlasTexture).region.position = Vector2(child_idx % 16, child_idx / 16) * Vector2(btn_min_size)

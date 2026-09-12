@@ -52,24 +52,6 @@ unique_name_in_owner = true
 use_parent_material = true
 centered = false
 
-[node name="Foreground" type="TileMapLayer" parent="." unique_id=1611047548]
-unique_name_in_owner = true
-visible = false
-z_index = 1
-use_parent_material = true
-occlusion_enabled = false
-collision_enabled = false
-navigation_enabled = false
-
-[node name="Background" type="TileMapLayer" parent="." unique_id=219117382]
-unique_name_in_owner = true
-visible = false
-z_index = -1
-use_parent_material = true
-occlusion_enabled = false
-collision_enabled = false
-navigation_enabled = false
-
 [node name="Cursor" type="Sprite2D" parent="." unique_id=514289708]
 z_index = 2
 material = ExtResource("4_w1jfu")
