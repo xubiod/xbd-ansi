@@ -1108,7 +1108,7 @@ func load_ansi(
 	sauce = Sauce.read_from_fileaccess(f)
 	f.close()
 
-	var data: PackedByteArray = FileAccess.get_file_as_bytes(ansi_path)
+	var ansi_data: PackedByteArray = FileAccess.get_file_as_bytes(ansi_path)
 	if sauce == null:
 		sauce = Sauce.new()
 	else:
@@ -1124,11 +1124,11 @@ func load_ansi(
 	current_tool = Tool.TYPING
 	cursor_pos = Vector2.ZERO
 
-	while bytes_parsed < len(data) and keep_going:
-		byte = data.get(bytes_parsed)
+	while bytes_parsed < len(ansi_data) and keep_going:
+		byte = ansi_data.get(bytes_parsed)
 
 		if byte == AnsiConsts.ESCAPE:
-			search = ansi_escape_pat.search(data.slice(bytes_parsed, bytes_parsed + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
+			search = ansi_escape_pat.search(ansi_data.slice(bytes_parsed, bytes_parsed + ANSI_LOAD_LOOKAHEAD).get_string_from_ascii())
 			if search:
 				for code: AnsiConsts.AnsiCodesSGR in AnsiConsts.break_open(search.get_string(0)):
 					match code:
@@ -1160,7 +1160,7 @@ func load_ansi(
 				bytes_parsed += len(search.get_string(0))
 				continue
 
-		elif new_line_on == AnsiLoadNewLine.CRLF and byte == AnsiConsts.CARRIAGE_RETURN and data.get(bytes_parsed + 1) == AnsiConsts.LINEFEED:
+		elif new_line_on == AnsiLoadNewLine.CRLF and byte == AnsiConsts.CARRIAGE_RETURN and ansi_data.get(bytes_parsed + 1) == AnsiConsts.LINEFEED:
 			pretend_enter()
 			bytes_parsed += 2
 			continue
