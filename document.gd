@@ -230,6 +230,10 @@ func update_font_tileset() -> void:
 
 	update_character_preview()
 
+	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	display_texture.set_image(display_image)
+	update_display_full()
+
 	font_updated.emit()
 
 func get_palette_colours() -> PackedColorArray:
