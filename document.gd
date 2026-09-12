@@ -959,21 +959,7 @@ func save_xbin_to_buffer() -> PackedByteArray:
 	if (flags & FLAGS_FONT) != 0:
 		stream.put_data(ansifnt.font_data)
 
-	var pos: Vector2i
-	var code: int
-	var attr: int
-
-	for y: int in range(document_size.y):
-		for x: int in range(document_size.x):
-			pos  = Vector2i(x, y)
-			code = get_fg_code(pos)
-			attr = ((get_bg(pos) & 0xF) << 4) | (get_fg_attr(pos) & 0xF)
-
-			if code < 0:
-				code = ansifnt.empty_block
-
-			stream.put_8(code)
-			stream.put_8(attr)
+	stream.put_data(data)
 
 	sauce.type_for_xbin(document_size.x, document_size.y)
 	stream.put_data(sauce.save_to_buffer(stream.get_size()))
