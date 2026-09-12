@@ -859,8 +859,9 @@ func resize(to: Vector2i) -> void:
 		for fillin_x: int in range(mini(document_size.x, to.x)):
 			old_pos = (((fillin_y * document_size.x) + fillin_x) * 2)
 			new_pos = (((fillin_y * to.x) + fillin_x) * 2)
-			new_data[new_pos] = data[old_pos]
-			new_data[new_pos + 1] = data[old_pos + 1]
+			if old_pos < len(data):
+				new_data[new_pos] = data[old_pos]
+				new_data[new_pos + 1] = data[old_pos + 1]
 
 	data = new_data.duplicate()
 
