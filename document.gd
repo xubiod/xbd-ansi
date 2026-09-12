@@ -835,19 +835,6 @@ func make_new(
 func resize(to: Vector2i) -> void:
 	assert(to == to.abs(),  "document size is negative somewhere")
 
-	#background.clear()
-	#for x: int in range(to.x):
-		#for y: int in range(to.y):
-			#set_bg(Vector2i(x, y), 0)
-#
-	#for x: int in range(mini(document_size.x, to.x), maxi(document_size.x, to.x)):
-		#for y: int in range(maxi(to.y, document_size.y)):
-			#foreground.erase_cell(Vector2i(x, y))
-#
-	#for y: int in range(mini(to.y, document_size.y), maxi(to.y, document_size.y)):
-		#for x: int in range(maxi(document_size.x, to.x)):
-			#foreground.erase_cell(Vector2i(x, y))
-
 	var new_data: PackedByteArray = []
 	new_data.resize(to.x * to.y * 2)
 	new_data.fill(0)
