@@ -1031,15 +1031,7 @@ func load_xbin(xbin_path: String) -> void:
 	make_new(Vector2i(width, height), ansifnt, p, sauce)
 
 	if not compressed:
-		# reads two bytes at a time so should NOT be multiplied
-		var code: int
-		var attr: int
-
-		for i: int in range(width * height):
-			code = f.get_8()
-			attr = f.get_8()
-
-			set_fg_bg(Vector2i(i % width, i / width), code, attr & 0xF, (attr >> 4) & 0xF)
+		data = f.get_buffer(width * height * 2).duplicate()
 	else: # is compressed
 		var tiles_written: int = 0
 
