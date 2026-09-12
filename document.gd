@@ -347,10 +347,7 @@ func _pos_to_idx(pos: Vector2i, is_attr: bool = false) -> int:
 func set_bg(canvas_pos: Vector2i, attr: int) -> void:
 	assert(attr >= 0,  "invalid attribute, less than zero")
 	assert(attr <= 15, "invalid attribute, greater than 15")
-	#background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(attr))
 
-	# 0xF0
-	# ((canvas_pos.y * document_size.x) + canvas_pos.x) * 2
 	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0x0F) | ((attr & 0xF) << 4)
 
 	dirty = true
@@ -364,10 +361,9 @@ func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
 	assert(to >= 0,   "invalid code, less than zero")
 	assert(to <= 255, "invalid code, greater than 255")
 
-	#foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(attr))
-
 	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF) | ((attr & 0xF))
 	data[_pos_to_idx(canvas_pos)] = to & 0xFF
+
 	dirty = true
 	drawn_on = true
 
@@ -375,12 +371,6 @@ func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
 func set_fg_attr(canvas_pos: Vector2i, attr: int) -> void:
 	assert(attr >= 0,  "invalid attribute, less than zero")
 	assert(attr <= 15, "invalid attribute, greater than 15")
-
-	#foreground.set_cell(
-		#canvas_pos, 0,
-		#foreground.get_cell_atlas_coords(canvas_pos),
-		#ansifnt.get_alt_id(attr)
-	#)
 
 	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF0) | ((attr & 0xF))
 
@@ -392,12 +382,6 @@ func set_fg_code(canvas_pos: Vector2i, to: int) -> void:
 	assert(to >= 0,   "invalid code, less than zero")
 	assert(to <= 255, "invalid code, greater than 255")
 
-	#foreground.set_cell(
-		#canvas_pos, 0,
-		#ansifnt.code_to_atlas(to),
-		#foreground.get_cell_alternative_tile(canvas_pos)
-	#)
-
 	data[_pos_to_idx(canvas_pos)] = to & 0xFF
 
 	dirty = true
@@ -405,17 +389,14 @@ func set_fg_code(canvas_pos: Vector2i, to: int) -> void:
 
 ## Gets character code at this position.
 func get_fg_code(canvas_pos: Vector2i) -> int:
-	#return ansifnt.atlas_to_code(foreground.get_cell_atlas_coords(canvas_pos))
 	return data[_pos_to_idx(canvas_pos)]
 
 ## Gets attribute for the foreground at this position.
 func get_fg_attr(canvas_pos: Vector2i) -> int:
-	#return clampi(ansifnt.get_shade(foreground.get_cell_alternative_tile(canvas_pos)), 0x0, 0xF)
 	return data[_pos_to_idx(canvas_pos, true)] & 0x0F
 
 ## Gets attribute for the background at this position.
 func get_bg(canvas_pos: Vector2i) -> int:
-	#return ansifnt.get_shade(background.get_cell_alternative_tile(canvas_pos))
 	return (data[_pos_to_idx(canvas_pos, true)] & 0xF0) >> 4
 
 ## Sets background attribute, foreground character, and attribute for this position.
@@ -427,9 +408,6 @@ func set_fg_bg(canvas_pos: Vector2i, to: int, fg_attr: int, bg_attr: int) -> voi
 
 	assert(to >= 0,   "invalid code, less than zero")
 	assert(to <= 255, "invalid code, greater than 255")
-
-	#foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(fg_attr))
-	#background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(bg_attr))
 
 	data[_pos_to_idx(canvas_pos)] = to & 0xFF
 	data[_pos_to_idx(canvas_pos, true)] = ((bg_attr & 0xF) << 4) | (fg_attr & 0xF)
@@ -917,7 +895,7 @@ func render(transparent_bg_idx: int = -1) -> Image:
 			fg		= get_fg_attr(p)
 			code	= get_fg_code(p)
 
-			region = Vector2i(code % 16, code / 16) #foreground.get_cell_atlas_coords(p)
+			region = Vector2i(code % 16, code / 16)
 
 			if bg != transparent_bg_idx:
 				r.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), palette_image.get_pixel(bg, 0))
