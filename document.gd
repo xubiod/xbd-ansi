@@ -874,11 +874,16 @@ func resize(to: Vector2i) -> void:
 
 # HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
 func grow_y_by(amount: int) -> void:
-	for x: int in range(document_size.x):
-		for y: int in range(document_size.y, document_size.y + amount):
-			set_bg(Vector2i(x, y), 0)
+	var new: PackedByteArray = PackedByteArray()
+	new.resize(document_size.x * amount * 2)
+	data.append_array(new)
+
 	dirty = true
 	document_size.y += amount
+
+	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	display_texture.set_image(display_image)
+	update_display_full()
 
 func render(transparent_bg_idx: int = -1) -> Image:
 	var r: Image	= Image.create_empty(int(document_rect.size.x), int(document_rect.size.y), false, Image.FORMAT_RGBA4444)
@@ -1177,8 +1182,9 @@ func load_ansi(
 			keep_going = false
 			continue
 
+		var _last_x: int = cursor_pos.x
 		type(byte)
-		if allow_growing_y and cursor_pos.y == 0 and bytes_parsed > 0:
+		if allow_growing_y and cursor_pos.y == 0 and _last_x > cursor_pos.x and bytes_parsed > 0:
 			grow_y_by(1)
 			cursor_pos.y = document_size.y - 1
 
