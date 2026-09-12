@@ -893,6 +893,7 @@ func render(transparent_bg_idx: int = -1) -> Image:
 			fg		= get_fg_attr(p)
 			code	= get_fg_code(p)
 
+			@warning_ignore("integer_division")
 			region = Vector2i(code % 16, code / 16)
 
 			if bg != transparent_bg_idx:
