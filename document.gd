@@ -299,7 +299,7 @@ func update_display_region(rect: Rect2i) -> void:
 		display_texture.update(display_image)
 	drawn_on = false
 
-## Spare display update. Only renders the given points over again.
+## Sparse display update. Only renders the given points over again.
 func update_display_sparse(points: PackedVector2Array) -> void:
 	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
