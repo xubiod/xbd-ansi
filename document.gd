@@ -265,10 +265,12 @@ func update_character_preview() -> void:
 	@warning_ignore("integer_division")
 	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
 
+## Rerenders entire display texture.
 func update_display_full() -> void:
 	update_display_region(Rect2i(Vector2i.ZERO, document_size))
 
 @warning_ignore_start("integer_division")
+## Rerenders based on given region.
 func update_display_region(rect: Rect2i) -> void:
 	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
@@ -287,10 +289,7 @@ func update_display_region(rect: Rect2i) -> void:
 			fg		= get_fg_attr(p)
 			code	= get_fg_code(p)
 
-			#if fg > 0:
-				#breakpoint
-
-			region = Vector2i(code % 16, code / 16) #foreground.get_cell_atlas_coords(p)
+			region = Vector2i(code % 16, code / 16)
 
 			display_image.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(bg * 16, 0, 0))
 			src.fill(Color.from_rgba8(fg * 16, 0, 0))
@@ -301,7 +300,8 @@ func update_display_region(rect: Rect2i) -> void:
 		display_texture.update(display_image)
 	drawn_on = false
 
-func update_display_partial(points: PackedVector2Array) -> void:
+## Spare display update. Only renders the given points over again.
+func update_display_sparse(points: PackedVector2Array) -> void:
 	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
@@ -318,7 +318,7 @@ func update_display_partial(points: PackedVector2Array) -> void:
 		fg		= get_fg_attr(p)
 		code	= get_fg_code(p)
 
-		region = Vector2i(code % 16, code / 16) #foreground.get_cell_atlas_coords(p)
+		region = Vector2i(code % 16, code / 16)
 
 		display_image.fill_rect(Rect2i(p.x * glyph_size.x, p.y * glyph_size.y, glyph_size.x, glyph_size.y), Color8(bg * 16, 0, 0))
 		src.fill(Color8(fg * 16, 0, 0))
