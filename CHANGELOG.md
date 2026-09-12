@@ -59,3 +59,6 @@ This version also includes a web export. It "works", in quotes as **there's no d
 - Default paint mode is now half-blocks
 - Shape bounding box adjustments
 - About window added with licenses and other credits
+
+## Update 5
+- Internal rework to not use tilemaps (still experimental)

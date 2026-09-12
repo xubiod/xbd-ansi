@@ -65,6 +65,7 @@ const PREVIEW_ALPHA: float = 0.5
 @onready var reference:		Sprite2D		= %Reference
 @onready var char_preview:	TextureRect		= %PreviewFG
 @onready var line_ref:		Line2D			= $LineRef
+@onready var display: 		Sprite2D		= %Display
 
 var history: UndoRedo
 
@@ -72,6 +73,9 @@ var sauce: Sauce
 
 var palette_image:		Image
 var palette_texture:	ImageTexture
+
+var display_image:		Image
+var display_texture:	ImageTexture
 
 var ansifnt: AnsiFont
 var tileset: TileSet
@@ -109,7 +113,10 @@ var ref_pos: Vector2 = Vector2.ZERO
 var ref_snapping: bool = false
 
 var dirty: bool = false : set = _set_dirty
+var drawn_on: bool = false
 var tool_in_use: bool = false
+
+var data: PackedByteArray = []
 
 ## Tools that don't use the character preview at all.
 const HIDE_CHARACTER_PREVIEW: Array[Tool] = [
@@ -201,7 +208,7 @@ func global_point_in_canvas(global: Vector2) -> bool:
 	return document_rect.has_point(to_local(global))
 
 func global_to_canvas_pos(global: Vector2) -> Vector2i:
-	return foreground.local_to_map(to_local(global))
+	return Vector2i((to_local(global) / Vector2(glyph_size)).floor())
 
 func set_palette_to_named(palette_name: String) -> void:
 	assert(Global.named_palettes.has(palette_name), "not a real palette name")
@@ -258,6 +265,71 @@ func update_character_preview() -> void:
 	@warning_ignore("integer_division")
 	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
 
+func update_display_full() -> void:
+	update_display_region(Rect2i(Vector2i.ZERO, document_size))
+
+@warning_ignore_start("integer_division")
+func update_display_region(rect: Rect2i) -> void:
+	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+
+	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
+
+	var p:	Vector2i
+	var bg:	int
+	var fg:	int
+	var code: int
+	var region: Vector2i
+
+	for y: int in range(rect.position.y, rect.position.y + rect.size.y):
+		for x: int in range(rect.position.x, rect.position.x + rect.size.x):
+			p		= Vector2i(x, y)
+			bg		= get_bg(p)
+			fg		= get_fg_attr(p)
+			code	= get_fg_code(p)
+
+			#if fg > 0:
+				#breakpoint
+
+			region = Vector2i(code % 16, code / 16) #foreground.get_cell_atlas_coords(p)
+
+			display_image.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(bg * 16, 0, 0))
+			src.fill(Color.from_rgba8(fg * 16, 0, 0))
+
+			display_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
+
+	if display_texture:
+		display_texture.update(display_image)
+	drawn_on = false
+
+func update_display_partial(points: PackedVector2Array) -> void:
+	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+
+	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
+
+	var p: Vector2i
+	var bg:	int
+	var fg:	int
+	var code: int
+	var region: Vector2i
+
+	for pt: Vector2 in points:
+		p = Vector2i(pt.floor())
+		bg		= get_bg(p)
+		fg		= get_fg_attr(p)
+		code	= get_fg_code(p)
+
+		region = Vector2i(code % 16, code / 16) #foreground.get_cell_atlas_coords(p)
+
+		display_image.fill_rect(Rect2i(p.x * glyph_size.x, p.y * glyph_size.y, glyph_size.x, glyph_size.y), Color8(bg * 16, 0, 0))
+		src.fill(Color8(fg * 16, 0, 0))
+
+		display_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
+
+	if display_texture:
+		display_texture.update(display_image)
+	drawn_on = false
+@warning_ignore_restore("integer_division")
+
 ## Pretend to press Enter. Directly calls [code]_unhandled_key_input[/code] with
 ## an input event.
 func pretend_enter() -> void:
@@ -268,12 +340,21 @@ func pretend_enter() -> void:
 #endregion
 
 #region Tile helpers
+func _pos_to_idx(pos: Vector2i, is_attr: bool = false) -> int:
+	return (((pos.y * document_size.x) + pos.x) * 2) + (1 if is_attr else 0)
+
 ## Sets background attribute for this position.
 func set_bg(canvas_pos: Vector2i, attr: int) -> void:
 	assert(attr >= 0,  "invalid attribute, less than zero")
 	assert(attr <= 15, "invalid attribute, greater than 15")
-	background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(attr))
+	#background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(attr))
+
+	# 0xF0
+	# ((canvas_pos.y * document_size.x) + canvas_pos.x) * 2
+	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0x0F) | ((attr & 0xF) << 4)
+
 	dirty = true
+	drawn_on = true
 
 ## Sets foreground character, and attribute for this position.
 func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
@@ -283,44 +364,59 @@ func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
 	assert(to >= 0,   "invalid code, less than zero")
 	assert(to <= 255, "invalid code, greater than 255")
 
-	foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(attr))
+	#foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(attr))
+
+	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF) | ((attr & 0xF))
+	data[_pos_to_idx(canvas_pos)] = to & 0xFF
 	dirty = true
+	drawn_on = true
 
 ## Sets foreground attribute only for this position.
 func set_fg_attr(canvas_pos: Vector2i, attr: int) -> void:
 	assert(attr >= 0,  "invalid attribute, less than zero")
 	assert(attr <= 15, "invalid attribute, greater than 15")
 
-	foreground.set_cell(
-		canvas_pos, 0,
-		foreground.get_cell_atlas_coords(canvas_pos),
-		ansifnt.get_alt_id(attr)
-	)
+	#foreground.set_cell(
+		#canvas_pos, 0,
+		#foreground.get_cell_atlas_coords(canvas_pos),
+		#ansifnt.get_alt_id(attr)
+	#)
+
+	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF0) | ((attr & 0xF))
+
 	dirty = true
+	drawn_on = true
 
 ## Sets foreground character only for this position.
 func set_fg_code(canvas_pos: Vector2i, to: int) -> void:
 	assert(to >= 0,   "invalid code, less than zero")
 	assert(to <= 255, "invalid code, greater than 255")
 
-	foreground.set_cell(
-		canvas_pos, 0,
-		ansifnt.code_to_atlas(to),
-		foreground.get_cell_alternative_tile(canvas_pos)
-	)
+	#foreground.set_cell(
+		#canvas_pos, 0,
+		#ansifnt.code_to_atlas(to),
+		#foreground.get_cell_alternative_tile(canvas_pos)
+	#)
+
+	data[_pos_to_idx(canvas_pos)] = to & 0xFF
+
 	dirty = true
+	drawn_on = true
 
 ## Gets character code at this position.
 func get_fg_code(canvas_pos: Vector2i) -> int:
-	return ansifnt.atlas_to_code(foreground.get_cell_atlas_coords(canvas_pos))
+	#return ansifnt.atlas_to_code(foreground.get_cell_atlas_coords(canvas_pos))
+	return data[_pos_to_idx(canvas_pos)]
 
 ## Gets attribute for the foreground at this position.
 func get_fg_attr(canvas_pos: Vector2i) -> int:
-	return clampi(ansifnt.get_shade(foreground.get_cell_alternative_tile(canvas_pos)), 0x0, 0xF)
+	#return clampi(ansifnt.get_shade(foreground.get_cell_alternative_tile(canvas_pos)), 0x0, 0xF)
+	return data[_pos_to_idx(canvas_pos, true)] & 0x0F
 
 ## Gets attribute for the background at this position.
 func get_bg(canvas_pos: Vector2i) -> int:
-	return ansifnt.get_shade(background.get_cell_alternative_tile(canvas_pos))
+	#return ansifnt.get_shade(background.get_cell_alternative_tile(canvas_pos))
+	return (data[_pos_to_idx(canvas_pos, true)] & 0xF0) >> 4
 
 ## Sets background attribute, foreground character, and attribute for this position.
 func set_fg_bg(canvas_pos: Vector2i, to: int, fg_attr: int, bg_attr: int) -> void:
@@ -332,9 +428,14 @@ func set_fg_bg(canvas_pos: Vector2i, to: int, fg_attr: int, bg_attr: int) -> voi
 	assert(to >= 0,   "invalid code, less than zero")
 	assert(to <= 255, "invalid code, greater than 255")
 
-	foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(fg_attr))
-	background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(bg_attr))
+	#foreground.set_cell(canvas_pos, 0, ansifnt.code_to_atlas(to), ansifnt.get_alt_id(fg_attr))
+	#background.set_cell(canvas_pos, 1, Vector2i.ZERO, ansifnt.get_alt_id(bg_attr))
+
+	data[_pos_to_idx(canvas_pos)] = to & 0xFF
+	data[_pos_to_idx(canvas_pos, true)] = ((bg_attr & 0xF) << 4) | (fg_attr & 0xF)
+
 	dirty = true
+	drawn_on = true
 
 ## Types a code at the cursor position. Moves the cursor right one, wrapping around
 ## document edges.
@@ -441,6 +542,10 @@ func paint_with_selected(global_pt: Vector2) -> void:
 #endregion
 
 func _ready() -> void:
+	display_image = Image.create_empty(1, 1, false, Image.FORMAT_LA8)
+	display_texture = ImageTexture.create_from_image(display_image)
+	display.texture = display_texture
+
 	reference.modulate.a = REF_IMAGE_DEFAULT_ALPHA
 
 	palette_image = Image.create_empty(16, 1, false, Image.FORMAT_RGB8)
@@ -495,6 +600,10 @@ func _process(_delta: float) -> void:
 	line_ref.set_point_position(1, Vector2(last_mouse_canvas_pos))
 
 	RenderingServer.global_shader_parameter_set(&"CURSOR_HEIGHT", Global.SHADER_CURSOR_HEIGHT if current_tool == Tool.TYPING else 1.)
+
+	# HACK still feels ick
+	if drawn_on:
+		update_display_full()
 
 func _unhandled_input(_event: InputEvent) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
@@ -711,8 +820,8 @@ func make_new(
 
 	history = UndoRedo.new()
 
-	background.clear()
-	foreground.clear()
+	#background.clear()
+	#foreground.clear()
 
 	update_font_tileset()
 
@@ -734,6 +843,10 @@ func make_new(
 
 	RenderingServer.global_shader_parameter_set(&"CHAR_HEIGHT", ansifnt.font_height)
 
+	data.clear()
+	data.resize(document_size.x * document_size.y * 2)
+	data.fill(0)
+
 	for x: int in range(document_size.x):
 		for y: int in range(document_size.y):
 			set_bg(Vector2i(x, y), 0)
@@ -743,21 +856,41 @@ func make_new(
 func resize(to: Vector2i) -> void:
 	assert(to == to.abs(),  "document size is negative somewhere")
 
-	background.clear()
-	for x: int in range(to.x):
-		for y: int in range(to.y):
-			set_bg(Vector2i(x, y), 0)
+	#background.clear()
+	#for x: int in range(to.x):
+		#for y: int in range(to.y):
+			#set_bg(Vector2i(x, y), 0)
+#
+	#for x: int in range(mini(document_size.x, to.x), maxi(document_size.x, to.x)):
+		#for y: int in range(maxi(to.y, document_size.y)):
+			#foreground.erase_cell(Vector2i(x, y))
+#
+	#for y: int in range(mini(to.y, document_size.y), maxi(to.y, document_size.y)):
+		#for x: int in range(maxi(document_size.x, to.x)):
+			#foreground.erase_cell(Vector2i(x, y))
 
-	for x: int in range(mini(document_size.x, to.x), maxi(document_size.x, to.x)):
-		for y: int in range(maxi(to.y, document_size.y)):
-			foreground.erase_cell(Vector2i(x, y))
+	var new_data: PackedByteArray = []
+	new_data.resize(to.x * to.y * 2)
+	new_data.fill(0)
 
-	for y: int in range(mini(to.y, document_size.y), maxi(to.y, document_size.y)):
-		for x: int in range(maxi(document_size.x, to.x)):
-			foreground.erase_cell(Vector2i(x, y))
+	var old_pos: int
+	var new_pos: int
+
+	for fillin_y: int in range(to.y):
+		for fillin_x: int in range(mini(document_size.x, to.x)):
+			old_pos = (((fillin_y * document_size.x) + fillin_x) * 2)
+			new_pos = (((fillin_y * to.x) + fillin_x) * 2)
+			new_data[new_pos] = data[old_pos]
+			new_data[new_pos + 1] = data[old_pos + 1]
+
+	data = new_data.duplicate()
 
 	dirty = true
 	document_size = to
+
+	display_image.crop(to.x * glyph_size.x, to.y * glyph_size.y)
+	display_texture.set_image(display_image)
+	update_display_full()
 
 # HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
 func grow_y_by(amount: int) -> void:
@@ -774,15 +907,17 @@ func render(transparent_bg_idx: int = -1) -> Image:
 	var p:	Vector2i
 	var bg:	int
 	var fg:	int
+	var code: int
 	var region: Vector2i
 
 	for y: int in range(document_size.y):
 		for x: int in range(document_size.x):
-			p	= Vector2i(x, y)
-			bg	= get_bg(p)
-			fg	= get_fg_attr(p)
+			p		= Vector2i(x, y)
+			bg		= get_bg(p)
+			fg		= get_fg_attr(p)
+			code	= get_fg_code(p)
 
-			region = foreground.get_cell_atlas_coords(p)
+			region = Vector2i(code % 16, code / 16) #foreground.get_cell_atlas_coords(p)
 
 			if bg != transparent_bg_idx:
 				r.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), palette_image.get_pixel(bg, 0))
@@ -1015,7 +1150,7 @@ func load_ansi(
 	else:
 		resize(Vector2i(sauce.tinfo[0],sauce.tinfo[1]))
 
-	foreground.clear()
+	#foreground.clear()
 
 	var keep_going:	bool = true
 
