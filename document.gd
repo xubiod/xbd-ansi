@@ -57,13 +57,13 @@ const REF_IMAGE_DEFAULT_ALPHA: float = 0.5
 
 const PREVIEW_ALPHA: float = 0.5
 
-@onready var viewport:		Viewport		= get_viewport()
+@onready var viewport:		Viewport	= get_viewport()
 
-@onready var cursor_sprite:	Sprite2D		= $Cursor
-@onready var reference:		Sprite2D		= %Reference
-@onready var char_preview:	TextureRect		= %PreviewFG
-@onready var line_ref:		Line2D			= $LineRef
-@onready var display: 		Sprite2D		= %Display
+@onready var cursor_sprite:	Sprite2D	= $Cursor
+@onready var reference:		Sprite2D	= %Reference
+@onready var char_preview:	TextureRect	= %PreviewFG
+@onready var line_ref:		Line2D		= $LineRef
+@onready var display: 		Sprite2D	= %Display
 
 var history: UndoRedo
 
