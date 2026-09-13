@@ -267,7 +267,6 @@ func update_character_preview() -> void:
 
 ## Rerenders based on given region. If none is given, it's the entire document.
 func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void:
-
 	if document_size.x * glyph_size.x > 0:
 		display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
@@ -783,10 +782,7 @@ func make_new(
 	ansifnt = font
 
 	history = UndoRedo.new()
-
-	#background.clear()
-	#foreground.clear()
-
+	
 	update_font_tileset()
 
 	fill_palette_image(palette)
