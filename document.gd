@@ -384,8 +384,8 @@ func get_bg(canvas_pos: Vector2i) -> int:
 
 ## Sets background attribute, foreground character, and attribute for this position.
 func set_fg_bg(canvas_pos: Vector2i, to: int, fg_attr: int, bg_attr: int) -> void:
-	assert((fg_attr % 0xF) == fg_attr, "invalid fg attribute, outside [0..15]")
-	assert((bg_attr % 0xF) == bg_attr, "invalid bg attribute, outside [0..15]")
+	assert((fg_attr & 0xF) == fg_attr, "invalid fg attribute, outside [0..15]")
+	assert((bg_attr & 0xF) == bg_attr, "invalid bg attribute, outside [0..15]")
 
 	assert((to & 0xFF) == to, "invalid code, outside [0..255]")
 
