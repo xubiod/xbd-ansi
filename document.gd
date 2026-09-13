@@ -230,7 +230,8 @@ func update_font_tileset() -> void:
 
 	update_character_preview()
 
-	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	if document_size.x * glyph_size.x > 0:
+		display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 	display_texture.set_image(display_image)
 	update_display()
 
@@ -267,7 +268,8 @@ func update_character_preview() -> void:
 @warning_ignore_start("integer_division")
 ## Rerenders based on given region. If none is given, it's the entire document.
 func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void:
-	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	if document_size.x * glyph_size.x > 0:
+		display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
 
