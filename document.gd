@@ -232,7 +232,7 @@ func update_font_tileset() -> void:
 
 	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 	display_texture.set_image(display_image)
-	update_display_full()
+	update_display()
 
 	font_updated.emit()
 
@@ -264,13 +264,9 @@ func update_character_preview() -> void:
 	@warning_ignore("integer_division")
 	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
 
-## Rerenders entire display texture.
-func update_display_full() -> void:
-	update_display_region(Rect2i(Vector2i.ZERO, document_size))
-
 @warning_ignore_start("integer_division")
-## Rerenders based on given region.
-func update_display_region(rect: Rect2i) -> void:
+## Rerenders based on given region. If none is given, it's the entire document.
+func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void:
 	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
@@ -563,7 +559,7 @@ func _process(_delta: float) -> void:
 
 	# HACK still feels ick
 	if drawn_on:
-		update_display_full()
+		update_display()
 
 func _unhandled_input(_event: InputEvent) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
@@ -844,7 +840,7 @@ func resize(to: Vector2i) -> void:
 
 	display_image.crop(to.x * glyph_size.x, to.y * glyph_size.y)
 	display_texture.set_image(display_image)
-	update_display_full()
+	update_display()
 
 # HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
 func grow_y_by(amount: int) -> void:
@@ -857,7 +853,7 @@ func grow_y_by(amount: int) -> void:
 
 	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 	display_texture.set_image(display_image)
-	update_display_full()
+	update_display()
 
 func render(transparent_bg_idx: int = -1) -> Image:
 	var r: Image	= Image.create_empty(int(document_rect.size.x), int(document_rect.size.y), false, Image.FORMAT_RGBA4444)
