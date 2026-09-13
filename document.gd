@@ -782,7 +782,7 @@ func make_new(
 	ansifnt = font
 
 	history = UndoRedo.new()
-	
+
 	update_font_tileset()
 
 	fill_palette_image(palette)
