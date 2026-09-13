@@ -276,22 +276,18 @@ func update_display_region(rect: Rect2i) -> void:
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
 
 	var p:	Vector2i
-	var bg:	int
-	var fg:	int
 	var code: int
 	var region: Vector2i
 
 	for y: int in range(rect.position.y, rect.position.y + rect.size.y):
 		for x: int in range(rect.position.x, rect.position.x + rect.size.x):
 			p		= Vector2i(x, y)
-			bg		= get_bg(p)
-			fg		= get_fg_attr(p)
 			code	= get_fg_code(p)
 
 			region = Vector2i(code % 16, code / 16)
 
-			display_image.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(bg * 16, 0, 0))
-			src.fill(Color.from_rgba8(fg * 16, 0, 0))
+			display_image.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(get_bg(p) * 16, 0, 0))
+			src.fill(Color.from_rgba8(get_fg_attr(p) * 16, 0, 0))
 
 			display_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
 
@@ -306,21 +302,17 @@ func update_display_sparse(points: PackedVector2Array) -> void:
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
 
 	var p: Vector2i
-	var bg:	int
-	var fg:	int
 	var code: int
 	var region: Vector2i
 
 	for pt: Vector2 in points:
 		p = Vector2i(pt.floor())
-		bg		= get_bg(p)
-		fg		= get_fg_attr(p)
 		code	= get_fg_code(p)
 
 		region = Vector2i(code % 16, code / 16)
 
-		display_image.fill_rect(Rect2i(p.x * glyph_size.x, p.y * glyph_size.y, glyph_size.x, glyph_size.y), Color8(bg * 16, 0, 0))
-		src.fill(Color8(fg * 16, 0, 0))
+		display_image.fill_rect(Rect2i(p.x * glyph_size.x, p.y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(get_bg(p) * 16, 0, 0))
+		src.fill(Color.from_rgba8(get_fg_attr(p) * 16, 0, 0))
 
 		display_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
 
@@ -344,8 +336,7 @@ func _pos_to_idx(pos: Vector2i, is_attr: bool = false) -> int:
 
 ## Sets background attribute for this position.
 func set_bg(canvas_pos: Vector2i, attr: int) -> void:
-	assert(attr >= 0,  "invalid attribute, less than zero")
-	assert(attr <= 15, "invalid attribute, greater than 15")
+	assert((attr & 0xF) == attr, "invalid attribute, outside [0..15]")
 
 	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0x0F) | ((attr & 0xF) << 4)
 
@@ -354,22 +345,18 @@ func set_bg(canvas_pos: Vector2i, attr: int) -> void:
 
 ## Sets foreground character, and attribute for this position.
 func set_fg(canvas_pos: Vector2i, to: int, attr: int) -> void:
-	assert(attr >= 0,  "invalid attribute, less than zero")
-	assert(attr <= 15, "invalid attribute, greater than 15")
+	assert((attr & 0xF) == attr, "invalid attribute, outside [0..15]")
+	assert((to & 0xFF) == to,    "invalid code, outside [0..255]")
 
-	assert(to >= 0,   "invalid code, less than zero")
-	assert(to <= 255, "invalid code, greater than 255")
-
-	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF) | ((attr & 0xF))
 	data[_pos_to_idx(canvas_pos)] = to & 0xFF
+	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF) | ((attr & 0xF))
 
 	dirty = true
 	drawn_on = true
 
 ## Sets foreground attribute only for this position.
 func set_fg_attr(canvas_pos: Vector2i, attr: int) -> void:
-	assert(attr >= 0,  "invalid attribute, less than zero")
-	assert(attr <= 15, "invalid attribute, greater than 15")
+	assert((attr & 0xF) == attr, "invalid attribute, outside [0..15]")
 
 	data[_pos_to_idx(canvas_pos, true)] = (data[_pos_to_idx(canvas_pos, true)] & 0xF0) | ((attr & 0xF))
 
@@ -378,8 +365,7 @@ func set_fg_attr(canvas_pos: Vector2i, attr: int) -> void:
 
 ## Sets foreground character only for this position.
 func set_fg_code(canvas_pos: Vector2i, to: int) -> void:
-	assert(to >= 0,   "invalid code, less than zero")
-	assert(to <= 255, "invalid code, greater than 255")
+	assert((to & 0xFF) == to, "invalid code, outside [0..255]")
 
 	data[_pos_to_idx(canvas_pos)] = to & 0xFF
 
@@ -400,13 +386,10 @@ func get_bg(canvas_pos: Vector2i) -> int:
 
 ## Sets background attribute, foreground character, and attribute for this position.
 func set_fg_bg(canvas_pos: Vector2i, to: int, fg_attr: int, bg_attr: int) -> void:
-	assert(fg_attr >= 0,  "invalid fg attribute, less than zero")
-	assert(fg_attr <= 15, "invalid fg attribute, greater than 15")
-	assert(bg_attr >= 0,  "invalid bg attribute, less than zero")
-	assert(bg_attr <= 15, "invalid bg attribute, greater than 15")
+	assert((fg_attr % 0xF) == fg_attr, "invalid fg attribute, outside [0..15]")
+	assert((bg_attr % 0xF) == bg_attr, "invalid bg attribute, outside [0..15]")
 
-	assert(to >= 0,   "invalid code, less than zero")
-	assert(to <= 255, "invalid code, greater than 255")
+	assert((to & 0xFF) == to, "invalid code, outside [0..255]")
 
 	data[_pos_to_idx(canvas_pos)] = to & 0xFF
 	data[_pos_to_idx(canvas_pos, true)] = ((bg_attr & 0xF) << 4) | (fg_attr & 0xF)
@@ -435,11 +418,11 @@ func make_line(from: Vector2, to: Vector2) -> void:
 		paint_with_selected(from)
 		return
 
-	var dx:  float =  floorf(absf(to.x - from.x))
-	var dy:  float = -floorf(absf(to.y - from.y))
+	var dx: float =  floorf(absf(to.x - from.x))
+	var dy: float = -floorf(absf(to.y - from.y))
 
-	var sx:  float = 1.0 if from.x < to.x else -1.0
-	var sy:  float = 1.0 if from.y < to.y else -1.0
+	var sx: float = 1.0 if from.x < to.x else -1.0
+	var sy: float = 1.0 if from.y < to.y else -1.0
 
 	var err: float = dx + dy
 	var e2: float
