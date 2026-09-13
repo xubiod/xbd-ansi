@@ -261,13 +261,13 @@ func update_palette() -> void:
 	palette_texture.update(palette_image)
 	palette_updated.emit()
 
+@warning_ignore_start("integer_division")
 func update_character_preview() -> void:
-	@warning_ignore("integer_division")
 	(char_preview.texture as AtlasTexture).region = Rect2(Vector2(selected_code % 16, selected_code / 16) * Vector2(glyph_size), glyph_size)
 
-@warning_ignore_start("integer_division")
 ## Rerenders based on given region. If none is given, it's the entire document.
 func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void:
+
 	if document_size.x * glyph_size.x > 0:
 		display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
