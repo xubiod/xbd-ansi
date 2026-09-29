@@ -586,8 +586,9 @@ func _unhandled_input(_event: InputEvent) -> void:
 				Tool.TYPING:
 					cursor_pos = clamped / Vector2(glyph_size)
 				Tool.DRAWING:
-					make_line(last_mouse_canvas_pos, clamped)
-					if last_mouse_canvas_pos == clamped:
+					if not Input.is_action_just_pressed(&"tool_interaction"):
+						make_line(last_mouse_canvas_pos, clamped)
+					elif last_mouse_canvas_pos == clamped:
 						paint_with_selected(last_mouse_canvas_pos)
 				Tool.PICKER:
 					var where: Vector2i = global_to_canvas_pos(clamped)

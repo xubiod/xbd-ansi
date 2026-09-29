@@ -63,3 +63,4 @@ This version also includes a web export. It "works", in quotes as **there's no d
 ## Update 5
 - Internal rework to not use tilemaps (still experimental)
 - Ellipse calculations optimized
+- Pencil tool tablet fix
