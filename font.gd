@@ -121,6 +121,9 @@ func get_alt_id(shade: int) -> int:
 
 func get_shade(alt_id: int) -> int:
 	return alt_id - 16
+
+func code_is_blocky(code: int) -> bool:
+	return code == empty_block or code == full_block or code == top_block or code == bottom_block
 #endregion
 
 func _fill_font_data() -> void:

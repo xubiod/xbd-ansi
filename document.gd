@@ -567,7 +567,38 @@ func fillbucket(_start_pt: Vector2) -> void:
 		return fillbucket_halfblock(_start_pt)
 	pass
 
-func fillbucket_halfblock(_start_pt: Vector2) -> void:
+func fillbucket_halfblock(start_pt: Vector2) -> void:
+	var start_tile: Vector2i = global_to_canvas_pos(start_pt)
+	var start_code: int = get_fg_code(start_tile)
+
+	if not ansifnt.code_is_blocky(start_code):
+		return
+
+	var _top_half: bool	= (start_pt.y - float(start_tile.y * glyph_size.y)) < (glyph_size.y / 2.)
+	var replace_attribute: int = get_fg_attr(start_tile) if (start_code == ansifnt.top_block and _top_half) else get_bg(start_tile)
+
+	var halfblock_stack: Array[Vector2i] = []
+	halfblock_stack.push_back(Vector2i(start_tile.x, start_tile.y*2 + (1 if _top_half else 0)))
+
+	while not halfblock_stack.is_empty():
+		var halfpos: Vector2i = halfblock_stack.pop_back()
+		var fullpos: Vector2i = Vector2i(halfpos.x, halfpos.y/2)
+		var code: int = get_fg_code(fullpos)
+		# var fg_attr: int = get_fg_attr(pos)
+		# var bg_attr: int = get_bg(pos)
+
+		if ansifnt.code_is_blocky(code):
+			# TODO: check for attribute validity n shit
+			if halfpos.x > 0:
+				halfblock_stack.push_back(Vector2i(halfpos.x-1, halfpos.y))
+			if halfpos.y > 0:
+				halfblock_stack.push_back(Vector2i(halfpos.x, halfpos.y-1))
+			if halfpos.x < document_size.x - 1:
+				halfblock_stack.push_back(Vector2i(halfpos.x+1, halfpos.y))
+			if halfpos.x < document_size.y*2 - 1:
+				halfblock_stack.push_back(Vector2i(halfpos.x, halfpos.y+1))
+			
+
 	pass
 
 func _unhandled_input(_event: InputEvent) -> void:
