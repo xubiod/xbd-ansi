@@ -562,6 +562,9 @@ func _process(_delta: float) -> void:
 	if drawn_on:
 		update_display()
 
+func fillbucket(_global_pt: Vector2) -> void:
+	pass
+
 func _unhandled_input(_event: InputEvent) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
 	var clamped: Vector2 = global_mouse_pos.clamp(Vector2.ZERO, Vector2(document_rect.size))
@@ -580,6 +583,12 @@ func _unhandled_input(_event: InputEvent) -> void:
 				# bodge-y?
 				rectangle_area.position	= Vector2(start_canvas_pos.min(clamped))
 				rectangle_area.size = Vector2.ZERO
+
+			match current_tool:
+				Tool.FILLBUCKET:
+					fillbucket(global_mouse_pos)
+				_:
+					pass
 
 		if Input.is_action_pressed(&"tool_interaction"):
 			match current_tool:
