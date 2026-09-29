@@ -562,7 +562,12 @@ func _process(_delta: float) -> void:
 	if drawn_on:
 		update_display()
 
-func fillbucket(_global_pt: Vector2) -> void:
+func fillbucket(_start_pt: Vector2) -> void:
+	if current_paint_mode == PaintMode.HALFBLOCK:
+		return fillbucket_halfblock(_start_pt)
+	pass
+
+func fillbucket_halfblock(_start_pt: Vector2) -> void:
 	pass
 
 func _unhandled_input(_event: InputEvent) -> void:
