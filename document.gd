@@ -607,7 +607,9 @@ func fillbucket_halfblock(start_pt: Vector2) -> void:
 
 		if ansifnt.code_is_blocky(code):
 			# TODO: check for attribute validity n shit
-			if (fg_attr == replace_attribute or bg_attr == replace_attribute) and set_halfblock(halfpos):
+			if ((fg_attr == replace_attribute and ((code == ansifnt.top_block and halfpos.y%2 == 0) or (code == ansifnt.bottom_block and halfpos.y%2 == 1) or code == ansifnt.full_block or code == ansifnt.empty_block)) or \
+				(bg_attr == replace_attribute and ((code == ansifnt.bottom_block and halfpos.y%2 == 0) or (code == ansifnt.top_block and halfpos.y%2 == 1) or code == ansifnt.full_block or code == ansifnt.empty_block))) \
+				and set_halfblock(halfpos):
 				# set_halfblock(halfpos)
 
 				var p: Vector2i
