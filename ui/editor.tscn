@@ -463,7 +463,6 @@ tooltip_text = "Fillbucket
 
 Unimplemented."
 mouse_default_cursor_shape = 2
-disabled = true
 toggle_mode = true
 button_group = ExtResource("4_q0a35")
 icon = ExtResource("14_l3ljj")

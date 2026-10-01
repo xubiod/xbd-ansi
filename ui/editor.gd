@@ -61,7 +61,8 @@ var last_transparent:	int		= -1
 	Document.Tool.RECT_LINE:	%ToolRectBoth,
 	Document.Tool.ELLIPSE_LINE:	%ToolEllipseBoth,
 	Document.Tool.ELLIPSE_FILL:	%ToolEllipseBoth,
-	Document.Tool.REFERENCE:	%ToolReference
+	Document.Tool.REFERENCE:	%ToolReference,
+	Document.Tool.FILLBUCKET:	%ToolFillBucket
 }
 
 var tool_fill: bool = false
@@ -69,7 +70,8 @@ var tool_fill: bool = false
 const TOOLS_THAT_DISABLE_PAINT_MODE: Array[Document.Tool] = [
 	Document.Tool.TYPING,
 	Document.Tool.PICKER,
-	Document.Tool.REFERENCE
+	Document.Tool.REFERENCE,
+	Document.Tool.FILLBUCKET
 ]
 
 const TOOLS_RECTANGLE:	Array[Document.Tool] = [Document.Tool.RECT_LINE,	Document.Tool.RECT_FILL]
@@ -118,6 +120,7 @@ func _ready() -> void:
 	%ToolPicker.pressed.connect(	_update_tool.bind(Document.Tool.PICKER))
 	%ToolLine.pressed.connect(		_update_tool.bind(Document.Tool.LINE))
 	%ToolReference.pressed.connect(	_update_tool.bind(Document.Tool.REFERENCE))
+	%ToolFillBucket.pressed.connect(_update_tool.bind(Document.Tool.FILLBUCKET))
 
 	%ToolRectBoth.pressed.connect(		_update_rect_tool)
 	%ToolEllipseBoth.pressed.connect(	_update_ellipse_tool)

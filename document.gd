@@ -593,25 +593,37 @@ func fillbucket_halfblock(start_pt: Vector2) -> void:
 	var halfblock_stack: Array[Vector2i] = []
 	halfblock_stack.push_back(Vector2i(start_tile.x, start_tile.y*2 + (1 if _top_half else 0)))
 
-	while not halfblock_stack.is_empty():
+	while halfblock_stack != null and not halfblock_stack.is_empty():
 		var halfpos: Vector2i = halfblock_stack.pop_back()
+		@warning_ignore("integer_division")
 		var fullpos: Vector2i = Vector2i(halfpos.x, halfpos.y/2)
+
+		if fullpos.y >= document_size.y:
+			continue
+
 		var code: int = get_fg_code(fullpos)
-		# var fg_attr: int = get_fg_attr(pos)
-		# var bg_attr: int = get_bg(pos)
+		var fg_attr: int = get_fg_attr(fullpos)
+		var bg_attr: int = get_bg(fullpos)
 
 		if ansifnt.code_is_blocky(code):
 			# TODO: check for attribute validity n shit
-			if halfpos.x > 0:
-				halfblock_stack.push_back(Vector2i(halfpos.x-1, halfpos.y))
-			if halfpos.y > 0:
-				halfblock_stack.push_back(Vector2i(halfpos.x, halfpos.y-1))
-			if halfpos.x < document_size.x - 1:
-				halfblock_stack.push_back(Vector2i(halfpos.x+1, halfpos.y))
-			if halfpos.x < document_size.y*2 - 1:
-				halfblock_stack.push_back(Vector2i(halfpos.x, halfpos.y+1))
-			
+			if (fg_attr == replace_attribute or bg_attr == replace_attribute) and set_halfblock(halfpos):
+				# set_halfblock(halfpos)
 
+				var p: Vector2i
+
+				if halfpos.x > 0:
+					p = Vector2i(halfpos.x-1, halfpos.y)
+					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+				if halfpos.y > 0:
+					p = Vector2i(halfpos.x, halfpos.y-1)
+					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+				if halfpos.x < document_size.x - 1:
+					p = Vector2i(halfpos.x+1, halfpos.y)
+					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+				if halfpos.x < document_size.y*2 - 1:
+					p = Vector2i(halfpos.x, halfpos.y+1)
+					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
 	pass
 
 func _unhandled_input(_event: InputEvent) -> void:
@@ -635,7 +647,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 
 			match current_tool:
 				Tool.FILLBUCKET:
-					fillbucket(global_mouse_pos)
+					fillbucket_halfblock(global_mouse_pos)
 				_:
 					pass
 
@@ -661,6 +673,9 @@ func _unhandled_input(_event: InputEvent) -> void:
 					pass
 				Tool.RECT_LINE, Tool.RECT_FILL, Tool.ELLIPSE_LINE, Tool.ELLIPSE_FILL, Tool.REFERENCE:
 					# handled outside of canvas
+					pass
+				Tool.FILLBUCKET:
+					# see above this conditional
 					pass
 				_:
 					push_error("not a tool")
@@ -868,6 +883,7 @@ func make_new(
 
 	for x: int in range(document_size.x):
 		for y: int in range(document_size.y):
+			set_fg_code(Vector2i(x,y), ansifnt.empty_block)
 			set_bg(Vector2i(x, y), 0)
 
 	dirty = false
