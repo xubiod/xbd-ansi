@@ -453,28 +453,9 @@ func paint_with_selected(global_pt: Vector2) -> void:
 
 	match current_paint_mode:
 		PaintMode.HALFBLOCK:
-			var _top_half: bool	= (global_pt.y - float(tile.y * glyph_size.y)) < (glyph_size.y / 2.)
+			#var _top_half: bool	= (global_pt.y - float(tile.y * glyph_size.y)) < (glyph_size.y / 2.)
 
-			match existing_fg_code:
-				ansifnt.top_block:
-					if _top_half and existing_fg_attr != selected_fg:
-						set_fg_attr(tile, selected_fg)
-					elif not _top_half:
-						set_fg_bg(tile, ansifnt.bottom_block, selected_fg, existing_fg_attr)
-
-				ansifnt.bottom_block:
-					if not _top_half and existing_fg_attr != selected_fg:
-						set_fg_attr(tile, selected_fg)
-					elif _top_half:
-						set_fg_bg(tile, ansifnt.top_block, selected_fg, existing_fg_attr)
-
-				ansifnt.full_block:
-					if existing_fg_attr != selected_fg:
-						var _new_code: int	= ansifnt.top_block if _top_half else ansifnt.bottom_block
-						set_fg_bg(tile, _new_code, selected_fg, existing_fg_attr)
-
-				ansifnt.empty_block, _:
-					set_fg_bg(tile, ansifnt.top_block if _top_half else ansifnt.bottom_block, selected_fg, existing_bg)
+			set_halfblock(Vector2i(global_pt.x/glyph_size.x, global_pt.y/(glyph_size.y/2)))
 
 		PaintMode.CHARACTER:
 			if not (existing_bg == selected_bg and existing_fg_attr == selected_fg and existing_fg_code == selected_code):
@@ -562,10 +543,42 @@ func _process(_delta: float) -> void:
 	if drawn_on:
 		update_display()
 
-func fillbucket(_start_pt: Vector2) -> void:
-	if current_paint_mode == PaintMode.HALFBLOCK:
-		return fillbucket_halfblock(_start_pt)
-	pass
+func set_halfblock(halfblock_pos: Vector2i) -> bool:
+	var tile: Vector2i = Vector2i(halfblock_pos.x, halfblock_pos.y/2)
+
+	var existing_fg_code:	int = get_fg_code(tile)
+	var existing_fg_attr:	int = get_fg_attr(tile)
+	var existing_bg:		int = get_bg(tile)
+
+	var _top_half: bool	= halfblock_pos.y%2 == 0
+
+	match existing_fg_code:
+		ansifnt.top_block:
+			if _top_half and existing_fg_attr != selected_fg:
+				set_fg_attr(tile, selected_fg)
+				return true
+			elif not _top_half:
+				set_fg_bg(tile, ansifnt.bottom_block, selected_fg, existing_fg_attr)
+				return true
+
+		ansifnt.bottom_block:
+			if not _top_half and existing_fg_attr != selected_fg:
+				set_fg_attr(tile, selected_fg)
+				return true
+			elif _top_half:
+				set_fg_bg(tile, ansifnt.top_block, selected_fg, existing_fg_attr)
+				return true
+
+		ansifnt.full_block:
+			if existing_fg_attr != selected_fg:
+				var _new_code: int	= ansifnt.top_block if _top_half else ansifnt.bottom_block
+				set_fg_bg(tile, _new_code, selected_fg, existing_fg_attr)
+				return true
+
+		ansifnt.empty_block, _:
+			set_fg_bg(tile, ansifnt.top_block if _top_half else ansifnt.bottom_block, selected_fg, existing_bg)
+			return true
+	return false
 
 func fillbucket_halfblock(start_pt: Vector2) -> void:
 	var start_tile: Vector2i = global_to_canvas_pos(start_pt)
