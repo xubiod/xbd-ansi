@@ -592,9 +592,11 @@ func fillbucket_halfblock(start_pt: Vector2) -> void:
 
 	var halfblock_stack: Array[Vector2i] = []
 	halfblock_stack.push_back(Vector2i(start_tile.x, start_tile.y*2 + (1 if _top_half else 0)))
+	var visited: Array[Vector2i] = []
 
 	while halfblock_stack != null and not halfblock_stack.is_empty():
 		var halfpos: Vector2i = halfblock_stack.pop_back()
+		visited.push_back(halfpos)
 		@warning_ignore("integer_division")
 		var fullpos: Vector2i = Vector2i(halfpos.x, halfpos.y/2)
 
@@ -616,16 +618,16 @@ func fillbucket_halfblock(start_pt: Vector2) -> void:
 
 				if halfpos.x > 0:
 					p = Vector2i(halfpos.x-1, halfpos.y)
-					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+					if not visited.has(p): halfblock_stack.push_back(p)
 				if halfpos.y > 0:
 					p = Vector2i(halfpos.x, halfpos.y-1)
-					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+					if not visited.has(p): halfblock_stack.push_back(p)
 				if halfpos.x < document_size.x - 1:
 					p = Vector2i(halfpos.x+1, halfpos.y)
-					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+					if not visited.has(p): halfblock_stack.push_back(p)
 				if halfpos.x < document_size.y*2 - 1:
 					p = Vector2i(halfpos.x, halfpos.y+1)
-					if not halfblock_stack.has(p): halfblock_stack.push_back(p)
+					if not visited.has(p): halfblock_stack.push_back(p)
 	pass
 
 func _unhandled_input(_event: InputEvent) -> void:
