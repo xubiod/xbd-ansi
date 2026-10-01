@@ -628,7 +628,6 @@ func fillbucket_halfblock(start_pt: Vector2) -> void:
 				if halfpos.x < document_size.y*2 - 1:
 					p = Vector2i(halfpos.x, halfpos.y+1)
 					if not visited.has(p): halfblock_stack.push_back(p)
-	pass
 
 func _unhandled_input(_event: InputEvent) -> void:
 	var global_mouse_pos: Vector2 = get_global_mouse_position()
