@@ -455,7 +455,8 @@ func paint_with_selected(global_pt: Vector2) -> void:
 		PaintMode.HALFBLOCK:
 			#var _top_half: bool	= (global_pt.y - float(tile.y * glyph_size.y)) < (glyph_size.y / 2.)
 
-			set_halfblock(Vector2i(global_pt.x/glyph_size.x, global_pt.y/(glyph_size.y/2)))
+			@warning_ignore("integer_division")
+			set_halfblock(Vector2(global_pt.x/glyph_size.x, global_pt.y/(glyph_size.y/2)))
 
 		PaintMode.CHARACTER:
 			if not (existing_bg == selected_bg and existing_fg_attr == selected_fg and existing_fg_code == selected_code):
@@ -544,6 +545,7 @@ func _process(_delta: float) -> void:
 		update_display()
 
 func set_halfblock(halfblock_pos: Vector2i) -> bool:
+	@warning_ignore("integer_division")
 	var tile: Vector2i = Vector2i(halfblock_pos.x, halfblock_pos.y/2)
 
 	var existing_fg_code:	int = get_fg_code(tile)
