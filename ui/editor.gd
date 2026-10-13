@@ -49,7 +49,8 @@ var last_transparent:	int		= -1
 	Document.Tool.ELLIPSE_LINE:	%CtrlHintShape,
 	Document.Tool.ELLIPSE_FILL:	%CtrlHintShape,
 	Document.Tool.PICKER:		%CtrlHintPick,
-	Document.Tool.REFERENCE:	%CtrlHintReferenceImg
+	Document.Tool.REFERENCE:	%CtrlHintReferenceImg,
+	Document.Tool.FILLBUCKET:	%CtrlHintFillBucket
 }
 
 @onready var tool_to_btn: Dictionary[Document.Tool, BaseButton] = {

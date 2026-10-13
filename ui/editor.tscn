@@ -555,6 +555,15 @@ Hold SHIFT to snap to character grid."
 horizontal_alignment = 2
 vertical_alignment = 2
 
+[node name="CtrlHintFillBucket" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=1109962805]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Click with LMB to fill in a region."
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="CtrlHintGeneral" type="Label" parent="Camera/UI/MainContainer/HBoxContainer/ThePit/ControlHints/PanelContainer/MarginContainer/VBoxContainer" unique_id=1928351332]
 layout_mode = 2
 size_flags_horizontal = 8
