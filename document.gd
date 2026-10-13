@@ -63,7 +63,8 @@ const PREVIEW_ALPHA: float = 0.5
 @onready var reference:		Sprite2D	= %Reference
 @onready var char_preview:	TextureRect	= %PreviewFG
 @onready var line_ref:		Line2D		= $LineRef
-@onready var display: 		Sprite2D	= %Display
+@onready var display_fg: 	Sprite2D	= %DisplayFG
+@onready var display_bg: 	Sprite2D	= %DisplayBG
 
 var history: UndoRedo
 
@@ -72,8 +73,11 @@ var sauce: Sauce
 var palette_image:		Image
 var palette_texture:	ImageTexture
 
-var display_image:		Image
-var display_texture:	ImageTexture
+var display_fg_image:	Image
+var display_fg_texture:	ImageTexture
+
+var display_bg_image:	Image
+var display_bg_texture:	ImageTexture
 
 var ansifnt: AnsiFont
 var tileset: TileSet
@@ -231,8 +235,10 @@ func update_font_tileset() -> void:
 	update_character_preview()
 
 	if document_size.x * glyph_size.x > 0:
-		display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
-	display_texture.set_image(display_image)
+		display_fg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+		display_bg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	display_fg_texture.set_image(display_fg_image)
+	display_bg_texture.set_image(display_bg_image)
 	update_display()
 
 	font_updated.emit()
@@ -268,7 +274,8 @@ func update_character_preview() -> void:
 ## Rerenders based on given region. If none is given, it's the entire document.
 func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void:
 	if document_size.x * glyph_size.x > 0:
-		display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+		display_fg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+		display_bg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
 
@@ -283,18 +290,20 @@ func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void
 
 			region = Vector2i(code % 16, code / 16)
 
-			display_image.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(get_bg(p) * 16, 0, 0))
+			display_bg_image.fill_rect(Rect2i(x * glyph_size.x, y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(get_bg(p) * 16, 0, 0))
 			src.fill(Color.from_rgba8(get_fg_attr(p) * 16, 0, 0))
 
-			display_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
+			display_fg_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
 
-	if display_texture:
-		display_texture.update(display_image)
+	if display_fg_texture:
+		display_fg_texture.update(display_fg_image)
+	if display_bg_texture:
+		display_bg_texture.update(display_bg_image)
 	drawn_on = false
 
-## Sparse display update. Only renders the given points over again.
+## Sparse display_fg update. Only renders the given points over again.
 func update_display_sparse(points: PackedVector2Array) -> void:
-	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	display_fg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
 	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_RGBA4444)
 
@@ -308,13 +317,15 @@ func update_display_sparse(points: PackedVector2Array) -> void:
 
 		region = Vector2i(code % 16, code / 16)
 
-		display_image.fill_rect(Rect2i(p.x * glyph_size.x, p.y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(get_bg(p) * 16, 0, 0))
+		display_bg_image.fill_rect(Rect2i(p.x * glyph_size.x, p.y * glyph_size.y, glyph_size.x, glyph_size.y), Color.from_rgba8(get_bg(p) * 16, 0, 0))
 		src.fill(Color.from_rgba8(get_fg_attr(p) * 16, 0, 0))
 
-		display_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
+		display_fg_image.blend_rect_mask(src, ansifnt.image, Rect2i(region * glyph_size, glyph_size), p * glyph_size)
 
-	if display_texture:
-		display_texture.update(display_image)
+	if display_fg_texture:
+		display_fg_texture.update(display_fg_image)
+	if display_bg_texture:
+		display_bg_texture.update(display_bg_image)
 	drawn_on = false
 @warning_ignore_restore("integer_division")
 
@@ -481,9 +492,13 @@ func paint_with_selected(global_pt: Vector2) -> void:
 #endregion
 
 func _ready() -> void:
-	display_image = Image.create_empty(1, 1, false, Image.FORMAT_LA8)
-	display_texture = ImageTexture.create_from_image(display_image)
-	display.texture = display_texture
+	display_fg_image = Image.create_empty(1, 1, false, Image.FORMAT_LA8)
+	display_fg_texture = ImageTexture.create_from_image(display_fg_image)
+	display_fg.texture = display_fg_texture
+
+	display_bg_image = Image.create_empty(1, 1, false, Image.FORMAT_LA8)
+	display_bg_texture = ImageTexture.create_from_image(display_bg_image)
+	display_bg.texture = display_bg_texture
 
 	reference.modulate.a = REF_IMAGE_DEFAULT_ALPHA
 
@@ -916,8 +931,11 @@ func resize(to: Vector2i) -> void:
 	dirty = true
 	document_size = to
 
-	display_image.crop(to.x * glyph_size.x, to.y * glyph_size.y)
-	display_texture.set_image(display_image)
+	display_fg_image.crop(to.x * glyph_size.x, to.y * glyph_size.y)
+	display_fg_texture.set_image(display_fg_image)
+
+	display_bg_image.crop(to.x * glyph_size.x, to.y * glyph_size.y)
+	display_bg_texture.set_image(display_bg_image)
 	update_display()
 
 # HACK BECAUSE MAKING RESIZE SMARTER IS HARD AND I DON'T WANNA THINK ABOUT IT
@@ -929,8 +947,11 @@ func grow_y_by(amount: int) -> void:
 	dirty = true
 	document_size.y += amount
 
-	display_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
-	display_texture.set_image(display_image)
+	display_fg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	display_fg_texture.set_image(display_fg_image)
+
+	display_bg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
+	display_bg_texture.set_image(display_bg_image)
 	update_display()
 
 func render(transparent_bg_idx: int = -1) -> Image:

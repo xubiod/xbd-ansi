@@ -47,8 +47,15 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Display" type="Sprite2D" parent="." unique_id=1611749611]
+[node name="DisplayFG" type="Sprite2D" parent="." unique_id=1611749611]
 unique_name_in_owner = true
+z_index = 1
+use_parent_material = true
+centered = false
+
+[node name="DisplayBG" type="Sprite2D" parent="." unique_id=220675357]
+unique_name_in_owner = true
+z_index = -1
 use_parent_material = true
 centered = false
 
