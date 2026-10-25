@@ -277,7 +277,11 @@ func update_display(rect: Rect2i = Rect2i(Vector2i.ZERO, document_size)) -> void
 		display_fg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 		display_bg_image.crop(document_size.x * glyph_size.x, document_size.y * glyph_size.y)
 
-	var src: Image	= Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
+	var src: Image    = Image.create_empty(ansifnt.image.get_width(), ansifnt.image.get_height(), false, Image.FORMAT_LA8)
+
+	if rect.size.x > 0 and rect.size.y > 0:
+		var voided: Image = Image.create_empty(rect.size.x * glyph_size.x, rect.size.y * glyph_size.y, false, display_fg_image.get_format())
+		display_fg_image.blit_rect(voided, Rect2i(0, 0, voided.get_width(), voided.get_height()), rect.position)
 
 	var p:	Vector2i
 	var code: int
@@ -1159,10 +1163,11 @@ func load_xbin(xbin_path: String) -> void:
 				_:
 					assert(false, "impossible compression type")
 					return
-
 	@warning_ignore_restore("integer_division")
 	f.close()
 	dirty = false
+
+	update_display()
 
 func load_ansi(
 	ansi_path: String,
